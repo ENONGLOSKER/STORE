@@ -1,9 +1,9 @@
 <div class="" align="center">
-    <p>Sistem Pendukung Keputusan</p>
-    <h1>PEMILIHAN BIDANG KEAHLIAN</h1>
+    <p>Store App</p>
+    <h1>STORE APP</h1>
     <span>✨⭐⭐⭐✨</span>
     <hr>
-    <img src="SPK-PENENTUAN-BIDANG/STATIC/img/SPK-PROFILE-MATCHING.png"/>
+    
     <br>
 </div>
 
@@ -13,7 +13,7 @@
 - 📍&nbsp;&nbsp;[Install Python (Python Official)](https://www.python.org/)
 - 📗&nbsp;&nbsp;Clone repository
 ```bash
-git clone https://github.com/ENONGLOSKER/SPK-PEMILIHAN-BIDANG-KEAHLIAN
+git clone https://github.com/ENONGLOSKER/
 ```
 - 📁&nbsp;&nbsp;Buat env
 ```bash
@@ -25,7 +25,7 @@ env\Scripts\activate
 ```
 - 📁&nbsp;&nbsp;Masuk ke Folder
 ```bash
-cd SPK-PEMILIHAN-BIDANG-KEAHLIAN
+cd greenstore
 ```
 - 📁&nbsp;&nbsp;Install requirements
 ```bash
