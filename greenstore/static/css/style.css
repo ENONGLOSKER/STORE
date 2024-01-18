@@ -1,0 +1,130 @@
+:root {
+    --satu: #FFC331;
+    --dua: #6C9E03;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    
+}
+body{
+    background-color: #F2F2F2;
+}
+
+/* nabar */
+nav{
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 120px;
+}
+.logo{
+    /* background-color: rgb(255, 110, 110); */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 25px;
+    font-weight: 400;
+    color: var(--dua);
+}
+nav a{
+    text-decoration: none;
+    background-color: rgb(163, 163, 163);
+    color: white;
+    width: 110px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+nav a:hover{
+    background-color: var(--satu);
+}
+span{
+    color:var(--satu) ;
+}
+
+
+/* produk list */
+.container{
+    /* background-color: rgb(204, 248, 197); */
+    margin: 0 120px;
+}
+.container .content1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 50px 0;
+}
+.container .content1 .title{
+    font-size: 20px;
+}
+.container .content1 .title p{
+    margin-top: 8px;
+    font-size: 13px;
+    color: rgb(135, 135, 135);
+}
+.container .content1 select{
+    height: 30px;
+    border: none;
+    color: rgb(165, 165, 165);
+    padding: 4px 12px;
+}
+.container .content1 form button{
+    background-color: rgb(214, 214, 214);
+    width: 50px;
+    padding: 6px 8px;
+    border: none;
+    cursor: pointer;
+}
+.container .content1 form button:hover{
+    background-color: var(--satu);
+
+}
+
+.container .content2{
+    /* background-color: aliceblue; */
+    display: flex;
+    gap: 5px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.container .content2 .card{
+    background-color: rgb(255, 255, 255);
+    color: #707070;
+    width: 24%;
+    padding: 12px;
+    display: flex;
+    margin-bottom: 10px;
+    flex-direction: column;
+    justify-content: center;
+}
+.content2 .card img{
+    width: 100%;
+    margin-bottom: 10px;
+}
+.content2 .card .ket{
+    position: relative;
+}
+.content2 .card .ket #reting{
+    margin-bottom: 8px;
+    color: #ecab07;
+    font-size: 13px;
+}
+.content2 .card .ket #beli{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+    border-radius: 50px;
+    cursor: pointer;
+}
+.content2 .card .ket #beli:hover{
+    background-color: var(--satu);
+    color: var(--dua);
+    box-shadow: 2px 2px 20px rgb(253, 194, 77);
+}

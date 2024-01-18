@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+        :root {
+            --vs-primary: 29 92 255;
+        }
+
+        /*Dialog Styles*/
+        dialog {
+            margin: 50px auto;
+            padding: 1rem 3rem;
+            background: white;
+            max-width: 600px;
+            padding-top: 2rem;
+            border-radius: 20px;
+            border: 0;
+            box-shadow: 0 5px 30px 0 rgb(0 0 0 / 10%);
+            animation: fadeIn 1s ease both;
+            &::backdrop {
+                animation: fadeIn 1s ease both;
+                background: rgb(255 255 255 / 40%);
+                z-index: 2;
+                backdrop-filter: blur(20px);
+            }
+            .x {
+                filter: grayscale(1);
+                border: none;
+                background: none;
+                position: absolute;
+                top: 15px;
+                right: 10px;
+                transition: ease filter, transform 0.3s;
+                cursor: pointer;
+                transform-origin: center;
+                &:hover {
+                    filter: grayscale(0);
+                    transform: scale(1.1);
+                }
+            }
+            h2 {
+                font-weight: 600;
+                font-size: 2rem;
+                padding-bottom: 1rem;
+            }
+            form{
+                /* background-color: red; */
+                padding: 10px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 300px;
+                margin-bottom: 10px;
+            }
+            form input{
+                height: 35px;
+                padding: 10px 15px;
+            }
+            form button{
+                margin-top: 20px;
+                height: 40px;
+                padding: 10px;
+                border-radius: 50px;
+                border: none;
+                color: #fff !important;
+                cursor: pointer;
+                background: rgb(var(--vs-primary) / 100%);
+                box-shadow: 0 10px 20px -10px rgb(var(--vs-primary) / 50%);
+            }
+        }
+
+        button.primary {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #fff !important;
+            background: rgb(var(--vs-primary) / 100%);
+            padding: 13px 25px;
+            border-radius: 50px;
+            transition: background-color 0.1s ease;
+            box-sizing: border-box;
+            transition: all 0.25s ease;
+            border: 0;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -10px rgb(var(--vs-primary) / 50%);
+            &:hover {
+                box-shadow: 0 20px 20px -10px rgb(var(--vs-primary) / 50%);
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- Modal -->
+    <dialog id="dialog">
+        <h2>Produk</h2>
+        <form id="produk-form">
+            {% csrf_token %}
+            <input type="text" name="nama_produk" placeholder="Nama Produk">
+            <input type="text" name="rettings" placeholder="rettings">
+            <input type="text" name="harga" placeholder="Harga">
+            <input type="text" name="kategori" placeholder="Kategori">
+            <button type="button" id="submit-btn">Submit</button>
+        </form>
+        <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <nav>
+        <div class="logo">
+            <img src="{% static 'img/logo.svg' %}" alt="">
+            <h3>Green<span>Store</span></h3>
+        </div>
+        <button class="primary" onclick="window.dialog.showModal();">Product</button>
+        <!-- <a href="">Product</a>-->
+    </nav>
+
+    
+
+    <div class="container">
+        <div class="content1">
+            <div class="title">
+                <h3>Store</h3>
+                <p>17 Januari 2024</p>
+            </div>
+            <form method="GET" action="{% url 'index' %}">
+                <select name="kategori" id="kategori-filter">
+                    <option value="">Filter by category</option>
+                    {% for kategori in kategoris %}
+                        <option value="{{ kategori.kategori }}" {% if kategori_filter == kategori.kategori %}selected{% endif %}>
+                            {{ kategori.kategori }}
+                        </option>
+                    {% endfor %}             
+                </select>
+                <button type="submit">Filter</button>
+            </form>
+            
+        </div>
+
+        <div class="content2">
+            {% for data in produk %}
+            <div class="card">
+                <img src="{% static 'img/mac.jpeg' %}" alt="">
+                <div class="ket">
+                    <h3>{{data.nama_produk}}</h3>
+                    <p id="reting">
+                        <ion-icon name="star"></ion-icon> 
+                        <ion-icon name="star"></ion-icon> 
+                        <ion-icon name="star"></ion-icon> 
+                        <ion-icon name="star"></ion-icon> 
+                        {{data.rettings}}
+                    </p>
+                    <p>Rp. {{data.harga}}</p>
+                    <ion-icon name="bag-check" id="beli"></ion-icon>
+                </div>
+            </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        // Get the modal
+        var modal = document.getElementById('myModal');
+    
+        // Get the button that opens the modal
+        var btn = document.querySelector('nav a');
+    
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName('close')[0];
+    
+        // When the user clicks on the button, open the modal
+        btn.onclick = function () {
+            modal.style.display = 'block';
+        }
+    
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = 'none';
+        }
+    
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+        $("#submit-btn").click(function () {
+            var namaProduk = $("input[name='nama_produk']").val();
+            var rettings = $("input[name='rettings']").val();
+            var harga = $("input[name='harga']").val();
+            var kategori = $("input[name='kategori']").val();
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'create_produk' %}",
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    nama_produk: namaProduk,
+                    rettings: rettings,
+                    harga: harga,
+                    kategori: kategori,
+                },
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        // Redirect ke halaman utama
+                        window.location.href = "{% url 'index' %}";
+                    } else {
+                        alert("Gagal menyimpan data. Kesalahan: " + data.errors);
+                    }
+                },
+                error: function () {
+                    alert("Terjadi kesalahan saat mengirim formulir.");
+                }
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>
