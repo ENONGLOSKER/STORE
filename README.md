@@ -3,8 +3,8 @@
     <h1>STORE APP</h1>
     <span>✨⭐⭐⭐✨</span>
     <hr>
-    
-    <br>
+    <img src="/greenstore/static/img/Screenshot1.png" alt="store">
+    <img src="/greenstore/static/img/Screenshot2.png" alt="checkout">
 </div>
 
 ## Setup Project
