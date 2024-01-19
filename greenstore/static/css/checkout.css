@@ -1,0 +1,170 @@
+:root {
+--satu: #FFC331;
+--dua: #6C9E03;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    
+}
+body{
+    background-color: #F2F2F2;
+}
+
+/* nabar */
+nav{
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 120px;
+}
+.logo{
+    /* background-color: rgb(255, 110, 110); */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 25px;
+    font-weight: 400;
+    color: var(--dua);
+}
+span{
+    color:var(--satu) ;
+}
+
+
+/* produk list */
+.container{
+    /* background-color: rgb(204, 248, 197); */
+    margin: 0 120px;
+}
+.container .content1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 50px 0;
+}
+.container .content1 .title{
+    font-size: 20px;
+}
+.container .content1 .title p{
+    margin-top: 8px;
+    font-size: 13px;
+    color: rgb(135, 135, 135);
+}
+.container .content1 select{
+    height: 30px;
+    border: none;
+    color: rgb(165, 165, 165);
+    padding: 4px 12px;
+}
+.container .content1 form button{
+    background-color: rgb(214, 214, 214);
+    width: 50px;
+    padding: 6px 8px;
+    border: none;
+    cursor: pointer;
+}
+.container .content1 form button:hover{
+    background-color: var(--satu);
+
+}
+
+.container .content2{
+    display: flex;
+    gap: 20px;
+}
+.content2 .order{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    width: 60%;
+}
+.content2 .order .cart{
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    display: flex;  
+    gap: 20px;
+    position: relative;
+}
+.content2 .order .cart img{
+    width: 120px; 
+    height: 120px; 
+}
+.content2 .order .cart .card{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: rgb(81, 81, 81);
+    font-weight: 100;
+}
+.content2 .order .cart .card table{
+    line-height: 25px;
+}
+.content2 .order .cart .card .qty{
+    display: flex;
+    gap: 10px;
+}
+.content2 .order .cart .card .qty button{
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    border: 1px solid rgb(229, 229, 229);
+    color: #dedede;
+}
+.content2 .order .cart .card .qty button:hover{
+    background-color: var(--satu);
+    color: #ffffff;
+    cursor: pointer;
+}
+.content2 .order .cart .card #close{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #e7e7e7;
+    font-size: 20px;
+}
+.content2 .order .cart .card #close:hover{
+    color: rgb(255, 37, 59);
+}
+.content2 .order .cart .card .retings{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: var(--satu);
+    font-size: 13px;
+}
+
+
+.content2 .summray{
+    width: 40%;
+    height: 50%;
+    background-color: rgb(255, 255, 255);
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: space-around;
+
+}
+.content2 .summray h3{
+    font-size: 20px;
+    padding-bottom: 20px;
+}
+.content2 .summray table tr{
+    font-weight: 400;
+    height: 30px;
+}
+.content2 .summray button{
+    height: 40px;
+    font-size: 16px;
+    background-color: var(--satu);
+    border: none;
+    cursor: pointer;
+}
+.content2 .summray button:hover{
+    box-shadow: 3px 2px 25px #f3db9e;
+}

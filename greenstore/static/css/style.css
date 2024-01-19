@@ -20,6 +20,10 @@ nav{
     justify-content: space-between;
     padding: 10px 120px;
 }
+nav a{
+    text-decoration: none;
+    color: white;
+}
 .logo{
     /* background-color: rgb(255, 110, 110); */
     display: flex;
@@ -28,20 +32,6 @@ nav{
     font-size: 25px;
     font-weight: 400;
     color: var(--dua);
-}
-nav a{
-    text-decoration: none;
-    background-color: rgb(163, 163, 163);
-    color: white;
-    width: 110px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-}
-nav a:hover{
-    background-color: var(--satu);
 }
 span{
     color:var(--satu) ;

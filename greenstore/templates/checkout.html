@@ -1,0 +1,287 @@
+<!-- {% load static %} -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+    
+</head>
+<body>
+    <!-- Modal -->
+
+    <nav>
+        <div class="logo">
+            <img src="{% static 'img/logo.svg' %}" alt="">
+            <h3>Green<span>Store</span></h3>
+        </div>
+        <!-- <button class="primary" onclick="window.dialog.showModal();">Product</button> -->
+        <!-- <a href="">Product</a>-->
+    </nav>
+
+    
+
+    <div class="container">
+        <div class="content1">
+            <div class="title">
+                <h3>Checkout</h3>
+                <p>17 Januari 2024</p>
+            </div>
+            <form method="GET" action="{% url 'index' %}">
+                <select name="kategori" id="kategori-filter">
+                    <option value="">Filter by category</option>
+                    {% for kategori in kategoris %}
+                        <option value="{{ kategori.kategori }}" {% if kategori_filter == kategori.kategori %}selected{% endif %}>
+                            {{ kategori.kategori }}
+                        </option>
+                    {% endfor %}             
+                </select>
+                <button type="submit">Filter</button>
+            </form>
+            
+        </div>
+
+        <div class="content2">
+            <div class="order">
+                <div class="cart">
+                    <img src="{% static 'img/mac.jpeg' %}" alt="">
+                    <div class="card">
+                        <table>
+                            <tr>
+                                <td>Nama Produk</td>
+                                <td>: Macbook Pro 2021</td>
+                            </tr>
+                            <tr>
+                                <td>Kategori</td>
+                                <td>: Elektronik</td>
+                            </tr>
+                            <tr>
+                                <td>Harga</td>
+                                <td>: Rp. 12000000</td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah </td>
+                                <td> 
+                                    <div class="qty">:
+                                        <button>-</button>
+                                        <p>1</p>
+                                        <button>+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <ion-icon name="close-circle" id="close"></ion-icon>
+                        <div class="retings">
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         4.00
+                        </div>
+                    </div>
+                </div>
+                <div class="cart">
+                    <img src="{% static 'img/mac.jpeg' %}" alt="">
+                    <div class="card">
+                        <table>
+                            <tr>
+                                <td>Nama Produk</td>
+                                <td>: Macbook Pro 2021</td>
+                            </tr>
+                            <tr>
+                                <td>Kategori</td>
+                                <td>: Elektronik</td>
+                            </tr>
+                            <tr>
+                                <td>Harga</td>
+                                <td>: Rp. 12000000</td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah </td>
+                                <td> 
+                                    <div class="qty">:
+                                        <button>-</button>
+                                        <p>1</p>
+                                        <button>+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <ion-icon name="close-circle" id="close"></ion-icon>
+                        <div class="retings">
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         4.00
+                        </div>
+                    </div>
+                </div>
+                <div class="cart">
+                    <img src="{% static 'img/mac.jpeg' %}" alt="">
+                    <div class="card">
+                        <table>
+                            <tr>
+                                <td>Nama Produk</td>
+                                <td>: Macbook Pro 2021</td>
+                            </tr>
+                            <tr>
+                                <td>Kategori</td>
+                                <td>: Elektronik</td>
+                            </tr>
+                            <tr>
+                                <td>Harga</td>
+                                <td>: Rp. 12000000</td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah </td>
+                                <td> 
+                                    <div class="qty">:
+                                        <button>-</button>
+                                        <p>1</p>
+                                        <button>+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <ion-icon name="close-circle" id="close"></ion-icon>
+                        <div class="retings">
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         4.00
+                        </div>
+                    </div>
+                </div>
+                <div class="cart">
+                    <img src="{% static 'img/mac.jpeg' %}" alt="">
+                    <div class="card">
+                        <table>
+                            <tr>
+                                <td>Nama Produk</td>
+                                <td>: Macbook Pro 2021</td>
+                            </tr>
+                            <tr>
+                                <td>Kategori</td>
+                                <td>: Elektronik</td>
+                            </tr>
+                            <tr>
+                                <td>Harga</td>
+                                <td>: Rp. 12000000</td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah </td>
+                                <td> 
+                                    <div class="qty">:
+                                        <button>-</button>
+                                        <p>1</p>
+                                        <button>+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <ion-icon name="close-circle" id="close"></ion-icon>
+                        <div class="retings">
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         4.00
+                        </div>
+                    </div>
+                </div>
+                <div class="cart">
+                    <img src="{% static 'img/mac.jpeg' %}" alt="">
+                    <div class="card">
+                        <table>
+                            <tr>
+                                <td>Nama Produk</td>
+                                <td>: Macbook Pro 2021</td>
+                            </tr>
+                            <tr>
+                                <td>Kategori</td>
+                                <td>: Elektronik</td>
+                            </tr>
+                            <tr>
+                                <td>Harga</td>
+                                <td>: Rp. 12000000</td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah </td>
+                                <td> 
+                                    <div class="qty">:
+                                        <button>-</button>
+                                        <p>1</p>
+                                        <button>+</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <ion-icon name="close-circle" id="close"></ion-icon>
+                        <div class="retings">
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         <ion-icon name="star"></ion-icon>
+                         4.00
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <!-- summary -->
+            <div class="summray">
+                <div class="title">
+                    <h3>Order Summary</h3>
+                    <hr>
+                </div>
+                <table>
+                    <tr>
+                        <td style="width: 30%;">User</td>
+                        <td>: Elqusairi</td>
+                    </tr>
+                    <tr>
+                        <td>Nomor HP</td>
+                        <td>: 085337802822</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>: user@gmail.com</td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
+                        <td>: Lombok Timur, Selong, Suralaga, Anjani</td>
+                    </tr>
+                    <tr>
+                        <td>Items</td>
+                        <td>: 6 Items</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td style="font-weight: bold;">: Rp. 12000000</td>
+                    </tr>
+                </table>
+                <button>Pesan</button>
+            </div>
+            
+        </div>
+    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <script src="{% static 'js/jquery.js' %}"></script>
+    
+
+</body>
+</html>

@@ -47,10 +47,25 @@ class ProdukListView(ListView):
             queryset = queryset.filter(kategori=kategori_filter)
         return queryset
     
-def index(request):
-    produks = Produk.objects.all().order_by('-id')
-    context = {
-        'produk':produks,
-    }
+class CheckoutListView(ListView):
+    model = Produk
+    template_name = 'checkout.html'
+    context_object_name = 'produk'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Mendapatkan semua kategori yang unik
+        context['kategoris'] = Produk.objects.values('kategori').distinct()
+
+        # Menambahkan kategori_filter ke dalam konteks untuk tetap mempertahankan filter
+        context['kategori_filter'] = self.request.GET.get('kategori', '')
+
+        return context
     
-    return render(request, 'index.html', context)
+    def get_queryset(self):
+        queryset = Produk.objects.all().order_by('-id')
+        kategori_filter = self.request.GET.get('kategori', '')
+        if kategori_filter:
+            queryset = queryset.filter(kategori=kategori_filter)
+        return queryset

@@ -16,13 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import index,ProdukCreateView, ProdukListView
+from greenstore_app.views import ProdukCreateView, ProdukListView,CheckoutListView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', index, name='index'),
+    path('checkout/', CheckoutListView.as_view(), name='checkout'),
     path('', ProdukListView.as_view(), name='index'),
     path('produk/create/', ProdukCreateView.as_view(), name='create_produk'),
 ]
