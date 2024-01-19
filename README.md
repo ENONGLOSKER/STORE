@@ -4,7 +4,9 @@
     <span>✨⭐⭐⭐✨</span>
     <hr>
     <img src="/greenstore/static/img/Screenshot1.png" alt="store">
+    <br>
     <img src="/greenstore/static/img/Screenshot2.png" alt="checkout">
+    <br>
 </div>
 
 ## Setup Project
