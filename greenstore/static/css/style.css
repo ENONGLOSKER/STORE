@@ -20,10 +20,7 @@ nav{
     justify-content: space-between;
     padding: 10px 120px;
 }
-nav a{
-    text-decoration: none;
-    color: white;
-}
+
 .logo{
     /* background-color: rgb(255, 110, 110); */
     display: flex;
