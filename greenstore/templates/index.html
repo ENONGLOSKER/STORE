@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Favicons -->
+    <link href="{%static 'img/logo.svg'%}" rel="icon">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
         :root {
@@ -154,8 +156,9 @@
     <!-- Modal -->
     <dialog id="dialog">
         <h2>Produk</h2>
-        <form id="produk-form">
+        <form id="produk-form" enctype="multipart/form-data">
             {% csrf_token %}
+            <input type="file" name="img_produk" placeholder="Gambar Produk">
             <input type="text" name="nama_produk" placeholder="Nama Produk">
             <input type="text" name="rettings" placeholder="rettings">
             <input type="text" name="harga" placeholder="Harga">
@@ -172,7 +175,7 @@
         </div>
         <div class="btncart">
             <a href="{% url 'checkout' %}">
-                <p id="jlh">5</p>
+                <p id="jlh">0</p>
                 <ion-icon name="cart" id="cartProduk"></ion-icon>
             </a>
             <button class="primary" onclick="window.dialog.showModal();">Product</button>
@@ -206,7 +209,7 @@
         <div class="content2">
             {% for data in produk %}
             <div class="card">
-                <img src="{% static 'img/mac.jpeg' %}" alt="">
+                <img src="{{data.img_produk.url}}" alt="">
                 <div class="ket">
                     <h3>{{data.nama_produk}}</h3>
                     <p id="reting">
@@ -217,13 +220,12 @@
                         {{data.rettings}}
                     </p>
                     <p>Rp. {{data.harga}}</p>
-                    <a href="{% url 'checkout' %}">
+                    <a href="#" class="beli-btn" data-produk-id="{{data.id}}">
                         <ion-icon name="bag-check" id="beli"></ion-icon>
                     </a>
                 </div>
             </div>
             {% endfor %}
-            
         </div>
     </div>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
@@ -258,38 +260,71 @@
     
     <script src="{% static 'js/jquery.js' %}"></script>
     <script>
-        $(document).ready(function () {
-        $("#submit-btn").click(function () {
-            var namaProduk = $("input[name='nama_produk']").val();
-            var rettings = $("input[name='rettings']").val();
-            var harga = $("input[name='harga']").val();
-            var kategori = $("input[name='kategori']").val();
+       $(document).ready(function () {
+            $("#submit-btn").click(function () {
+                var formData = new FormData();
+                formData.append('csrfmiddlewaretoken', "{{ csrf_token }}");
+                formData.append('img_produk', $('input[name="img_produk"]')[0].files[0]);
+                formData.append('nama_produk', $("input[name='nama_produk']").val());
+                formData.append('rettings', $("input[name='rettings']").val());
+                formData.append('harga', $("input[name='harga']").val());
+                formData.append('kategori', $("input[name='kategori']").val());
 
-            $.ajax({
-                type: "POST",
-                url: "{% url 'create_produk' %}",
-                data: {
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                    nama_produk: namaProduk,
-                    rettings: rettings,
-                    harga: harga,
-                    kategori: kategori,
-                },
-                success: function (data) {
-                    if (data.success) {
-                        alert(data.message);
-                        // Redirect ke halaman utama
-                        window.location.href = "{% url 'index' %}";
-                    } else {
-                        alert("Gagal menyimpan data. Kesalahan: " + data.errors);
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'create_produk' %}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            alert(data.message);
+                            // Redirect ke halaman utama
+                            window.location.href = "{% url 'index' %}";
+                        } else {
+                            alert("Gagal menyimpan data. Kesalahan: " + data.errors);
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim formulir.");
                     }
-                },
-                error: function () {
-                    alert("Terjadi kesalahan saat mengirim formulir.");
-                }
+                });
             });
         });
-    });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(".beli-btn").click(function (e) {
+                e.preventDefault();
+
+                var produkId = $(this).data('produk-id');
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'tambah_ke_cart' %}",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        produk_id: produkId
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            updateCartCount(data.jumlah_item);
+                            alert("Produk berhasil ditambahkan ke keranjang!");
+                        } else {
+                            alert("Gagal menambahkan produk ke keranjang.");
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim data.");
+                    }
+                });
+            });
+
+            function updateCartCount(jumlahItem) {
+                $("#jlh").text(jumlahItem);
+            }
+        });
     </script>
 
 </body>

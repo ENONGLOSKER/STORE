@@ -91,6 +91,8 @@ span{
 }
 .content2 .card img{
     width: 100%;
+    height: 100%;
+    background-size: cover;
     margin-bottom: 10px;
 }
 .content2 .card .ket{

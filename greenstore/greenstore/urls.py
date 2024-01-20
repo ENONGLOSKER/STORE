@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import ProdukCreateView, ProdukListView,CheckoutListView
+from greenstore_app.views import ProdukCreateView, ProdukListView,CheckoutListView, TambahKeCartView, HapusDariCartView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,6 +25,9 @@ urlpatterns = [
     path('checkout/', CheckoutListView.as_view(), name='checkout'),
     path('', ProdukListView.as_view(), name='index'),
     path('produk/create/', ProdukCreateView.as_view(), name='create_produk'),
+    path('tambah-ke-cart/', TambahKeCartView.as_view(), name='tambah_ke_cart'),
+    path('hapus-dari-cart/', HapusDariCartView.as_view(), name='hapus_dari_cart'),
+    # path('checkout/', CheckoutView.as_view(), name='checkout'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
