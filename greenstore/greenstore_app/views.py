@@ -10,6 +10,30 @@ from django.core.files.base import ContentFile
 import base64
 import io
 
+class SummaryView(View):
+    def get(self, request, *args, **kwargs):
+        if 'cart' in request.session:
+            jumlah_items = sum(item['jumlah'] for item in request.session['cart'].values())
+            total_harga = sum(item['jumlah'] * item['harga'] for item in request.session['cart'].values())
+            return JsonResponse({'success': True, 'jumlah_items': jumlah_items, 'total_harga': total_harga})
+        return JsonResponse({'success': False})
+
+class UpdateJumlahItemView(View):
+    def post(self, request, *args, **kwargs):
+        produk_id = request.POST.get('produk_id')
+        tindakan = request.POST.get('tindakan')
+
+        if 'cart' in request.session and produk_id in request.session['cart']:
+            if tindakan == "tambah":
+                request.session['cart'][produk_id]['jumlah'] += 1
+            elif tindakan == "kurang" and request.session['cart'][produk_id]['jumlah'] > 1:
+                request.session['cart'][produk_id]['jumlah'] -= 1
+
+            request.session.save()
+            return JsonResponse({'success': True, 'jumlah_item': request.session['cart'][produk_id]['jumlah']})
+
+        return JsonResponse({'success': False})
+
 class HapusDariCartView(View):
     def post(self, request, *args, **kwargs):
         produk_id = request.POST.get('produk_id')

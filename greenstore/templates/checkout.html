@@ -60,9 +60,9 @@
                             <td>Jumlah </td>
                             <td> 
                                 <div class="qty">
-                                    <button>-</button>
-                                    <p>{{ item.jumlah }}</p>
-                                    <button>+</button>
+                                    <button class="btn-kurang" data-produk-id="{{ produk_id }}">-</button>
+                                    <p class="jumlah-item" data-produk-id="{{ produk_id }}">{{ item.jumlah }}</p>
+                                    <button class="btn-tambah" data-produk-id="{{ produk_id }}">+</button>
                                 </div>
                             </td>
                         </tr>
@@ -107,12 +107,12 @@
                         <td>: Lombok Timur, Selong, Suralaga, Anjani</td>
                     </tr>
                     <tr>
-                        <td>Items</td>
-                        <td>: 6 Items</td>
+                        <td>Produk</td>
+                        <td>: <span id="jumlah-items">0 Items</span></td>
                     </tr>
                     <tr>
                         <td>Total</td>
-                        <td style="font-weight: bold;">: Rp. 12000000</td>
+                        <td style="font-weight: bold;">: <span id="total-harga">Rp. 0</span></td>
                     </tr>
                 </table>
                 <button>Pesan</button>
@@ -157,7 +157,82 @@
                 }
             });
         }
+    
     </script>
+<!-- cart.html -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var tambahButtons = document.querySelectorAll(".btn-tambah");
+        var kurangButtons = document.querySelectorAll(".btn-kurang");
 
+        tambahButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var produkId = button.getAttribute("data-produk-id");
+                updateJumlahItem(produkId, "tambah");
+            });
+        });
+
+        kurangButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var produkId = button.getAttribute("data-produk-id");
+                updateJumlahItem(produkId, "kurang");
+            });
+        });
+    });
+
+    function updateJumlahItem(produkId, tindakan) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'update_jumlah_item' %}",
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                produk_id: produkId,
+                tindakan: tindakan
+            },
+            success: function (data) {
+                if (data.success) {
+                    var jumlahItemElem = document.querySelector(".jumlah-item[data-produk-id='" + produkId + "']");
+                    jumlahItemElem.innerText = data.jumlah_item;
+
+                    // Perbarui summary
+                    updateSummary();
+                } else {
+                    alert("Gagal memperbarui jumlah item.");
+                }
+            },
+            error: function () {
+                alert("Terjadi kesalahan saat mengirim data.");
+            }
+        });
+    }
+
+    function updateSummary() {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'summary' %}",
+            success: function (data) {
+                if (data.success) {
+                    // Perbarui nilai Total dan Jumlah Item pada summary
+                    document.getElementById("jumlah-items").innerText = data.jumlah_items + " Items";
+                    document.getElementById("total-harga").innerText ="Rp." + data.total_harga;
+
+                    // Tambahan: Perbarui elemen lain di summary jika diperlukan
+                    // document.getElementById("user").innerText = data.user;
+                    // document.getElementById("nomor-hp").innerText = data.nomor_hp;
+                    // document.getElementById("email").innerText = data.email;
+                    // document.getElementById("alamat").innerText = data.alamat;
+                } else {
+                    alert("Gagal memperbarui summary.");
+                }
+            },
+            error: function () {
+                alert("Terjadi kesalahan saat mengambil data summary.");
+            }
+        });
+    }
+</script>
+
+
+</script>
 </body>
 </html>
