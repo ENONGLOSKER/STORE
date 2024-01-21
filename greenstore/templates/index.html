@@ -86,20 +86,25 @@
         .btncart button.primary {
             display: inline-block;
             font-size: 0.8rem;
-            color: #fff !important;
-            background: rgb(var(--vs-primary) / 100%);
-            padding: 10px 30px;
-            border-radius: 50px;
-            transition: background-color 0.1s ease;
+            color: #1f1f1f;
+            /* background: rgb(var(--vs-primary) / 100%); */
+            background-color: transparent;
+            padding: 10px 0;
+            /* border-radius: 50px; */
+            /* transition: background-color 0.1s ease; */
             box-sizing: border-box;
-            transition: all 0.25s ease;
+            /* transition: all 0.25s ease; */
             border: 0;
             cursor: pointer;
-            box-shadow: 0 10px 20px -10px rgb(var(--vs-primary) / 50%);
-            &:hover {
+            /* box-shadow: 0 10px 20px -10px rgb(var(--vs-primary) / 50%); */
+            /* &:hover {
                 box-shadow: 0 20px 20px -10px rgb(var(--vs-primary) / 50%);
                 transform: translateY(-5px);
-            }
+            } */
+        }
+        .btncart button.primary:hover{
+            color: var(--satu);
+            font-weight: bold;
         }
         .btncart #cartProduk{
             background-color: white;
@@ -118,7 +123,7 @@
         .btncart #jlh{
             background-color: tomato;
             position: absolute;
-            left: 40px;
+            left: 45px;
             top: 0;
             color: white;
             padding: 2px 5px;
@@ -129,12 +134,13 @@
         }
 
         .btncart{
-            width: 20%;
+            width: 40%;
             display: flex;
-            gap: 10px;
+            gap: 5px;
             justify-content: space-around;
             align-items: center;
             position: relative;
+            /* background-color: rgb(160, 160, 255); */
         }
         nav a{
             text-decoration: none;
@@ -148,6 +154,37 @@
             to {
                 opacity: 1;
             }
+        }
+
+        /* signin */
+        .btncart button#signin{
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #1e1e1e;
+            padding: 10px 0;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+        }
+        .btncart button#signin:hover{
+            color: var(--satu);
+            font-weight: bold;
+        }
+        /* signup */
+        .btncart button#signup{
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #ffffff;
+            width: 90px;
+            padding: 10px 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            /* box-shadow: 1px 1px 15px var(--satu); */
+            background-color: var(--satu);
+        }
+        .btncart button#signup:hover{
+            color: #1e1e1e;
         }
     </style>
     
@@ -168,6 +205,19 @@
         <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
+    <dialog id="signupModal">
+        <h2>Registrasi</h2>
+        <form id="produk-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="text" name="nohp" placeholder="Nomor hp">
+            <input type="text" name="email" placeholder="Email">
+            <input type="text" name="alamat" placeholder="Alamat">
+            <button type="button" id="submit-btn">Submit</button>
+        </form>
+        <button onclick="window.signupModal.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
     <nav>
         <div class="logo">
             <img src="{% static 'img/logo.svg' %}" alt="">
@@ -179,9 +229,9 @@
                 <ion-icon name="cart" id="cartProduk"></ion-icon>
             </a>
             <button class="primary" onclick="window.dialog.showModal();">Product</button>
+            <button id="signin">Sign in</button>
+            <button id="signup" onclick="window.signupModal.showModal();">Sign up</button>
         </div>
-        <!-- <a href="">Product</a>-->
-
     </nav>
 
     
@@ -228,6 +278,7 @@
             {% endfor %}
         </div>
     </div>
+
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
@@ -293,6 +344,7 @@
         });
     </script>
 
+    <!-- cart  -->
     <script>
         $(document).ready(function () {
             $(".beli-btn").click(function (e) {
