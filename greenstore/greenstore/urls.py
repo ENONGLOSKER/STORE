@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import ProdukCreateView, ProdukListView,CheckoutListView, TambahKeCartView, HapusDariCartView, UpdateJumlahItemView, SummaryView
+from greenstore_app.views import ProdukCreateView, ProdukListView,CheckoutListView, TambahKeCartView, HapusDariCartView, UpdateJumlahItemView, SummaryView, SignUpView, SignInView, SignOutView, datauser
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('user/', datauser, name='datauser'),
     path('checkout/', CheckoutListView.as_view(), name='checkout'),
     path('', ProdukListView.as_view(), name='index'),
     path('produk/create/', ProdukCreateView.as_view(), name='create_produk'),
@@ -30,6 +31,10 @@ urlpatterns = [
     path('update-jumlah-item/', UpdateJumlahItemView.as_view(), name='update_jumlah_item'),
      path('summary/', SummaryView.as_view(), name='summary'),
     # path('checkout/', CheckoutView.as_view(), name='checkout'),
+
+    path('signup/', SignUpView.as_view(), name='signup'),
+    path('login/', SignInView.as_view(), name='signin'),
+    path('signout/', SignOutView.as_view(), name='signout'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

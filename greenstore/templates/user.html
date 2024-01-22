@@ -85,7 +85,7 @@
 
         /* button */
         .btncart{
-            width: 35%;
+            width: 30%;
             display: flex;
             gap: 10px;
             justify-content: space-around;
@@ -194,15 +194,14 @@
         </form>
         <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
     </dialog>
-
-    <!-- signin.html -->
+    <!-- sigin in-->
     <dialog id="dialogsignin">
         <h2>Sign in</h2>
-        <form id="signin-form" enctype="multipart/form-data">
+        <form id="produk-form" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="text" name="username" placeholder="Username">
-            <input type="password" name="password" placeholder="Password">
-            <button type="button" id="submitSignin">Submit</button>
+            <input type="text" name="password" placeholder="Password">
+            <button type="button" id="submit-btn">Submit</button>
         </form>
         <button onclick="window.dialogsignin.close();" aria-label="close" class="x">❌</button>
     </dialog>
@@ -223,6 +222,8 @@
         <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
+
+
     <nav>
         <div class="logo">
             <img src="{% static 'img/logo.svg' %}" alt="">
@@ -233,9 +234,8 @@
                 <p id="jlh">0</p>
                 <ion-icon name="cart" id="cartProduk"></ion-icon>
             </a>
-            <button class="signin" id="signout-btn">Sign out</button>
-            <button class="signin" onclick="window.dialogsignin.showModal();">Sign in</button>
-            <button class="signup" onclick="window.dialogsignup.showModal();">Sign up</button>
+            <button class="signin" onclick="window.dialogsignin.showModal();">Sigin</button>
+            <button class="signup" onclick="window.dialogsignup.showModal();">Signup</button>
             <button class="primary" onclick="window.dialog.showModal();">Product</button>
         </div>
     </nav>
@@ -246,7 +246,7 @@
         <div class="content1">
             <div class="title">
                 <h3>Store</h3>
-                <p>Hello 👋 {{user}}</p>
+                <p>17 Januari 2024</p>
             </div>
             <form method="GET" action="{% url 'index' %}">
                 <select name="kategori" id="kategori-filter">
@@ -263,22 +263,14 @@
         </div>
 
         <div class="content2">
-            {% for data in produk %}
+            {% for datas in data %}
             <div class="card">
-                <img src="{{data.img_produk.url}}" alt="">
                 <div class="ket">
-                    <h3>{{data.nama_produk}}</h3>
-                    <p id="reting">
-                        <ion-icon name="star"></ion-icon> 
-                        <ion-icon name="star"></ion-icon> 
-                        <ion-icon name="star"></ion-icon> 
-                        <ion-icon name="star"></ion-icon> 
-                        {{data.rettings}}
-                    </p>
-                    <p>Rp. {{data.harga}}</p>
-                    <a href="#" class="beli-btn" data-produk-id="{{data.id}}">
-                        <ion-icon name="bag-check" id="beli"></ion-icon>
-                    </a>
+                    <h3>{{datas.username}}</h3>
+                    <h3>{{datas.email}}</h3>
+                    <h3>{{datas.nomor}}</h3>
+                    <h3>{{datas.alamat}}</h3>
+                    
                 </div>
             </div>
             {% endfor %}
@@ -289,70 +281,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="{% static 'js/jquery.js' %}"></script>
 
-    <!-- sign out -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var signoutButton = document.getElementById("signout-btn");
-
-            signoutButton.addEventListener("click", function () {
-                signout();
-            });
-        });
-
-        function signout() {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'signout' %}",  // Ganti 'signout' dengan nama URL view sign-out
-                data: {csrfmiddlewaretoken: "{{ csrf_token }}",},
-                success: function (data) {
-                    if (data.success) {
-                        alert("Logout berhasil");
-                        window.location.href = "{% url 'index' %}";  // Redirect ke halaman utama atau halaman login
-                    } else {
-                        alert("Logout gagal: " + data.message);
-                    }
-                },
-                error: function () {
-                    alert("Terjadi kesalahan saat mengirim permintaan sign-out.");
-                }
-            });
-        }
-    </script>
-
-
-    <!-- sign in-->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var signinButton = document.getElementById("submitSignin");
-    
-            signinButton.addEventListener("click", function () {
-                submitSigninForm();
-            });
-        });
-    
-        function submitSigninForm() {
-            var form = document.getElementById("signin-form");
-    
-            $.ajax({
-                type: "POST",
-                url: "{% url 'signin' %}",
-                data: $(form).serialize(),
-                success: function (data) {
-                    if (data.success) {
-                        alert("Login berhasil");
-                        window.location.href = "{% url 'checkout' %}";
-                    } else {
-                        alert("Login gagal: " + data.message);
-                    }
-                },
-                error: function () {
-                    alert("Terjadi kesalahan saat mengirim formulir.");
-                }
-            });
-        }
-    </script>
-
-    <!-- sign up -->
+    <!-- JavaScript -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var signupButton = document.getElementById("submit-signup-btn");

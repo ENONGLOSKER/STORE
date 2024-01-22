@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Produk
+from .models import Produk,CustomUser
 # views.py
 from django.http import JsonResponse
 from django.views import View
@@ -9,6 +9,47 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.base import ContentFile
 import base64
 import io
+# views.py
+from django.contrib.auth import authenticate, login, logout
+from .forms import CustomUserCreationForm
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+# menampilkan semua user
+
+def datauser(request):
+    data = CustomUser.objects.all()
+    context = {
+        'data':data
+    }
+    return render(request, 'user.html',context)
+
+class SignOutView(View):
+
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return JsonResponse({'success': True})
+
+class SignInView(View):
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'message': 'Username atau password salah'})
+        
+class SignUpView(View):
+    def post(self, request, *args, **kwargs):
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return JsonResponse({'success': True, 'message': 'Register berhasil'})
+        return JsonResponse({'success': False, 'errors': form.errors})
+
 
 class SummaryView(View):
     def get(self, request, *args, **kwargs):
