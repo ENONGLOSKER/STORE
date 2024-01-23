@@ -90,31 +90,32 @@
                 <table>
                     <tr>
                         <td style="width: 30%;">User</td>
-                        <td>: Elqusairi</td>
+                        <td>: <span id="nama-user"></span></td>
                     </tr>
                     <tr>
                         <td>Nomor HP</td>
-                        <td>: 085337802822</td>
+                        <td>: <span id="nomor-hp"></span></td>
                     </tr>
                     <tr>
                         <td>Email</td>
-                        <td>: user@gmail.com</td>
+                        <td>: <span id="email"></span></td>
                     </tr>
                     <tr>
                         <td>Alamat</td>
-                        <td>: Lombok Timur, Selong, Suralaga, Anjani</td>
+                        <td>: <span id="alamat"></span></td>
                     </tr>
                     <tr>
                         <td>Produk</td>
-                        <td>: <span id="jumlah-items">0 Items</span></td>
+                        <td>: <span id="jumlah-items"></span> Items</td>
                     </tr>
                     <tr>
                         <td>Total</td>
-                        <td style="font-weight: bold;">: <span id="total-harga">Rp. 0</span></td>
+                        <td style="font-weight: bold;">: Rp. <span id="total-harga"></span></td>
                     </tr>
                 </table>
-                <button>Pesan</button>
+                <button id="pesan-btn">Pesan</button>
             </div>
+
         </div>
     </div> 
     <!-- script ionic icon -->
@@ -148,6 +149,8 @@
                 var produkId = $(this).data("produk-id");
                 removeFromCart(produkId);
             });
+
+            
         });
 
         function updateQuantity(produkId, amount) {
@@ -194,8 +197,44 @@
                 }
             });
         }
+    
+
     </script>
-   
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+$(document).ready(function () {
+    $.ajax({
+        type: "GET",
+        url: "{% url 'get_order_summary' %}",
+        success: function (data) {
+            $("#nama-user").text(data.order_summary.nama_user);
+            $("#nomor-hp").text(data.order_summary.nomor_hp);
+            $("#email").text(data.order_summary.email);
+            $("#alamat").text(data.order_summary.alamat);
+            $("#jumlah-items").text(data.order_summary.jumlah_items);
+            $("#total-harga").text(data.order_summary.total_harga);
+        },
+        error: function () {
+            alert("Terjadi kesalahan saat mengambil data order summary.");
+        }
+    });
+
+    $("#pesan-btn").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'send_order_whatsapp' %}",
+            success: function (data) {
+                // Buka tab baru dengan URL WhatsApp
+                window.open(data.whatsapp_url, '_blank');
+            },
+            error: function () {
+                alert("Terjadi kesalahan saat mengirim pesanan.");
+            }
+        });
+    });
+});
+
 </script>
 </body>
 </html>

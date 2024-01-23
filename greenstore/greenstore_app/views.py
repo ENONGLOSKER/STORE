@@ -12,6 +12,9 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import CustomUserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sessions.models import Session
+from django.views.generic import TemplateView
+import urllib.parse
+from urllib.parse import quote
 
 def datauser(request):
     data = CustomUser.objects.all()
@@ -96,9 +99,9 @@ class CartSummaryView(View):
 class UpdateQuantityView(View):
     def post(self, request, *args, **kwargs):
         produk_id = request.POST.get('produk_id')
-        amount = int(request.POST.get('amount'))
+        amount = int(request.POST.get('amount')) 
 
-        # Pastikan item ada di keranjang dan milik pengguna yang sedang login
+        # Pastikan item ada di keranjang dan milik pengguna yang sedang login 
         cart_item = CartItem.objects.filter(cart__user=request.user, produk__id=produk_id).first()
 
         if cart_item:
@@ -135,6 +138,50 @@ class RemoveCartItemView(View):
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
+
+class OrderSummaryView(View):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        cart_items = CartItem.objects.filter(cart__user=user)
+
+        nama_user = user.username
+        nomor_hp = user.nomor
+        email = user.email
+        alamat = user.alamat
+
+        pesanan = "\n".join(
+            f"{item.produk.nama_produk} - Jumlah: {item.quantity} - Harga Satuan: Rp. {item.produk.harga}"
+            for item in cart_items
+        )
+
+        jumlah_items = cart_items.count()
+        total_harga = sum(item.produk.harga * item.quantity for item in cart_items)
+
+        # Format pesan untuk WhatsApp
+        whatsapp_message = (
+            f"Hai admin...saya ingin pesan\n"
+            f"Nama: {nama_user}\n"
+            f"Alamat: {alamat}\n"
+            f"Nomor: {nomor_hp}\n"
+            f"Email: {email}\n"
+            f"Pesanan:\n{pesanan}\n"
+            "--------------------------------\n"
+            f"Jumlah Item: {jumlah_items}\n"
+            f"Total Bayar: Rp. {total_harga}\n"
+            "--------------------------------"
+        )
+
+        # URL WhatsApp dengan parameter pesan
+        whatsapp_url = f"https://wa.me/+6285239664462?text={urllib.parse.quote(whatsapp_message)}"
+
+        return JsonResponse({'whatsapp_url': whatsapp_url, 'order_summary': {
+            'nama_user': nama_user,
+            'nomor_hp': nomor_hp,
+            'email': email,
+            'alamat': alamat,
+            'jumlah_items': jumlah_items,
+            'total_harga': total_harga,
+        }})
 
 # tambah produk ke katalog
 class ProdukCreateView(LoginRequiredMixin, View):
