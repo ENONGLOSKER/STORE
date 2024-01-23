@@ -222,7 +222,7 @@
         </form>
         <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
     </dialog>
-
+    <!-- navbar -->
     <nav>
         <div class="logo">
             <img src="{% static 'img/logo.svg' %}" alt="">
@@ -230,7 +230,7 @@
         </div>
         <div class="btncart">
             <a href="{% url 'checkout' %}">
-                <p id="jlh">0</p>
+                <p id="jlh">{{ total_items }}</p>
                 <ion-icon name="cart" id="cartProduk"></ion-icon>
             </a>
             <button class="signin" id="signout-btn">Sign out</button>
@@ -239,9 +239,7 @@
             <button class="primary" onclick="window.dialog.showModal();">Product</button>
         </div>
     </nav>
-
-    
-
+    <!-- content -->
     <div class="container">
         <div class="content1">
             <div class="title">
@@ -264,29 +262,32 @@
 
         <div class="content2">
             {% for data in produk %}
-            <div class="card">
-                <img src="{{data.img_produk.url}}" alt="">
-                <div class="ket">
-                    <h3>{{data.nama_produk}}</h3>
-                    <p id="reting">
-                        <ion-icon name="star"></ion-icon> 
-                        <ion-icon name="star"></ion-icon> 
-                        <ion-icon name="star"></ion-icon> 
-                        <ion-icon name="star"></ion-icon> 
-                        {{data.rettings}}
-                    </p>
-                    <p>Rp. {{data.harga}}</p>
-                    <a href="#" class="beli-btn" data-produk-id="{{data.id}}">
-                        <ion-icon name="bag-check" id="beli"></ion-icon>
-                    </a>
+                <div class="card">
+                    <img src="{{data.img_produk.url}}" alt="">
+                    <div class="ket">
+                        <h3>{{data.nama_produk}}</h3>
+                        <p id="reting">
+                            <ion-icon name="star"></ion-icon> 
+                            <ion-icon name="star"></ion-icon> 
+                            <ion-icon name="star"></ion-icon> 
+                            <ion-icon name="star"></ion-icon> 
+                            {{data.rettings}}
+                        </p>
+                        <p>Rp. {{data.harga}}</p>
+                        <a href="#" class="beli-btn" data-produk-id="{{data.id}}">
+                            <ion-icon name="bag-check" id="beli"></ion-icon>
+                        </a>
+                    </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
+        
     </div>
 
+    <!-- ionic icon -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
 
     <!-- sign out -->
@@ -319,7 +320,6 @@
         }
     </script>
 
-
     <!-- sign in-->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -340,7 +340,7 @@
                 success: function (data) {
                     if (data.success) {
                         alert("Login berhasil");
-                        window.location.href = "{% url 'checkout' %}";
+                        window.location.href = "{% url 'index' %}";
                     } else {
                         alert("Login gagal: " + data.message);
                     }
@@ -385,7 +385,6 @@
         }
     </script>
 
-    
     <!-- add product -->
     <script>
        $(document).ready(function () {
@@ -420,39 +419,53 @@
         });
     </script>
 
+    <!-- cart -->
     <script>
         $(document).ready(function () {
-            $(".beli-btn").click(function (e) {
+            $('.beli-btn').click(function (e) {
                 e.preventDefault();
-
                 var produkId = $(this).data('produk-id');
-
+                addToCart(produkId);
+            });
+    
+            function addToCart(produkId) {
                 $.ajax({
-                    type: "POST",
-                    url: "{% url 'tambah_ke_cart' %}",
+                    type: 'POST',
+                    url: `/add_to_cart/${produkId}/`,  // Sesuaikan dengan URL Anda
                     data: {
                         csrfmiddlewaretoken: "{{ csrf_token }}",
-                        produk_id: produkId
                     },
                     success: function (data) {
                         if (data.success) {
-                            updateCartCount(data.jumlah_item);
-                            alert("Produk berhasil ditambahkan ke keranjang!");
+                            alert("Item berhasil ditambahkan ke keranjang");
+                            updateCartCount();
                         } else {
-                            alert("Gagal menambahkan produk ke keranjang.");
+                            alert("Gagal menambahkan item ke keranjang: " + data.message);
                         }
                     },
                     error: function () {
-                        alert("Terjadi kesalahan saat mengirim data.");
+                        alert("Terjadi kesalahan saat mengirim formulir.");
                     }
                 });
-            });
-
-            function updateCartCount(jumlahItem) {
-                $("#jlh").text(jumlahItem);
             }
+    
+        updateCartCount();  // Panggil fungsi ini saat halaman dimuat
+
+        function updateCartCount() {
+            $.ajax({
+                type: 'GET',
+                url: '/cart_item_count/',  // Sesuaikan dengan URL Anda
+                success: function (data) {
+                    $('#jlh').text(data.cart_count);
+                },
+                error: function () {
+                    alert("Terjadi kesalahan saat memperbarui jumlah item keranjang.");
+                }
+            });
+        }
         });
     </script>
-
+    
+    
 </body>
 </html>

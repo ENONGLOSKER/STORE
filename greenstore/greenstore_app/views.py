@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from .models import Produk,CustomUser
-# views.py
+from .models import Produk,CustomUser,Cart, CartItem
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import ListView
@@ -9,12 +8,10 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.base import ContentFile
 import base64
 import io
-# views.py
 from django.contrib.auth import authenticate, login, logout
 from .forms import CustomUserCreationForm
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
-# menampilkan semua user
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sessions.models import Session
 
 def datauser(request):
     data = CustomUser.objects.all()
@@ -50,68 +47,97 @@ class SignUpView(View):
             return JsonResponse({'success': True, 'message': 'Register berhasil'})
         return JsonResponse({'success': False, 'errors': form.errors})
 
-
-class SummaryView(View):
-    def get(self, request, *args, **kwargs):
-        if 'cart' in request.session:
-            jumlah_items = sum(item['jumlah'] for item in request.session['cart'].values())
-            total_harga = sum(item['jumlah'] * item['harga'] for item in request.session['cart'].values())
-            return JsonResponse({'success': True, 'jumlah_items': jumlah_items, 'total_harga': total_harga})
-        return JsonResponse({'success': False})
-
-class UpdateJumlahItemView(View):
+#tambah produk ke cart
+class AddToCartView(View):
     def post(self, request, *args, **kwargs):
-        produk_id = request.POST.get('produk_id')
-        tindakan = request.POST.get('tindakan')
+        produk_id = self.kwargs['produk_id']
+        user_cart, created = Cart.objects.get_or_create(user=request.user)
+        produk = get_object_or_404(Produk, pk=produk_id)
 
-        if 'cart' in request.session and produk_id in request.session['cart']:
-            if tindakan == "tambah":
-                request.session['cart'][produk_id]['jumlah'] += 1
-            elif tindakan == "kurang" and request.session['cart'][produk_id]['jumlah'] > 1:
-                request.session['cart'][produk_id]['jumlah'] -= 1
+        cart_item, created = CartItem.objects.get_or_create(cart=user_cart, produk=produk)
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
 
-            request.session.save()
-            return JsonResponse({'success': True, 'jumlah_item': request.session['cart'][produk_id]['jumlah']})
+        cart_count = user_cart.items.count()
 
-        return JsonResponse({'success': False})
-
-class HapusDariCartView(View):
-    def post(self, request, *args, **kwargs):
-        produk_id = request.POST.get('produk_id')
-
-        if 'cart' in request.session and produk_id in request.session['cart']:
-            del request.session['cart'][produk_id]
-            request.session.save()
-            return JsonResponse({'success': True})
-
-        return JsonResponse({'success': False})
-
-class TambahKeCartView(View):
-    def post(self, request, *args, **kwargs):
-        produk_id = request.POST.get('produk_id')
-        produk = get_object_or_404(Produk, id=produk_id)
-
-        if 'cart' not in request.session:
-            request.session['cart'] = {}
-
-        cart = request.session['cart']
-        if produk_id in cart:
-            cart[produk_id]['jumlah'] += 1
-        else:
-            cart[produk_id] = {
-                'nama_produk': produk.nama_produk,
-                'kategori': produk.kategori,
-                'harga': produk.harga,
-                'rettings': produk.rettings,
-                'jumlah': 1,
-            }
-
+        # Simpan informasi keranjang belanja pengguna dalam session
+        request.session['cart_count'] = cart_count
         request.session.save()
-        jumlah_item = sum(item['jumlah'] for item in cart.values())
-        
-        return JsonResponse({'success': True, 'jumlah_item': jumlah_item})
 
-class ProdukCreateView(View):
+        return JsonResponse({'success': True, 'message': 'Item added to cart successfully', 'cart_count': cart_count})
+
+class CartItemCountView(View):
+    def get(self, request, *args, **kwargs):
+        user_cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_count = user_cart.items.count()
+
+        return JsonResponse({'cart_count': cart_count})
+
+class CartView(View):
+    template_name = 'checkout.html'
+
+    def get(self, request, *args, **kwargs):
+        user_cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_items = user_cart.cartitem_set.all()
+
+        return render(request, self.template_name, {'cart_items': cart_items})
+
+class CartSummaryView(View):
+    def get(self, request, *args, **kwargs):
+        user_cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_items = user_cart.cartitem_set.all()
+
+        total_items = sum(item.quantity for item in cart_items)
+        total_price = sum(item.produk.harga * item.quantity for item in cart_items)
+
+        return JsonResponse({'total_items': total_items, 'total_price': total_price})
+
+class UpdateQuantityView(View):
+    def post(self, request, *args, **kwargs):
+        produk_id = request.POST.get('produk_id')
+        amount = int(request.POST.get('amount'))
+
+        # Pastikan item ada di keranjang dan milik pengguna yang sedang login
+        cart_item = CartItem.objects.filter(cart__user=request.user, produk__id=produk_id).first()
+
+        if cart_item:
+            # Update jumlah item di keranjang
+            cart_item.quantity += amount
+
+            if cart_item.quantity < 1:
+                cart_item.quantity = 1
+
+            cart_item.save()
+
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
+
+class CheckoutView(View):
+    template_name = 'checkout.html'
+
+    def get(self, request, *args, **kwargs):
+        cart_items = CartItem.objects.filter(cart__user=request.user)
+        total_items = cart_items.count()
+
+        return render(request, self.template_name, {'cart_items': cart_items, 'total_items': total_items})
+
+class RemoveCartItemView(View):
+    def post(self, request, *args, **kwargs):
+        produk_id = request.POST.get('produk_id')
+
+        # Pastikan item ada di keranjang dan milik pengguna yang sedang login
+        cart_item = CartItem.objects.filter(cart__user=request.user, produk__id=produk_id).first()
+
+        if cart_item:
+            cart_item.delete()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
+
+# tambah produk ke katalog
+class ProdukCreateView(LoginRequiredMixin, View):
     template_name = 'index.html' 
 
     def post(self, request, *args, **kwargs):
@@ -148,7 +174,6 @@ class ProdukCreateView(View):
         except Exception as e:
             return JsonResponse({'success': False, 'errors': str(e)})
 
-
 class ProdukListView(ListView):
     model = Produk
     template_name = 'index.html'
@@ -171,26 +196,4 @@ class ProdukListView(ListView):
         if kategori_filter:
             queryset = queryset.filter(kategori=kategori_filter)
         return queryset
-    
-class CheckoutListView(ListView):
-    model = Produk
-    template_name = 'checkout.html'
-    context_object_name = 'produk'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Mendapatkan semua kategori yang unik
-        context['kategoris'] = Produk.objects.values('kategori').distinct()
-
-        # Menambahkan kategori_filter ke dalam konteks untuk tetap mempertahankan filter
-        context['kategori_filter'] = self.request.GET.get('kategori', '')
-
-        return context
-    
-    def get_queryset(self):
-        queryset = Produk.objects.all().order_by('-id')
-        kategori_filter = self.request.GET.get('kategori', '')
-        if kategori_filter:
-            queryset = queryset.filter(kategori=kategori_filter)
-        return queryset

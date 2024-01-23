@@ -14,7 +14,6 @@
 </head>
 <body>
     <!-- Modal -->
-
     <nav>
         <div class="logo">
             <a href="{% url 'index' %}" style="text-decoration: none; color: #6C9E03; display: flex; gap: 10px; align-items: center;">
@@ -25,64 +24,61 @@
         <!-- <button class="primary" onclick="window.dialog.showModal();">Product</button> -->
         <!-- <a href="">Product</a>-->
     </nav>
-
-    
-
+    <!-- conten -->
     <div class="container">
         <div class="content1">
             <div class="title">
                 <h3>Checkout</h3>
-                <p>17 Januari 2024</p>
+                <p>Hello 👋 {{user}}</p>
             </div>
             
         </div>
 
         <div class="content2">
             <!-- cart.html -->
-<div class="order">
-    {% if 'cart' in request.session %}
-        {% for produk_id, item in request.session.cart.items %}
-            <div class="cart">
-                <img src="{{ item.img_produk.url }}" alt="">
-                <div class="card">
-                    <table>
-                        <tr>
-                            <td>Nama Produk</td>
-                            <td>: {{ item.nama_produk }}</td>
-                        </tr>
-                        <tr>
-                            <td>Kategori</td>
-                            <td>: {{ item.kategori }}</td>
-                        </tr>
-                        <tr>
-                            <td>Harga</td>
-                            <td>: Rp. {{ item.harga }}</td>
-                        </tr>
-                        <tr>
-                            <td>Jumlah </td>
-                            <td> 
-                                <div class="qty">
-                                    <button class="btn-kurang" data-produk-id="{{ produk_id }}">-</button>
-                                    <p class="jumlah-item" data-produk-id="{{ produk_id }}">{{ item.jumlah }}</p>
-                                    <button class="btn-tambah" data-produk-id="{{ produk_id }}">+</button>
+            <div class="order">
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                        <div class="cart">
+                            <img src="{{ item.produk.img_produk.url }}" alt="">
+                            <div class="card">
+                                <table>
+                                    <tr>
+                                        <td>Nama Produk</td>
+                                        <td>: {{ item.produk.nama_produk }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kategori</td>
+                                        <td>: {{ item.produk.kategori }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Harga</td>
+                                        <td>: Rp. {{ item.produk.harga }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jumlah </td>
+                                        <td>
+                                            <div class="qty">
+                                                <button class="btn-kurang" data-produk-id="{{ item.produk.id }}">-</button>
+                                                <p class="jumlah-item" data-produk-id="{{ item.produk.id }}">{{ item.quantity }}</p>
+                                                <button class="btn-tambah" data-produk-id="{{ item.produk.id }}">+</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <ion-icon name="close-circle" class="close-btn" data-produk-id="{{ item.produk.id }}"></ion-icon>
+                                <div class="retings">
+                                    <ion-icon name="star"></ion-icon> 
+                                    {{ item.produk.rettings }}                            
                                 </div>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <ion-icon name="close-circle" id="close" data-produk-id="{{ produk_id }}"></ion-icon>
-                    <div class="retings">
-                        <!-- Tambahkan logika untuk menampilkan rating -->
-                       
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Keranjang belanja Anda kosong.</p>
+                {% endif %}
             </div>
-        {% endfor %}
-    {% else %}
-        <p>Keranjang belanja Anda kosong.</p>
-    {% endif %}
-</div>
-
 
 
             <!-- summary -->
@@ -120,120 +116,86 @@
                 <button>Pesan</button>
             </div>
         </div>
-    </div>
+    </div> 
+    <!-- script ionic icon -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    
+    <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var closeIcons = document.querySelectorAll("#close");
-            closeIcons.forEach(function (icon) {
-                icon.addEventListener("click", function () {
-                    var produkId = icon.getAttribute("data-produk-id");
-                    hapusItemDariCart(produkId);
-                });
+        // main.js
+        $(document).ready(function () {
+
+            // Handle klik tombol kurang
+            $(".btn-kurang").click(function () {
+                var produkId = $(this).data("produk-id");
+                updateQuantity(produkId, -1);
+            });
+
+            // Handle klik tombol tambah
+            $(".btn-tambah").click(function () {
+                var produkId = $(this).data("produk-id");
+                updateQuantity(produkId, 1);
+            });
+
+            // Handle klik tombol checkout
+            $("#checkout-btn").click(function () {
+                window.location.href = "{% url 'checkout' %}";
+            });
+
+           // Handle klik tombol close
+            $(".close-btn").click(function () {
+                var produkId = $(this).data("produk-id");
+                removeFromCart(produkId);
             });
         });
-    
-        function hapusItemDariCart(produkId) {
-            // Implementasikan AJAX atau formulir untuk mengirimkan permintaan penghapusan
+
+        function updateQuantity(produkId, amount) {
             $.ajax({
                 type: "POST",
-                url: "{% url 'hapus_dari_cart' %}",
+                url: "{% url 'update_quantity' %}",
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    produk_id: produkId,
+                    amount: amount
+                },
+                success: function (data) {
+                    if (data.success) {
+                        // Refresh halaman setelah pembaruan berhasil
+                        window.location.reload();
+                    } else {
+                        alert("Gagal memperbarui jumlah item: " + data.message);
+                    }
+                },
+                error: function () {
+                    alert("Terjadi kesalahan saat mengirim permintaan.");
+                }
+            });
+        }
+
+        function removeFromCart(produkId) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'remove_cart_item' %}",
                 data: {
                     csrfmiddlewaretoken: "{{ csrf_token }}",
                     produk_id: produkId
                 },
                 success: function (data) {
                     if (data.success) {
-                        // Refresh halaman atau perbarui bagian keranjang belanja
-                        // (Anda dapat menggunakan AJAX untuk memperbarui bagian ini tanpa mereload seluruh halaman)
+                        // Refresh halaman setelah penghapusan berhasil
                         window.location.reload();
                     } else {
-                        alert("Gagal menghapus produk dari keranjang.");
+                        alert("Gagal menghapus item dari keranjang: " + data.message);
                     }
                 },
                 error: function () {
-                    alert("Terjadi kesalahan saat mengirim data.");
+                    alert("Terjadi kesalahan saat mengirim permintaan.");
                 }
             });
         }
-    
     </script>
-<!-- cart.html -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var tambahButtons = document.querySelectorAll(".btn-tambah");
-        var kurangButtons = document.querySelectorAll(".btn-kurang");
-
-        tambahButtons.forEach(function (button) {
-            button.addEventListener("click", function () {
-                var produkId = button.getAttribute("data-produk-id");
-                updateJumlahItem(produkId, "tambah");
-            });
-        });
-
-        kurangButtons.forEach(function (button) {
-            button.addEventListener("click", function () {
-                var produkId = button.getAttribute("data-produk-id");
-                updateJumlahItem(produkId, "kurang");
-            });
-        });
-    });
-
-    function updateJumlahItem(produkId, tindakan) {
-        $.ajax({
-            type: "POST",
-            url: "{% url 'update_jumlah_item' %}",
-            data: {
-                csrfmiddlewaretoken: "{{ csrf_token }}",
-                produk_id: produkId,
-                tindakan: tindakan
-            },
-            success: function (data) {
-                if (data.success) {
-                    var jumlahItemElem = document.querySelector(".jumlah-item[data-produk-id='" + produkId + "']");
-                    jumlahItemElem.innerText = data.jumlah_item;
-
-                    updateSummary();
-                } else {
-                    alert("Gagal memperbarui jumlah item.");
-                }
-            },
-            error: function () {
-                alert("Terjadi kesalahan saat mengirim data.");
-            }
-        });
-    }
-
-    function updateSummary() {
-        $.ajax({
-            type: "GET",
-            url: "{% url 'summary' %}",
-            success: function (data) {
-                if (data.success) {
-                    // Perbarui nilai Total dan Jumlah Item pada summary
-                    document.getElementById("jumlah-items").innerText = data.jumlah_items + " Items";
-                    document.getElementById("total-harga").innerText ="Rp." + data.total_harga;
-
-                    // Tambahan: Perbarui elemen lain di summary jika diperlukan
-                    // document.getElementById("user").innerText = data.user;
-                    // document.getElementById("nomor-hp").innerText = data.nomor_hp;
-                    // document.getElementById("email").innerText = data.email;
-                    // document.getElementById("alamat").innerText = data.alamat;
-                } else {
-                    alert("Gagal memperbarui summary.");
-                }
-            },
-            error: function () {
-                alert("Terjadi kesalahan saat mengambil data summary.");
-            }
-        });
-    }
-</script>
-
-
+   
 </script>
 </body>
 </html>

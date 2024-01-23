@@ -16,22 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import ProdukCreateView, ProdukListView,CheckoutListView, TambahKeCartView, HapusDariCartView, UpdateJumlahItemView, SummaryView, SignUpView, SignInView, SignOutView, datauser
+from greenstore_app.views import ProdukCreateView, ProdukListView, SignUpView, SignInView, SignOutView, datauser , AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', datauser, name='datauser'),
-    path('checkout/', CheckoutListView.as_view(), name='checkout'),
+    # product
     path('', ProdukListView.as_view(), name='index'),
     path('produk/create/', ProdukCreateView.as_view(), name='create_produk'),
-    path('tambah-ke-cart/', TambahKeCartView.as_view(), name='tambah_ke_cart'),
-    path('hapus-dari-cart/', HapusDariCartView.as_view(), name='hapus_dari_cart'),
-    path('update-jumlah-item/', UpdateJumlahItemView.as_view(), name='update_jumlah_item'),
-     path('summary/', SummaryView.as_view(), name='summary'),
-    # path('checkout/', CheckoutView.as_view(), name='checkout'),
+    # cart
+    path('add_to_cart/<int:produk_id>/', AddToCartView.as_view(), name='add_to_cart'),
+    path('cart_item_count/', CartItemCountView.as_view(), name='cart_item_count'),
+    path('cart/', CartView.as_view(), name='cart'),
+    path('cart_summary/', CartSummaryView.as_view(), name='cart_summary'),
+    path('update_quantity/', UpdateQuantityView.as_view(), name='update_quantity'),
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
+    path('remove_cart_item/', RemoveCartItemView.as_view(), name='remove_cart_item'),
 
+    # auth
     path('signup/', SignUpView.as_view(), name='signup'),
     path('login/', SignInView.as_view(), name='signin'),
     path('signout/', SignOutView.as_view(), name='signout'),
