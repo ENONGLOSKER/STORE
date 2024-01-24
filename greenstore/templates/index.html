@@ -96,9 +96,9 @@
         .btncart button.primary {
             display: inline-block;
             font-size: 0.8rem;
-            color: #fff !important;
+            color: #fdfdfd;
             background: rgb(var(--vs-primary) / 100%);
-            padding: 10px 30px;
+            padding: 10px 35px;
             border-radius: 50px;
             transition: background-color 0.1s ease;
             box-sizing: border-box;
@@ -111,6 +111,7 @@
                 transform: translateY(-5px);
             }
         }
+        
         .btncart button.signin {
             display: inline-block;
             font-size: 0.8rem;
@@ -150,7 +151,7 @@
         .btncart #jlh{
             background-color: tomato;
             position: absolute;
-            left: 40px;
+            left: 45px;
             top: 0;
             color: white;
             padding: 2px 5px;
@@ -172,6 +173,7 @@
                 opacity: 1;
             }
         }
+
     </style>
     
 </head>
@@ -216,6 +218,19 @@
         <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
+    <dialog id="signupModal">
+        <h2>Registrasi</h2>
+        <form id="produk-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="text" name="nohp" placeholder="Nomor hp">
+            <input type="text" name="email" placeholder="Email">
+            <input type="text" name="alamat" placeholder="Alamat">
+            <button type="button" id="submit-btn">Submit</button>
+        </form>
+        <button onclick="window.signupModal.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
     <nav>
         <div class="logo">
             <img src="{% static 'img/logo.svg' %}" alt="">
@@ -230,8 +245,6 @@
             <button class="signup" onclick="window.dialogsignup.showModal();">Signup</button>
             <button class="primary" onclick="window.dialog.showModal();">Product</button>
         </div>
-        <!-- <a href="">Product</a>-->
-
     </nav>
 
     
@@ -278,6 +291,7 @@
             {% endfor %}
         </div>
     </div>
+
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="{% static 'js/jquery.js' %}"></script>
@@ -316,7 +330,6 @@
         });
     </script>
 
-    <!-- cart -->
     <script>
         $(document).ready(function () {
             $(".beli-btn").click(function (e) {

@@ -17,8 +17,10 @@
 
     <nav>
         <div class="logo">
-            <img src="{% static 'img/logo.svg' %}" alt="">
-            <h3>Green<span>Store</span></h3>
+            <a href="{% url 'index' %}" style="text-decoration: none; color: #6C9E03; display: flex; gap: 10px; align-items: center;">
+                <img src="{% static 'img/logo.svg' %}" alt="">
+                <h3>Green<span>Store</span></h3>
+             </a>
         </div>
         <!-- <button class="primary" onclick="window.dialog.showModal();">Product</button> -->
         <!-- <a href="">Product</a>-->
@@ -194,7 +196,6 @@
                     var jumlahItemElem = document.querySelector(".jumlah-item[data-produk-id='" + produkId + "']");
                     jumlahItemElem.innerText = data.jumlah_item;
 
-                    // Perbarui summary
                     updateSummary();
                 } else {
                     alert("Gagal memperbarui jumlah item.");
