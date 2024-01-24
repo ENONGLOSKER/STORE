@@ -50,7 +50,6 @@ class TambahKeCartView(View):
         produk_id = request.POST.get('produk_id')
         produk = get_object_or_404(Produk, id=produk_id)
 
-        # Simpan informasi produk ke sesi keranjang belanja
         if 'cart' not in request.session:
             request.session['cart'] = {}
 

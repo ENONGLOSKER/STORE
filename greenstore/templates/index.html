@@ -83,6 +83,16 @@
             }
         }
 
+        /* button */
+        .btncart{
+            width: 20%;
+            display: flex;
+            gap: 10px;
+            justify-content: space-around;
+            align-items: center;
+            position: relative;
+        }
+
         .btncart button.primary {
             display: inline-block;
             font-size: 0.8rem;
@@ -100,6 +110,28 @@
                 box-shadow: 0 20px 20px -10px rgb(var(--vs-primary) / 50%);
                 transform: translateY(-5px);
             }
+        }
+        .btncart button.signin {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #1e1e1e;
+            background-color: transparent;
+            border: none;
+        }
+        .btncart button.signin:hover{
+            color: var(--satu);
+            font-weight: bold
+        }
+        .btncart button.signup {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #1e1e1e;
+            background-color: transparent;
+            border: none;
+        }
+        .btncart button.signup:hover{
+            color: var(--satu);
+            font-weight: bold
         }
         .btncart #cartProduk{
             background-color: white;
@@ -126,15 +158,6 @@
             border-radius: 50px;
             z-index: 99;
             font-size: 12px;
-        }
-
-        .btncart{
-            width: 20%;
-            display: flex;
-            gap: 10px;
-            justify-content: space-around;
-            align-items: center;
-            position: relative;
         }
         nav a{
             text-decoration: none;
@@ -167,6 +190,31 @@
         </form>
         <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
     </dialog>
+    <!-- sigin in-->
+    <dialog id="dialogsignin">
+        <h2>Sign in</h2>
+        <form id="produk-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="text" name="password" placeholder="Password">
+            <button type="button" id="submit-btn">Submit</button>
+        </form>
+        <button onclick="window.dialogsignin.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+    <!-- sigin up-->
+    <dialog id="dialogsignup">
+        <h2>Sign up</h2>
+        <form id="produk-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="text" name="email" placeholder="email">
+            <input type="text" name="nomor" placeholder="nomor">
+            <input type="text" name="alamat" placeholder="alamat">
+            <input type="text" name="password" placeholder="Password">
+            <button type="button" id="submit-btn">Submit</button>
+        </form>
+        <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
+    </dialog>
 
     <nav>
         <div class="logo">
@@ -178,6 +226,8 @@
                 <p id="jlh">0</p>
                 <ion-icon name="cart" id="cartProduk"></ion-icon>
             </a>
+            <button class="signin" onclick="window.dialogsignin.showModal();">Sigin</button>
+            <button class="signup" onclick="window.dialogsignup.showModal();">Signup</button>
             <button class="primary" onclick="window.dialog.showModal();">Product</button>
         </div>
         <!-- <a href="">Product</a>-->
@@ -230,35 +280,9 @@
     </div>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script>
-        // Get the modal
-        var modal = document.getElementById('myModal');
-    
-        // Get the button that opens the modal
-        var btn = document.querySelector('nav a');
-    
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName('close')[0];
-    
-        // When the user clicks on the button, open the modal
-        btn.onclick = function () {
-            modal.style.display = 'block';
-        }
-    
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = 'none';
-        }
-    
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-    </script>
-    
     <script src="{% static 'js/jquery.js' %}"></script>
+    
+    <!-- add product -->
     <script>
        $(document).ready(function () {
             $("#submit-btn").click(function () {
@@ -279,7 +303,6 @@
                     success: function (data) {
                         if (data.success) {
                             alert(data.message);
-                            // Redirect ke halaman utama
                             window.location.href = "{% url 'index' %}";
                         } else {
                             alert("Gagal menyimpan data. Kesalahan: " + data.errors);
@@ -293,6 +316,7 @@
         });
     </script>
 
+    <!-- cart -->
     <script>
         $(document).ready(function () {
             $(".beli-btn").click(function (e) {
