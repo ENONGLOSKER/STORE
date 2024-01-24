@@ -57,18 +57,26 @@ class AddToCartView(View):
         user_cart, created = Cart.objects.get_or_create(user=request.user)
         produk = get_object_or_404(Produk, pk=produk_id)
 
-        cart_item, created = CartItem.objects.get_or_create(cart=user_cart, produk=produk)
-        if not created:
-            cart_item.quantity += 1
-            cart_item.save()
+        # Pemeriksaan stok
+        if produk.stok > 0:
+            cart_item, created = CartItem.objects.get_or_create(cart=user_cart, produk=produk)
+            if not created:
+                cart_item.quantity += 1
+                cart_item.save()
 
-        cart_count = user_cart.items.count()
+            # Kurangi stok
+            produk.stok -= 1
+            produk.save()
 
-        # Simpan informasi keranjang belanja pengguna dalam session
-        request.session['cart_count'] = cart_count
-        request.session.save()
+            cart_count = user_cart.items.count()
 
-        return JsonResponse({'success': True, 'message': 'Item added to cart successfully', 'cart_count': cart_count})
+            # Simpan informasi keranjang belanja pengguna dalam session
+            request.session['cart_count'] = cart_count
+            request.session.save()
+
+            return JsonResponse({'success': True, 'message': 'Item added to cart successfully', 'cart_count': cart_count})
+        else:
+            return JsonResponse({'success': False, 'message': 'Stok produk tidak mencukupi'})
 
 class CartItemCountView(View):
     def get(self, request, *args, **kwargs):
@@ -112,6 +120,11 @@ class UpdateQuantityView(View):
                 cart_item.quantity = 1
 
             cart_item.save()
+
+            # Perbarui stok produk
+            produk = get_object_or_404(Produk, id=produk_id)
+            produk.stok -= amount
+            produk.save()
 
             return JsonResponse({'success': True})
         else:

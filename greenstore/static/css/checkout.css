@@ -1,6 +1,6 @@
 :root {
 --satu: #FFC331;
---dua: #6C9E03;
+--dua: #ad0000;
 }
 *{
     margin: 0;
@@ -32,6 +32,10 @@ nav{
 span{
     color:var(--satu) ;
 }
+.logo a h3{
+    color: var(--dua);
+}
+
 
 
 /* produk list */

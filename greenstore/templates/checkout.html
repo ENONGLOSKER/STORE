@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Store</title>
+    <title>TOKO ELXTRO</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
     <!-- Favicons -->
@@ -18,11 +17,9 @@
         <div class="logo">
             <a href="{% url 'index' %}" style="text-decoration: none; color: #6C9E03; display: flex; gap: 10px; align-items: center;">
                 <img src="{% static 'img/logo.svg' %}" alt="">
-                <h3>Green<span>Store</span></h3>
+                <h3>TOKO ELXTRO</h3>
              </a>
         </div>
-        <!-- <button class="primary" onclick="window.dialog.showModal();">Product</button> -->
-        <!-- <a href="">Product</a>-->
     </nav>
     <!-- conten -->
     <div class="container">
@@ -56,6 +53,10 @@
                                         <td>: Rp. {{ item.produk.harga }}</td>
                                     </tr>
                                     <tr>
+                                        <td>Stok </td>
+                                        <td>: {{ item.produk.stok }} buah</td>
+                                    </tr>
+                                    <tr>
                                         <td>Jumlah </td>
                                         <td>
                                             <div class="qty">
@@ -67,6 +68,7 @@
                                     </tr>
                                 </table>
 
+                                
                                 <ion-icon name="close-circle" class="close-btn" data-produk-id="{{ item.produk.id }}"></ion-icon>
                                 <div class="retings">
                                     <ion-icon name="star"></ion-icon> 
@@ -127,16 +129,24 @@
         // main.js
         $(document).ready(function () {
 
-            // Handle klik tombol kurang
+           // Handle klik tombol kurang
             $(".btn-kurang").click(function () {
                 var produkId = $(this).data("produk-id");
-                updateQuantity(produkId, -1);
+                var quantityElement = $(".jumlah-item[data-produk-id='" + produkId + "']");
+                var currentQuantity = parseInt(quantityElement.text());
+
+                // Cek apakah jumlah item sudah 1
+                if (currentQuantity > 1) {
+                    updateQuantity(produkId, -1);
+                    updateStok(produkId, -1);  // Mengembalikan stok ketika tombol kurang ditekan
+                }
             });
 
             // Handle klik tombol tambah
             $(".btn-tambah").click(function () {
                 var produkId = $(this).data("produk-id");
                 updateQuantity(produkId, 1);
+                updateStok(produkId, 1);  // Mengurangi stok ketika tombol tambah ditekan
             });
 
             // Handle klik tombol checkout
@@ -144,13 +154,12 @@
                 window.location.href = "{% url 'checkout' %}";
             });
 
-           // Handle klik tombol close
+        // Handle klik tombol close
             $(".close-btn").click(function () {
                 var produkId = $(this).data("produk-id");
                 removeFromCart(produkId);
             });
 
-            
         });
 
         function updateQuantity(produkId, amount) {
@@ -198,43 +207,42 @@
             });
         }
     
-
     </script>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-$(document).ready(function () {
-    $.ajax({
-        type: "GET",
-        url: "{% url 'get_order_summary' %}",
-        success: function (data) {
-            $("#nama-user").text(data.order_summary.nama_user);
-            $("#nomor-hp").text(data.order_summary.nomor_hp);
-            $("#email").text(data.order_summary.email);
-            $("#alamat").text(data.order_summary.alamat);
-            $("#jumlah-items").text(data.order_summary.jumlah_items);
-            $("#total-harga").text(data.order_summary.total_harga);
-        },
-        error: function () {
-            alert("Terjadi kesalahan saat mengambil data order summary.");
-        }
-    });
 
-    $("#pesan-btn").click(function () {
-        $.ajax({
-            type: "GET",
-            url: "{% url 'send_order_whatsapp' %}",
-            success: function (data) {
-                // Buka tab baru dengan URL WhatsApp
-                window.open(data.whatsapp_url, '_blank');
-            },
-            error: function () {
-                alert("Terjadi kesalahan saat mengirim pesanan.");
-            }
+    
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'get_order_summary' %}",
+                success: function (data) {
+                    $("#nama-user").text(data.order_summary.nama_user);
+                    $("#nomor-hp").text(data.order_summary.nomor_hp);
+                    $("#email").text(data.order_summary.email);
+                    $("#alamat").text(data.order_summary.alamat);
+                    $("#jumlah-items").text(data.order_summary.jumlah_items);
+                    $("#total-harga").text(data.order_summary.total_harga);
+                },
+                error: function () {
+                    alert("Terjadi kesalahan saat mengambil data order summary.");
+                }
+            });
+
+            $("#pesan-btn").click(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'send_order_whatsapp' %}",
+                    success: function (data) {
+                        // Buka tab baru dengan URL WhatsApp
+                        window.open(data.whatsapp_url, '_blank');
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim pesanan.");
+                    }
+                });
+            });
         });
-    });
-});
-
-</script>
+    </script>
 </body>
 </html>

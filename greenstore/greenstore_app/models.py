@@ -11,6 +11,7 @@ class Produk(models.Model):
     rettings = models.FloatField()
     harga = models.IntegerField()
     kategori = models.CharField(default='Elektronik',max_length=50)
+    stok = models.IntegerField(default=0)
 
     def __str__(self) -> str:
         return self.nama_produk
