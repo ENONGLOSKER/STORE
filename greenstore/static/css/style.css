@@ -104,8 +104,17 @@ span{
 }
 .content2 .card .ket #reting{
     margin-bottom: 8px;
-    color: #ecab07;
-    font-size: 13px;
+    font-size: 12px;
+    display: flex;
+    gap: 6px;
+    color: var(--satu);
+}
+.content2 .card .ket #reting .stok{
+    color: #9d9d9d;
+}
+.content2 .card .ket .beli-btn{
+    text-decoration: none;
+    color: var(--dua);
 }
 .content2 .card .ket #beli{
     position: absolute;
@@ -117,7 +126,7 @@ span{
     cursor: pointer;
 }
 .content2 .card .ket #beli:hover{
-    background-color: var(--satu);
-    color: var(--dua);
-    box-shadow: 2px 2px 20px rgb(253, 194, 77);
+    background-color: var(--dua);
+    color: var(--satu);
+    box-shadow: 2px 2px 13px rgb(253, 194, 77);
 }

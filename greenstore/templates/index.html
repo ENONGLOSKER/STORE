@@ -67,6 +67,10 @@
                 height: 35px;
                 padding: 10px 15px;
             }
+            form textarea{
+                height: 80px;
+                padding: 10px 15px;
+            }
             form button{
                 margin-top: 20px;
                 height: 40px;
@@ -131,10 +135,16 @@
             color: #1e1e1e;
             background-color: transparent;
             border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            color: white;
+            background-color: var(--dua);
         }
         .btncart button.signup:hover{
-            color: var(--satu);
-            font-weight: bold
+            background-color: var(--satu);
+            color: var(--dua);
+            font-weight: bold;
+            box-shadow: 2px 2px 13px rgb(253, 194, 77);
         }
         .btncart #cartProduk{
             background-color: white;
@@ -153,7 +163,7 @@
         .btncart #jlh{
             background-color: tomato;
             position: absolute;
-            left: 30px;
+            left: 40px;
             top: 0;
             color: white;
             padding: 2px 5px;
@@ -215,7 +225,7 @@
             <input type="text" name="username" placeholder="Username">
             <input type="text" name="email" placeholder="Email">
             <input type="text" name="nomor" placeholder="Nomor">
-            <input type="text" name="alamat" placeholder="Alamat">
+            <textarea type="text" name="alamat" placeholder="Alamat Lengkap : Kab, Daerah, Kecamatan, Dusun - Desa "></textarea>
             <input type="password" name="password1" placeholder="Password">
             <input type="password" name="password2" placeholder="Confirm Password">
             <button type="button" data-dialog-id="dialogsignup" id="submit-signup-btn">Submit</button>
@@ -236,7 +246,7 @@
             <button class="signin" id="signout-btn">Sign out</button>
             <button class="signin" onclick="window.dialogsignin.showModal();">Sign in</button>
             <button class="signup" onclick="window.dialogsignup.showModal();">Sign up</button>
-            <button class="primary" onclick="window.dialog.showModal();">Product</button>
+            <!-- <button class="primary" onclick="window.dialog.showModal();">Product</button> -->
         </div>
     </nav>
     <!-- content -->
@@ -266,13 +276,15 @@
                     <img src="{{data.img_produk.url}}" alt="">
                     <div class="ket">
                         <h3>{{data.nama_produk}}</h3>
-                        <p id="reting">
-                            <ion-icon name="star"></ion-icon> 
-                            <ion-icon name="star"></ion-icon> 
-                            <ion-icon name="star"></ion-icon> 
+                        
+                        <div id="reting">
+                            <div class="stok">
+                                <p>Stok : {{data.stok}}</p>
+                            </div>
                             <ion-icon name="star"></ion-icon> 
                             {{data.rettings}}
-                        </p>
+                        </div>
+
                         <p>Rp. {{data.harga}}</p>
                         <a href="#" class="beli-btn" data-produk-id="{{data.id}}">
                             <ion-icon name="bag-check" id="beli"></ion-icon>
@@ -378,8 +390,13 @@
                         alert("Gagal: " + data.errors);
                     }
                 },
-                error: function () {
-                    alert("Terjadi kesalahan saat mengirim formulir.");
+                error: function (jqXHR) {
+                    // Tangkap respon kesalahan dan tampilkan pesan kesalahan yang lebih informatif
+                    var errorMessage = "Terjadi kesalahan saat mengirim formulir.";
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.errors) {
+                        errorMessage = "Gagal: " + jqXHR.responseJSON.errors;
+                    }
+                    alert(errorMessage);
                 }
             });
         }

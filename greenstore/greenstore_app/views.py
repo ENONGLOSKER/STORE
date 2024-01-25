@@ -15,6 +15,7 @@ from django.contrib.sessions.models import Session
 from django.views.generic import TemplateView
 import urllib.parse
 from urllib.parse import quote
+from django.db import transaction
 
 def datauser(request):
     data = CustomUser.objects.all()
@@ -139,18 +140,30 @@ class CheckoutView(View):
 
         return render(request, self.template_name, {'cart_items': cart_items, 'total_items': total_items})
 
+
 class RemoveCartItemView(View):
     def post(self, request, *args, **kwargs):
         produk_id = request.POST.get('produk_id')
 
-        # Pastikan item ada di keranjang dan milik pengguna yang sedang login
-        cart_item = CartItem.objects.filter(cart__user=request.user, produk__id=produk_id).first()
+        with transaction.atomic():
+            # Pastikan item ada di keranjang dan milik pengguna yang sedang login
+            cart_item = CartItem.objects.filter(cart__user=request.user, produk__id=produk_id).first()
 
-        if cart_item:
-            cart_item.delete()
-            return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
+            if cart_item:
+                # Simpan jumlah item sebelum dihapus
+                removed_quantity = cart_item.quantity
+
+                cart_item.delete()
+
+                # Kembalikan stok produk
+                produk = get_object_or_404(Produk, id=produk_id)
+                produk.stok += removed_quantity
+                produk.save()
+
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
+
 
 class OrderSummaryView(View):
     def get(self, request, *args, **kwargs):
@@ -172,16 +185,20 @@ class OrderSummaryView(View):
 
         # Format pesan untuk WhatsApp
         whatsapp_message = (
-            f"Hai admin...saya ingin pesan\n"
+            f"Hallo admin, Saya ingin melakukan pemesanan produk. Detail pesanannya:\n"
             f"Nama: {nama_user}\n"
             f"Alamat: {alamat}\n"
             f"Nomor: {nomor_hp}\n"
             f"Email: {email}\n"
+            "---------------------------------------------\n"
             f"Pesanan:\n{pesanan}\n"
-            "--------------------------------\n"
+            "---------------------------------------------\n"
             f"Jumlah Item: {jumlah_items}\n"
             f"Total Bayar: Rp. {total_harga}\n"
-            "--------------------------------"
+            "---------------------------------------------\n"
+            "Mohon konfirmasi mengenai informasi pembayaran.Terima kasih!\n\n\n"
+            
+            f"Salam Customor,\n {nama_user}"
         )
 
         # URL WhatsApp dengan parameter pesan
