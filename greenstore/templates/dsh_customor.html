@@ -28,6 +28,20 @@
         <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
     </dialog>
 
+    <!-- Modal Edit User -->
+    <dialog id="dialogEditUser">
+        <h2>Edit User</h2>
+        <form id="edit-user-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="edit_username" placeholder="Username" value="{{ custom_user.username }}">
+            <input type="text" name="edit_email" placeholder="Email" value="{{ custom_user.email }}">
+            <input type="text" name="edit_nomor" placeholder="Nomor" value="{{ custom_user.nomor }}">
+            <textarea type="text" name="edit_alamat" placeholder="Alamat Lengkap : Kab, Daerah, Kecamatan, Dusun - Desa ">{{ custom_user.alamat }}</textarea>
+            <input type="password" name="edit_password" placeholder="Password (biarkan kosong jika tidak diubah)">
+            <button type="button" data-dialog-id="dialogEditUser" id="submit-edit-user-btn">Submit</button>
+        </form>
+        <button onclick="window.dialogEditUser.close();" aria-label="close" class="x">❌</button>
+    </dialog>
 
     <!-- =============== Navigation ================ -->
     <div class="container">
@@ -146,7 +160,9 @@
                             {% for custom_user in custom_users %}
                                 <tr>
                                     <td style="text-align: center;">{{ forloop.counter }}</td>
-                                    <td style="text-align: left;"><a href="">{{ custom_user.username }}</a></td>
+                                    <td style="text-align: left;">
+                                        <a href="#" class="edit-user-btn" data-user-id="{{ custom_user.id }}">{{ custom_user.username }}</a>
+                                    </td>
                                     <td>{{ custom_user.email }}</td>
                                     <td>{{ custom_user.alamat }}</td>
                                     <td>{{ custom_user.nomor }}</td>
@@ -154,7 +170,7 @@
                                         <span class="status delivered">{{ custom_user.last_login|date:'d/m/Y/' }}</span>
                                     </td>
                                     <td>
-                                        <a href="" style="background-color: rgb(252, 30, 30); padding:5px; border-radius: 4px; color: white;">
+                                        <a href="#" class="delete-user-btn" data-user-id="{{ custom_user.id }}" style="background-color: rgb(252, 30, 30); padding:5px; border-radius: 4px; color: white;">
                                             <ion-icon name="close-circle-outline" style="transform: translateY(2.5px);"></ion-icon>
                                         </a>
                                     </td>
@@ -177,8 +193,41 @@
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
 
-    <!-- tambah user -->
+
     <script>
+        //  hapus user
+        $(document).ready(function () {
+            $(".delete-user-btn").click(function () {
+                var userId = $(this).data("user-id");
+                var confirmation = confirm("Apakah Anda yakin ingin menghapus user ini?");
+                if (confirmation) {
+                    deleteUser(userId);
+                }
+            });
+
+            function deleteUser(userId) {
+                $.ajax({
+                    type: "POST",
+                    url: `/delete_user/${userId}/`,
+                    data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    success: function (data) {
+                        if (data.success) {
+                            // Refresh halaman setelah penghapusan berhasil
+                            window.location.reload();
+                        } else {
+                            alert("Gagal menghapus user.");
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim permintaan.");
+                    }
+                });
+            }
+        });
+
+
+
+        // tambah user
         document.addEventListener("DOMContentLoaded", function () {
             var signupButton = document.getElementById("submit-signup-btn");
 
@@ -214,6 +263,78 @@
             });
         }
     </script>
+
+    <!-- customor.html -->
+    <script>        
+        $(document).ready(function () {
+            // Declare userId in the outer scope
+            var userId;
+
+            // Fungsi untuk mendapatkan data pengguna dan mengisi formulir modal
+            function getUserDataAndFillForm(id) {
+                // Lakukan permintaan Ajax ke endpoint get_user_data
+                $.ajax({
+                    type: "GET",
+                    url: `/get_user_data/${id}/`,
+                    success: function (data) {
+                        // Isi formulir modal dengan data yang diterima
+                        $('#edit-user-form [name="edit_username"]').val(data.username);
+                        $('#edit-user-form [name="edit_email"]').val(data.email);
+                        $('#edit-user-form [name="edit_nomor"]').val(data.nomor);
+                        $('#edit-user-form [name="edit_alamat"]').val(data.alamat);
+                        // (Tambahkan pengisian formulir lainnya sesuai kebutuhan Anda)
+
+                        // Buka dialogEditUser setelah formulir diisi
+                        window.dialogEditUser.showModal();
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengambil data pengguna.");
+                    }
+                });
+            }
+
+            // Panggil fungsi getUserDataAndFillForm saat tautan "Edit User" diklik
+            $('.edit-user-btn').click(function (e) {
+                e.preventDefault();
+                // Set nilai userId dari atribut data-user-id
+                userId = $(this).data('user-id');
+                getUserDataAndFillForm(userId);
+            });
+
+            // Fungsi untuk menutup dialogEditUser
+            $('#submit-edit-user-btn').click(function () {
+                // Ambil data dari formulir modal
+                var formData = $('#edit-user-form').serialize();
+
+                // Lakukan permintaan Ajax untuk menyimpan data pengguna yang diperbarui
+                $.ajax({
+                    type: "POST",
+                    url: `/edit_user/${userId}/`,  // Ganti URL dengan endpoint yang sesuai di server Anda
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Data pengguna berhasil diperbarui.");
+                            window.dialogEditUser.close();
+                            location.reload(); 
+                        } else {
+                            alert("Gagal menyimpan perubahan pengguna.");
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim data pengguna yang diperbarui.");
+                    }
+                });
+            });
+
+            // Fungsi untuk menutup dialogEditUser
+            $('#submit-edit-user-btn').click(function () {
+                window.dialogEditUser.close();
+            });
+        });
+
+    </script>
+
+
 </body>
 
 </html>

@@ -16,7 +16,8 @@ from django.views.generic import TemplateView
 import urllib.parse
 from urllib.parse import quote
 from django.db import transaction
-
+from django.views.generic.edit import DeleteView
+from django.urls import reverse_lazy
 
 def pesanan(request):
     return render(request, 'dsh_pesanan.html')
@@ -35,6 +36,46 @@ def datauser(request):
     }
     return render(request, 'dashboard.html',context)
 
+class GetUserDataView(View):
+    def get(self, request, *args, **kwargs):
+        user_id = self.kwargs['user_id']
+        user = get_object_or_404(CustomUser, id=user_id)
+        data = {
+            'username': user.username,
+            'email': user.email,
+            'nomor': user.nomor,
+            'alamat': user.alamat,
+            # (Tambahkan data lainnya sesuai kebutuhan Anda)
+        }
+        return JsonResponse(data)
+
+class CustomUserEditView(View):
+    def post(self, request, *args, **kwargs):
+        user_id = kwargs.get('user_id')
+        user = get_object_or_404(CustomUser, id=user_id)
+
+        user.username = request.POST.get('edit_username')
+        user.email = request.POST.get('edit_email')
+        user.nomor = request.POST.get('edit_nomor')
+        user.alamat = request.POST.get('edit_alamat')
+
+        # Ubah password hanya jika diisi
+        new_password = request.POST.get('edit_password')
+        if new_password:
+            user.set_password(new_password)
+
+        user.save()
+
+        return JsonResponse({'success': True})
+
+
+class CustomUserDeleteView(View):
+    def post(self, request, *args, **kwargs):
+        user_id = kwargs.get('user_id')
+        user = get_object_or_404(CustomUser, id=user_id)
+        user.delete()
+        return JsonResponse({'success': True})
+    
 class CustomUserListView(ListView):
     model = CustomUser
     template_name = 'dsh_customor.html'
