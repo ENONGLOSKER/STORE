@@ -16,17 +16,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import ProdukCreateView, ProdukListView, SignUpView, SignInView, SignOutView, datauser , AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView
+from greenstore_app.views import ProdukCreateView, ProdukListView, SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView,CustomUserListView, datauser,kategori,barang, pesanan
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/', datauser, name='datauser'),
-    # product
-    path('', ProdukListView.as_view(), name='index'),
-    path('produk/create/', ProdukCreateView.as_view(), name='create_produk'),
-    # cart
+    path('dashboard/', datauser, name='dashboard'),
+    path('kategori/', kategori, name='kategori'),
+    path('barang/', barang, name='barang'),
+    path('pesanan/', pesanan, name='pesanan'),
+
+    # untuk tmpilan admin
+    path('customor/', CustomUserListView.as_view(), name='customor'),
+
+
+    # untuk authentikasi user
+    path('signup/', SignUpView.as_view(), name='signup'),
+    path('login/', SignInView.as_view(), name='signin'),
+    path('signout/', SignOutView.as_view(), name='signout'),
+
+    # untuk tampilan user 
     path('add_to_cart/<int:produk_id>/', AddToCartView.as_view(), name='add_to_cart'),
     path('cart_item_count/', CartItemCountView.as_view(), name='cart_item_count'),
     path('cart/', CartView.as_view(), name='cart'),
@@ -38,10 +48,9 @@ urlpatterns = [
     path('get_order_summary/', OrderSummaryView.as_view(), name='get_order_summary'),
     path('send_order_whatsapp/', OrderSummaryView.as_view(), name='send_order_whatsapp'),
 
-    # auth
-    path('signup/', SignUpView.as_view(), name='signup'),
-    path('login/', SignInView.as_view(), name='signin'),
-    path('signout/', SignOutView.as_view(), name='signout'),
+    # product
+    path('', ProdukListView.as_view(), name='index'),
+    path('produk/create/', ProdukCreateView.as_view(), name='create_produk'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

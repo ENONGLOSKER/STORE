@@ -84,6 +84,7 @@ span{
     gap: 10px;
     flex-direction: column;
     width: 60%;
+    margin-bottom: 50px;
 }
 .content2 .order .cart{
     background-color: rgb(255, 255, 255);
@@ -162,6 +163,7 @@ span{
     font-weight: 400;
     height: 30px;
 }
+
 .content2 .summray button{
     height: 40px;
     font-size: 16px;

@@ -17,13 +17,31 @@ import urllib.parse
 from urllib.parse import quote
 from django.db import transaction
 
+
+def pesanan(request):
+    return render(request, 'dsh_pesanan.html')
+
+def barang(request):
+    return render(request, 'dsh_barang.html')
+
+def kategori(request):
+    return render(request, 'dsh_kategori.html')
+
+
 def datauser(request):
     data = CustomUser.objects.all()
     context = {
         'data':data
     }
-    return render(request, 'user.html',context)
+    return render(request, 'dashboard.html',context)
 
+class CustomUserListView(ListView):
+    model = CustomUser
+    template_name = 'dsh_customor.html'
+    context_object_name = 'custom_users'
+
+
+# AUTH
 class SignOutView(View):
 
     def post(self, request, *args, **kwargs):
@@ -51,7 +69,7 @@ class SignUpView(View):
             return JsonResponse({'success': True, 'message': 'Register berhasil'})
         return JsonResponse({'success': False, 'errors': form.errors})
 
-#tambah produk ke cart
+#USER PAGE CART AND SUMMARY ORDER
 class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         produk_id = self.kwargs['produk_id']
@@ -164,7 +182,6 @@ class RemoveCartItemView(View):
             else:
                 return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
 
-
 class OrderSummaryView(View):
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -212,6 +229,9 @@ class OrderSummaryView(View):
             'jumlah_items': jumlah_items,
             'total_harga': total_harga,
         }})
+
+
+
 
 # tambah produk ke katalog
 class ProdukCreateView(LoginRequiredMixin, View):

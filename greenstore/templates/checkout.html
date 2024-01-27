@@ -4,12 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOKO ELXTRO</title>
+    <title>TOKO KAIN</title>    
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
     <!-- Favicons -->
     <link href="{%static 'img/logo.svg'%}" rel="icon">
+    <style>
+        .content2 .order{
+            margin-bottom: 50px;
+        }
+        .content2 .summray table tr td span{
+            color: rgb(11, 11, 11);
+        }
+
+    </style>
 </head>
 <body>
     <!-- Modal -->
@@ -17,7 +27,7 @@
         <div class="logo">
             <a href="{% url 'index' %}" style="text-decoration: none; color: #6C9E03; display: flex; gap: 10px; align-items: center;">
                 <img src="{% static 'img/logo.svg' %}" alt="">
-                <h3>TOKO ELXTRO</h3>
+                <h3>TOKO KAIN</h3>
              </a>
         </div>
     </nav>
@@ -71,8 +81,32 @@
                                 
                                 <ion-icon name="close-circle" class="close-btn" data-produk-id="{{ item.produk.id }}"></ion-icon>
                                 <div class="retings">
-                                    <ion-icon name="star"></ion-icon> 
-                                    {{ item.produk.rettings }}                            
+                                    {% if item.produk.rettings  == 1.00 %}
+                                        <ion-icon name="star"></ion-icon>
+                                        {{ item.produk.rettings }} 
+                                    {% elif item.produk.rettings  == 2.00  %}  
+                                        <ion-icon name="star"></ion-icon> 
+                                        <ion-icon name="star"></ion-icon> 
+                                        {{ item.produk.rettings }}                          
+                                    {% elif item.produk.rettings  == 3.00  %}  
+                                        <ion-icon name="star"></ion-icon> 
+                                        <ion-icon name="star"></ion-icon> 
+                                        <ion-icon name="star"></ion-icon> 
+                                        {{ item.produk.rettings }}                          
+                                    {% elif item.produk.rettings  == 4.00  %}  
+                                        <ion-icon name="star"></ion-icon>
+                                        <ion-icon name="star"></ion-icon> 
+                                        <ion-icon name="star"></ion-icon>
+                                        <ion-icon name="star"></ion-icon> 
+                                        {{ item.produk.rettings }}                          
+                                    {% else %}
+                                        <ion-icon name="star"></ion-icon> 
+                                        <ion-icon name="star"></ion-icon> 
+                                        <ion-icon name="star"></ion-icon> 
+                                        <ion-icon name="star"></ion-icon> 
+                                        <ion-icon name="star"></ion-icon> 
+                                        {{ item.produk.rettings }}                          
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

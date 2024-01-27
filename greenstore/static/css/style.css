@@ -1,6 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
 :root {
     --satu: #FFC331;
     --dua: #ad0000;
+    --vs-primary: 29 92 255;
 }
 *{
     margin: 0;
@@ -12,6 +15,178 @@
 body{
     background-color: #F2F2F2;
 }
+
+/* modals */
+
+/*Dialog Styles*/
+dialog {
+    margin: 50px auto;
+    padding: 1rem 3rem;
+    background: white;
+    max-width: 600px;
+    padding-top: 2rem;
+    border-radius: 20px;
+    border: 0;
+    box-shadow: 0 5px 30px 0 rgb(0 0 0 / 10%);
+    animation: fadeIn 1s ease both;
+    &::backdrop {
+        animation: fadeIn 1s ease both;
+        background: rgb(255 255 255 / 40%);
+        z-index: 2;
+        backdrop-filter: blur(20px);
+    }
+    .x {
+        filter: grayscale(1);
+        border: none;
+        background: none;
+        position: absolute;
+        top: 15px;
+        right: 10px;
+        transition: ease filter, transform 0.3s;
+        cursor: pointer;
+        transform-origin: center;
+        &:hover {
+            filter: grayscale(0);
+            transform: scale(1.1);
+        }
+    }
+    h2 {
+        font-weight: 600;
+        font-size: 2rem;
+        padding-bottom: 1rem;
+    }
+    form{
+        /* background-color: red; */
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 300px;
+        margin-bottom: 10px;
+    }
+    form input{
+        height: 35px;
+        padding: 10px 15px;
+    }
+    form textarea{
+        height: 80px;
+        padding: 10px 15px;
+    }
+    form button{
+        margin-top: 20px;
+        height: 40px;
+        padding: 10px;
+        border-radius: 50px;
+        border: none;
+        color: #fff !important;
+        cursor: pointer;
+        background: rgb(var(--vs-primary) / 100%);
+        box-shadow: 0 10px 20px -10px rgb(var(--vs-primary) / 50%);
+    }
+    form #cartProduk{
+        background-color:red ;
+    }
+}
+
+/* button */
+.btncart{
+    width: 35%;
+    display: flex;
+    gap: 10px;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+}
+
+.btncart button.primary {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #fdfdfd;
+    background: rgb(var(--vs-primary) / 100%);
+    padding: 10px 25px;
+    border-radius: 50px;
+    transition: background-color 0.1s ease;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+    border: 0;
+    cursor: pointer;
+    box-shadow: 0 10px 20px -10px rgb(var(--vs-primary) / 50%);
+    &:hover {
+        box-shadow: 0 20px 20px -10px rgb(var(--vs-primary) / 50%);
+        transform: translateY(-5px);
+    }
+}
+
+.btncart button.signin {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #1e1e1e;
+    background-color: transparent;
+    border: none;
+}
+.btncart button.signin:hover{
+    color: var(--satu);
+    font-weight: bold
+}
+
+/* sign up */
+.btncart button.signup {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #1e1e1e;
+    background-color: transparent;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 50px;
+    color: white;
+    background-color: var(--dua);
+}
+.btncart button.signup:hover{
+    background-color: var(--satu);
+    color: var(--dua);
+    font-weight: bold;
+    box-shadow: 2px 2px 13px rgb(253, 194, 77);
+}
+.btncart #cartProduk{
+    background-color: white;
+    padding: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50px;
+    font-size:5px;
+    cursor: pointer;
+    background-color: rgb(241, 241, 241);
+    
+}
+.btncart #cartProduk:hover{
+    background-color: var(--satu);
+}
+.btncart #jlh{
+    background-color: tomato;
+    position: absolute;
+    left: 40px;
+    top: 0;
+    color: white;
+    padding: 2px 5px;
+    text-align: center;
+    border-radius: 50px;
+    z-index: 99;
+    font-size: 12px;
+}
+nav a{
+    text-decoration: none;
+    color: rgb(87, 87, 87);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 
 /* nabar */
 nav{
@@ -82,6 +257,7 @@ span{
     gap: 5px;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-bottom: 50px;
 }
 .container .content2 .card{
     background-color: rgb(255, 255, 255);

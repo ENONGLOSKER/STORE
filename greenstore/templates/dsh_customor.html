@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Admin Dashboard </title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+
+<body>
+    <!-- signup.html -->
+    <dialog id="dialogsignup">
+        <h2>Tambah User</h2>
+        <form id="signup-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="text" name="email" placeholder="Email">
+            <input type="text" name="nomor" placeholder="Nomor">
+            <textarea type="text" name="alamat" placeholder="Alamat Lengkap : Kab, Daerah, Kecamatan, Dusun - Desa "></textarea>
+            <input type="password" name="password1" placeholder="Password">
+            <input type="password" name="password2" placeholder="Confirm Password">
+            <button type="button" data-dialog-id="dialogsignup" id="submit-signup-btn">Submit</button>
+        </form>
+        <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="{% url 'index' %}">
+                        <span class="icon">
+                            <img src="{% static 'img/logo.svg' %}" alt="Toko Kain" style="width: 30px;">
+                        </span>
+                        <span class="title" style="font-weight: bold;">Toko Kain</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard' %}">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'customor' %}">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Customers</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'kategori' %}">
+                        <span class="icon">
+                            <ion-icon name="storefront-outline"></ion-icon>
+                        </span>
+                        <span class="title">Kategori</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'barang' %}">
+                        <span class="icon">
+                            <ion-icon name="cube-outline"></ion-icon>
+                        </span>
+                        <span class="title">Produk</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'pesanan' %}">
+                        <span class="icon">
+                            <ion-icon name="cart-outline"></ion-icon>
+                        </span>
+                        <span class="title">Pesanan</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+
+                <div class="search">
+                    <label>
+                        <input type="text" placeholder="Search here">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </label>
+                </div>
+
+                <div class="" style="display: flex; gap: 10px; align-items: center;">
+                    <h4 style="text-transform: capitalize;"> <span style="font-weight: 200;">hi..👋 welcome back! </span> {{user}}</h4>
+                    <div class="user">
+                        <img src="{% static 'img/customer01.jpg' %}" alt="user">
+                     </div>
+                </div>
+            </div>
+
+            <!-- ================ Order Details List ================= -->
+            <div class="details">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>Data  Customor</h2>
+                        <a href="#" class="btnsignup" onclick="window.dialogsignup.showModal();" style="padding: 6px 12px; background-color: #680000; text-decoration: none;color: white; border-radius: 4px;">Tambah</a>
+                    </div>
+
+                    <!-- customor.html -->
+                    <table>
+                        <thead>
+                            <tr style="text-align: center;">
+                                <td style="width: 100px;">No</td>
+                                <td>Username</td>
+                                <td>Email</td>
+                                <td style="width: 250px;">Alamat</td>
+                                <td>Nomor</td>
+                                <td>Last login</td>
+                                <td>Hapus</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for custom_user in custom_users %}
+                                <tr>
+                                    <td style="text-align: center;">{{ forloop.counter }}</td>
+                                    <td style="text-align: left;"><a href="">{{ custom_user.username }}</a></td>
+                                    <td>{{ custom_user.email }}</td>
+                                    <td>{{ custom_user.alamat }}</td>
+                                    <td>{{ custom_user.nomor }}</td>
+                                    <td style="text-align: center;">
+                                        <span class="status delivered">{{ custom_user.last_login|date:'d/m/Y/' }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="" style="background-color: rgb(252, 30, 30); padding:5px; border-radius: 4px; color: white;">
+                                            <ion-icon name="close-circle-outline" style="transform: translateY(2.5px);"></ion-icon>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========== Scripts =========  -->
+    <script src="{% static 'js/dashboard.js' %}"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <!-- jquery -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <!-- tambah user -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var signupButton = document.getElementById("submit-signup-btn");
+
+            signupButton.addEventListener("click", function () {
+                submitForm('signup-form');
+            });
+        });
+
+        function submitForm(formId) {
+            var form = document.getElementById(formId);
+            var dialogId = form.getAttribute("data-dialog-id");
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'signup' %}",
+                data: $(form).serialize(),
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        window.location.href = "{% url 'customor' %}";
+                    } else {
+                        alert("Gagal: " + data.errors);
+                    }
+                },
+                error: function (jqXHR) {
+                    // Tangkap respon kesalahan dan tampilkan pesan kesalahan yang lebih informatif
+                    var errorMessage = "Terjadi kesalahan saat mengirim formulir.";
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.errors) {
+                        errorMessage = "Gagal: " + jqXHR.responseJSON.errors;
+                    }
+                    alert(errorMessage);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
