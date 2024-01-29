@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Produk,CustomUser,Cart, CartItem
+from .models import Produk,CustomUser,Cart, CartItem, Kategori
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import ListView
@@ -22,18 +22,35 @@ from django.urls import reverse_lazy
 def pesanan(request):
     return render(request, 'dsh_pesanan.html')
 
+def get_kategori_list(request):
+    kategori_list = Kategori.objects.values_list('id', 'kategori')
+    return JsonResponse({'kategori_list': list(kategori_list)})
 
-def kategori(request):
-    return render(request, 'dsh_kategori.html')
+class ProdukAddView(View):
+    def post(self, request, *args, **kwargs):
+        img_produk = request.FILES.get('img_produk')
+        nama_produk = request.POST.get('nama_produk')
+        rettings = request.POST.get('rettings')
+        harga = request.POST.get('harga')
+        stok = request.POST.get('stok')
+        kategori_id = request.POST.get('kategori')
 
+        try:
+            kategori = Kategori.objects.get(id=kategori_id)
+        except Kategori.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Kategori tidak valid.'})
 
-def datauser(request):
-    data = CustomUser.objects.all()
-    context = {
-        'data':data
-    }
-    return render(request, 'dashboard.html',context)
-# produk
+        Produk.objects.create(
+            img_produk=img_produk,
+            nama_produk=nama_produk,
+            rettings=rettings,
+            harga=harga,
+            kategori=kategori,
+            stok=stok
+        )
+
+        return JsonResponse({'success': True})
+    
 class BarangListView(ListView):
     model = Produk
     template_name = 'dsh_barang.html'  # Ganti 'nama_template_anda.html' dengan nama template yang sesuai
@@ -44,6 +61,13 @@ class BarangListView(ListView):
         context = super().get_context_data(**kwargs)
         # Tambahkan konteks tambahan jika diperlukan
         return context
+    
+class DeleteProdukView(View):
+    def post(self, request, *args, **kwargs):
+        product_id = request.POST.get('product_id')
+        product = get_object_or_404(Produk, id=product_id)
+        product.delete()
+        return JsonResponse({'success': True})
 
 # customor
 class GetUserDataView(View):
@@ -281,45 +305,7 @@ class OrderSummaryView(View):
 
 
 
-
-# tambah produk ke katalog
-class ProdukCreateView(LoginRequiredMixin, View):
-    template_name = 'index.html' 
-
-    def post(self, request, *args, **kwargs):
-        img_produk = request.FILES.get('img_produk')
-        nama_produk = request.POST.get('nama_produk')
-        rettings = request.POST.get('rettings')
-        harga = request.POST.get('harga')
-        kategori = request.POST.get('kategori')
-
-        # Validasi manual
-        if not nama_produk or not rettings or not harga or not img_produk:
-            return JsonResponse({'success': False, 'errors': 'Semua kolom harus diisi'})
-
-        try:
-            # Handle the image data
-            img_data = img_produk.read()
-            img_data = base64.b64encode(img_data).decode('utf-8')
-
-            Produk.objects.create(
-                img_produk=InMemoryUploadedFile(
-                    ContentFile(base64.b64decode(img_data)),
-                    None,  # field_name
-                    img_produk.name,
-                    'image/jpeg',  # content_type
-                    len(img_data),
-                    None  # charset
-                ),
-                nama_produk=nama_produk,
-                rettings=rettings,
-                harga=harga,
-                kategori=kategori
-            )
-            return JsonResponse({'success': True, 'message': 'Data berhasil disimpan'})
-        except Exception as e:
-            return JsonResponse({'success': False, 'errors': str(e)})
-
+# user 
 class ProdukListView(ListView):
     model = Produk
     template_name = 'index.html'
@@ -343,3 +329,18 @@ class ProdukListView(ListView):
             queryset = queryset.filter(kategori=kategori_filter)
         return queryset
 
+def kategori(request):
+    data = Kategori.objects.all()
+
+    context = {
+        'kategoris': data,
+    }
+    return render(request, 'dsh_kategori.html',context)
+
+
+def datauser(request):
+    data = CustomUser.objects.all()
+    context = {
+        'data':data
+    }
+    return render(request, 'dashboard.html',context)

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import ProdukCreateView, ProdukListView, SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser,kategori, pesanan, BarangListView
+from greenstore_app.views import ProdukListView, SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser,kategori, pesanan, BarangListView,DeleteProdukView, get_kategori_list, ProdukAddView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -27,9 +27,15 @@ urlpatterns = [
     # path('barang/', barang, name='barang'),
     path('pesanan/', pesanan, name='pesanan'),
 
+
     # untuk tmpilan admin
+    # kategori
+    path('kategori-list/', get_kategori_list, name='kategori_list'),
+    path('produk/add/', ProdukAddView.as_view(), name='produk_add'),
     # produk
     path('produk-list/', BarangListView.as_view(), name='barang'),
+    path('delete-produk/<int:product_id>/', DeleteProdukView.as_view(), name='delete_produk'),
+    
 
     # custumor
     path('customor/', CustomUserListView.as_view(), name='customor'),
@@ -56,7 +62,7 @@ urlpatterns = [
 
     # product
     path('', ProdukListView.as_view(), name='index'),
-    path('produk/create/', ProdukCreateView.as_view(), name='create_produk'),
+    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

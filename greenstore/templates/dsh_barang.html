@@ -12,6 +12,7 @@
 </head>
 
 <body>
+
     <!-- =============== Navigation ================ -->
     <div class="container">
         <div class="navigation">
@@ -99,60 +100,13 @@
                     <img src="{% static 'img/customer01.jpg' %}" alt="user">
                 </div>
             </div>
-
-            <!-- ======================= Cards ================== -->
-            <div class="cardBox">
-                <div class="card">
-                    <div>
-                        <div class="numbers">1,504</div>
-                        <div class="cardName">Daily Views</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="eye-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">80</div>
-                        <div class="cardName">Sales</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="cart-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">284</div>
-                        <div class="cardName">Comments</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="chatbubbles-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">$7,842</div>
-                        <div class="cardName">Earning</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="cash-outline"></ion-icon>
-                    </div>
-                </div>
-            </div>
-
             <!-- ================ Order Details List ================= -->
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
                         <h2>Data Produk</h2>
-                        <a href="#" class="btn">Tambah</a>
+                        <a href="#" class="btn" onclick="window.dialog.showModal();">Tambah</a>
+                        <!-- <button class="primary" onclick="window.dialog.showModal();">Product</button> -->
                     </div>
 
                     <table>
@@ -171,114 +125,60 @@
 
                         <tbody>
                             {% for produk in produk_list %}
-                <tr>
-                    <td style="text-align: center;">{{ forloop.counter }}</td>
-                    <td style="width: 80px; height: 80px; padding: 3px;">
-                        <img src="{{ produk.img_produk.url }}" alt="{{ produk.nama_produk }}" style="width: 80px; height: 80px; border: 1px solid rgb(214, 214, 214); border-radius: 4px;">
-                    </td>
-                    <td style="text-align: left;">
-                        <a href="#" class="edit-user-btn" data-user-id="">{{ produk.nama_produk }}</a>
-                    </td>
-                    <td>Rp. {{ produk.harga }}</td>
-                    <td>{{ produk.kategori }}</td>
-                    <td>
-                        <ion-icon name="star" style="color:rgb(255, 191, 0);"></ion-icon> {{ produk.rettings }}
-                    </td>
-                    <td style="text-align: center;">{{ produk.stok }} buah</td>
-                    <td>
-                        <a href="#" class="delete-user-btn" data-user-id="{{ produk.id }}" style="background-color: rgb(252, 30, 30); padding:5px; border-radius: 4px; color: white;">
-                            <ion-icon name="close-circle-outline" style="transform: translateY(2.5px);"></ion-icon>
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}                
+                                <tr>
+                                    <td style="text-align: center;">{{ forloop.counter }}</td>
+                                    <td style="width: 80px; height: 80px; padding: 3px;">
+                                        <img src="{{ produk.img_produk.url }}" alt="{{ produk.nama_produk }}" style="width: 80px; height: 80px; border: 1px solid rgb(214, 214, 214); border-radius: 4px;">
+                                    </td>
+                                    <td>
+                                        <a href="#" class="edit-produk-btn" data-produk-id="{{ produk.id }}">{{ produk.nama_produk }}</a>
+                                    </td>              
+                                    <td>Rp. {{ produk.harga }}</td>
+                                    <td>{{ produk.kategori }}</td>
+                                    <td>
+                                        <ion-icon name="star" style="color:rgb(255, 191, 0);"></ion-icon> {{ produk.rettings }}
+                                    </td>
+                                    <td style="text-align: center;">{{ produk.stok }} buah</td>
+                                    <td>
+                                        <a href="#" class="delete-user-btn" data-user-id="{{ produk.id }}" style="background-color: rgb(252, 30, 30); padding:5px; border-radius: 4px; color: white;">
+                                            <ion-icon name="close-circle-outline" style="transform: translateY(2.5px);"></ion-icon>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}                
                         </tbody>
                     </table>
                 </div>
 
-                <!-- ================= New Customers ================ -->
-                <div class="recentCustomers">
-                    <div class="cardHeader">
-                        <h2>Recent Customers</h2>
-                    </div>
-
-                    <table>
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>Amit <br> <span>India</span></h4>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                {% for dat in kategoris %}
+                <p>{{dat.kategori}}</p>
+                {% endfor %}
+         
             </div>
         </div>
     </div>
+
+    <!-- modals -->
+    <dialog id="dialog">
+        <h2>Produk</h2>
+        <form id="produk-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="img_produk" placeholder="Gambar Produk">
+            <input type="text" name="nama_produk" placeholder="Nama Produk">
+            <input type="text" name="rettings" placeholder="rettings">
+            <input type="text" name="harga" placeholder="Harga">
+            <input type="text" name="stok" placeholder="Stok">
+            <!-- Tambahkan id="kategori-select" pada elemen <select> -->
+            <select id="kategori-select" name="kategori" style="padding: 10px 15px;">
+                <option value="">Pilih Kategori</option>
+            </select>
+
+            <button type="button" id="submit-btn"> Submit</button>
+        </form>
+        <button onclick="closeDialog();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+
 
     <!-- =========== Scripts =========  -->
     <script src="{% static 'js/dashboard.js' %}"></script>
@@ -286,6 +186,131 @@
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <!-- get kategori -->
+    <script>
+        $(document).ready(function () {
+            // Ambil data kategori saat halaman dimuat
+            getKategoriList();
+
+            // Fungsi untuk mendapatkan data kategori
+            function getKategoriList() {
+                $.ajax({
+                    type: "GET",
+                    url: "/kategori-list/",  // Sesuaikan dengan URL yang sesuai di aplikasi Django Anda
+                    success: function (data) {
+                        if (data.kategori_list) {
+                            // Isi opsi kategori pada elemen <select>
+                            var kategoriSelect = $('#kategori-select');
+                            kategoriSelect.empty();
+                            kategoriSelect.append('<option value="">Pilih Kategori</option>');
+
+                            data.kategori_list.forEach(function (kategori) {
+                                kategoriSelect.append(`<option value="${kategori[0]}">${kategori[1]}</option>`);
+                            });
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengambil data kategori.");
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- add produk -->
+    <script>
+        $(document).ready(function () {
+            // Ambil data kategori saat halaman dimuat
+            getKategoriList();
+
+            // Fungsi untuk mendapatkan data kategori
+            function getKategoriList() {
+                $.ajax({
+                    type: "GET",
+                    url: "/get-kategori-list/",
+                    success: function (data) {
+                        if (data.kategori_list) {
+                            var kategoriSelect = $('#kategori-select');
+                            kategoriSelect.empty();
+                            kategoriSelect.append('<option value="">Pilih Kategori</option>');
+
+                            data.kategori_list.forEach(function (kategori) {
+                                kategoriSelect.append(`<option value="${kategori[0]}">${kategori[1]}</option>`);
+                            });
+                        }
+                    },
+                    error: function () {
+                       
+                    }
+                });
+            }
+
+            // Handle klik tombol submit
+            $('#submit-btn').click(function () {
+                var formData = new FormData($('#produk-form')[0]);
+
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'produk_add' %}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            alert("Produk berhasil ditambahkan.");
+                            window.location.href = "{% url 'barang' %}";
+                        } else {
+                            alert("Gagal menambahkan produk: " + data.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim permintaan.");
+                    }
+                });
+            });
+        });
+    </script>
+
+
+     <!-- hapus produk -->
+     <script>
+        $(document).ready(function () {
+            // Handle klik tombol delete
+            $(".delete-user-btn").click(function (e) {
+                e.preventDefault();
+                var productId = $(this).data('user-id');
+                
+                // Konfirmasi pengguna sebelum menghapus
+                if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+                    // Lakukan permintaan Ajax untuk menghapus produk
+                    $.ajax({
+                        type: "POST",
+                        url: `/delete-produk/${productId}/`,  // Ganti dengan URL yang sesuai di aplikasi Django Anda
+                        data: {
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                            product_id: productId
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                // Hapus baris produk dari tabel setelah berhasil dihapus
+                                $(`.delete-user-btn[data-user-id='${productId}']`).closest('tr').remove();
+                                alert("Produk berhasil dihapus.");
+                            } else {
+                                alert("Gagal menghapus produk: " + data.message);
+                            }
+                        },
+                        error: function () {
+                            alert("Terjadi kesalahan saat mengirim permintaan.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+
 </body>
 
 </html>

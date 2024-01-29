@@ -226,40 +226,6 @@
         }
     </script>
 
-    <!-- add product -->
-    <script>
-       $(document).ready(function () {
-            $("#submit-btn").click(function () {
-                var formData = new FormData();
-                formData.append('csrfmiddlewaretoken', "{{ csrf_token }}");
-                formData.append('img_produk', $('input[name="img_produk"]')[0].files[0]);
-                formData.append('nama_produk', $("input[name='nama_produk']").val());
-                formData.append('rettings', $("input[name='rettings']").val());
-                formData.append('harga', $("input[name='harga']").val());
-                formData.append('kategori', $("input[name='kategori']").val());
-
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'create_produk' %}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if (data.success) {
-                            alert(data.message);
-                            window.location.href = "{% url 'index' %}";
-                        } else {
-                            alert("Gagal menyimpan data. Kesalahan: " + data.errors);
-                        }
-                    },
-                    error: function () {
-                        alert("Terjadi kesalahan saat mengirim formulir.");
-                    }
-                });
-            });
-        });
-    </script>
-
     <!-- cart -->
     <script>
         $(document).ready(function () {
