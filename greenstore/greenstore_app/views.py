@@ -22,8 +22,6 @@ from django.urls import reverse_lazy
 def pesanan(request):
     return render(request, 'dsh_pesanan.html')
 
-def barang(request):
-    return render(request, 'dsh_barang.html')
 
 def kategori(request):
     return render(request, 'dsh_kategori.html')
@@ -35,7 +33,19 @@ def datauser(request):
         'data':data
     }
     return render(request, 'dashboard.html',context)
+# produk
+class BarangListView(ListView):
+    model = Produk
+    template_name = 'dsh_barang.html'  # Ganti 'nama_template_anda.html' dengan nama template yang sesuai
+    context_object_name = 'produk_list'
+    ordering = ['nama_produk']  # Sesuaikan dengan field yang ingin Anda gunakan sebagai urutan
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Tambahkan konteks tambahan jika diperlukan
+        return context
+
+# customor
 class GetUserDataView(View):
     def get(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
@@ -45,7 +55,6 @@ class GetUserDataView(View):
             'email': user.email,
             'nomor': user.nomor,
             'alamat': user.alamat,
-            # (Tambahkan data lainnya sesuai kebutuhan Anda)
         }
         return JsonResponse(data)
 
@@ -67,7 +76,6 @@ class CustomUserEditView(View):
         user.save()
 
         return JsonResponse({'success': True})
-
 
 class CustomUserDeleteView(View):
     def post(self, request, *args, **kwargs):

@@ -151,76 +151,47 @@
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Recent Orders</h2>
-                        <a href="#" class="btn">View All</a>
+                        <h2>Data Produk</h2>
+                        <a href="#" class="btn">Tambah</a>
                     </div>
 
                     <table>
                         <thead>
-                            <tr>
-                                <td>Name</td>
-                                <td>Price</td>
-                                <td>Payment</td>
-                                <td>Status</td>
+                            <tr style="text-align: center;">
+                                <td>No</td>
+                                <td>Gambar</td>
+                                <td>Nama</td>
+                                <td>Harga</td>
+                                <td>Kategori</td>
+                                <td>Retings</td>
+                                <td>Stok</td>
+                                <td>Hapus</td>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status delivered">Delivered</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>Dell Laptop</td>
-                                <td>$110</td>
-                                <td>Due</td>
-                                <td><span class="status pending">Pending</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>Apple Watch</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status return">Return</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>Addidas Shoes</td>
-                                <td>$620</td>
-                                <td>Due</td>
-                                <td><span class="status inProgress">In Progress</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>Star Refrigerator</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status delivered">Delivered</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>Dell Laptop</td>
-                                <td>$110</td>
-                                <td>Due</td>
-                                <td><span class="status pending">Pending</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>Apple Watch</td>
-                                <td>$1200</td>
-                                <td>Paid</td>
-                                <td><span class="status return">Return</span></td>
-                            </tr>
-
-                            <tr>
-                                <td>Addidas Shoes</td>
-                                <td>$620</td>
-                                <td>Due</td>
-                                <td><span class="status inProgress">In Progress</span></td>
-                            </tr>
+                            {% for produk in produk_list %}
+                <tr>
+                    <td style="text-align: center;">{{ forloop.counter }}</td>
+                    <td style="width: 80px; height: 80px; padding: 3px;">
+                        <img src="{{ produk.img_produk.url }}" alt="{{ produk.nama_produk }}" style="width: 80px; height: 80px; border: 1px solid rgb(214, 214, 214); border-radius: 4px;">
+                    </td>
+                    <td style="text-align: left;">
+                        <a href="#" class="edit-user-btn" data-user-id="">{{ produk.nama_produk }}</a>
+                    </td>
+                    <td>Rp. {{ produk.harga }}</td>
+                    <td>{{ produk.kategori }}</td>
+                    <td>
+                        <ion-icon name="star" style="color:rgb(255, 191, 0);"></ion-icon> {{ produk.rettings }}
+                    </td>
+                    <td style="text-align: center;">{{ produk.stok }} buah</td>
+                    <td>
+                        <a href="#" class="delete-user-btn" data-user-id="{{ produk.id }}" style="background-color: rgb(252, 30, 30); padding:5px; border-radius: 4px; color: white;">
+                            <ion-icon name="close-circle-outline" style="transform: translateY(2.5px);"></ion-icon>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}                
                         </tbody>
                     </table>
                 </div>

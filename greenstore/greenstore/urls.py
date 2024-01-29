@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import ProdukCreateView, ProdukListView, SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser,kategori,barang, pesanan
+from greenstore_app.views import ProdukCreateView, ProdukListView, SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser,kategori, pesanan, BarangListView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -24,10 +24,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', datauser, name='dashboard'),
     path('kategori/', kategori, name='kategori'),
-    path('barang/', barang, name='barang'),
+    # path('barang/', barang, name='barang'),
     path('pesanan/', pesanan, name='pesanan'),
 
     # untuk tmpilan admin
+    # produk
+    path('produk-list/', BarangListView.as_view(), name='barang'),
+
+    # custumor
     path('customor/', CustomUserListView.as_view(), name='customor'),
     path('delete_user/<int:user_id>/', CustomUserDeleteView.as_view(), name='delete_user'),
     path('edit_user/<int:user_id>/', CustomUserEditView.as_view(), name='edit_user'),
