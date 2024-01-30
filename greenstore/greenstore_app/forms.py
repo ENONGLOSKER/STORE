@@ -1,6 +1,12 @@
 # forms.py
 from django import forms
-from .models import CustomUser
+from .models import CustomUser,Produk
+
+class EditProdukForm(forms.ModelForm):
+    class Meta:
+        model = Produk
+        fields = ['img_produk', 'nama_produk', 'rettings', 'harga', 'kategori']
+
 
 class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)

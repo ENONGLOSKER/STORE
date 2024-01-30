@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Produk,CustomUser,Cart, CartItem, Kategori
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.base import ContentFile
@@ -26,6 +26,11 @@ def get_kategori_list(request):
     kategori_list = Kategori.objects.values_list('id', 'kategori')
     return JsonResponse({'kategori_list': list(kategori_list)})
 
+class KategoriListView(View):
+    def get(self, request, *args, **kwargs):
+        kategori_list = Kategori.objects.values('id', 'kategori')
+        return JsonResponse({'kategori_list': list(kategori_list)})
+    
 class ProdukAddView(View):
     def post(self, request, *args, **kwargs):
         img_produk = request.FILES.get('img_produk')
@@ -68,6 +73,45 @@ class DeleteProdukView(View):
         product = get_object_or_404(Produk, id=product_id)
         product.delete()
         return JsonResponse({'success': True})
+
+class EditProdukView(View):
+    template_name = 'dsh_barang.html'  # Sesuaikan dengan template yang Anda gunakan
+
+    def get(self, request, produk_id):
+        # Ambil data produk dari database
+        produk = get_object_or_404(Produk, id=produk_id)
+        # Buat formulir dengan data produk
+        form = EditProdukForm(instance=produk)
+        # Render template dengan formulir
+        return render(request, self.template_name, {'form': form, 'produk': produk})
+
+    def post(self, request, produk_id):
+        # Ambil data produk dari database
+        produk = get_object_or_404(Produk, id=produk_id)
+        # Buat formulir dengan data POST dan data produk
+        form = EditProdukForm(request.POST, request.FILES, instance=produk)
+        if form.is_valid():
+            # Simpan perubahan jika formulir valid
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            # Kirim pesan kesalahan jika formulir tidak valid
+            return JsonResponse({'success': False, 'errors': form.errors})
+
+class GetProdukDataView(View):
+    def get(self, request, produk_id, *args, **kwargs):
+        produk = get_object_or_404(Produk, id=produk_id)
+        data = {
+            'img_produk': produk.img_produk.url,
+            'nama_produk': produk.nama_produk,
+            'rettings': produk.rettings,
+            'harga': produk.harga,
+            'kategori': produk.kategori.id,  # Jika kategori adalah ForeignKey
+            # Tambahkan atribut lain jika perlu
+        }
+        return JsonResponse(data)
+
+
 
 # customor
 class GetUserDataView(View):

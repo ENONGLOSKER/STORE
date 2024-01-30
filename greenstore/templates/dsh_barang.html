@@ -132,7 +132,9 @@
                                     </td>
                                     <td>
                                         <a href="#" class="edit-produk-btn" data-produk-id="{{ produk.id }}">{{ produk.nama_produk }}</a>
-                                    </td>              
+                                    </td>
+                                    
+                                                 
                                     <td>Rp. {{ produk.harga }}</td>
                                     <td>{{ produk.kategori }}</td>
                                     <td>
@@ -175,10 +177,27 @@
 
             <button type="button" id="submit-btn"> Submit</button>
         </form>
-        <button onclick="closeDialog();" aria-label="close" class="x">❌</button>
+        <button onclick="window.dialog.close()" aria-label="close" class="x">❌</button>
     </dialog>
 
+    <!-- modals edit -->
+    <dialog id="edit-produk-dialog">
+        <h2>Edit Produk</h2>
+        <form id="edit-produk-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="img_produk" placeholder="Gambar Produk">
+            <input type="text" name="nama_produk" placeholder="Nama Produk" value="{{ produk.nama_produk }}">
+            <input type="text" name="rettings" placeholder="Rettings" value="{{ produk.rettings }}">
+            <input type="text" name="harga" placeholder="Harga" value="{{ produk.harga }}">
+            <select id="kategori-select" name="kategori" style="padding: 10px 15px;">
+                <option value="">Pilih Kategori</option>
+            </select>
+            <button type="button" id="submit-edit-produk-btn">Submit</button>
+        </form>
+        <button onclick="closeEditProdukDialog();" aria-label="close" class="x">❌</button>
+    </dialog>
 
+    
 
     <!-- =========== Scripts =========  -->
     <script src="{% static 'js/dashboard.js' %}"></script>
@@ -229,7 +248,7 @@
             function getKategoriList() {
                 $.ajax({
                     type: "GET",
-                    url: "/get-kategori-list/",
+                    url: "/kategori-list/",
                     success: function (data) {
                         if (data.kategori_list) {
                             var kategoriSelect = $('#kategori-select');
@@ -273,7 +292,6 @@
         });
     </script>
 
-
      <!-- hapus produk -->
      <script>
         $(document).ready(function () {
@@ -309,6 +327,79 @@
             });
         });
     </script>
+
+    <!-- edit produk -->
+    <script>
+        // Fungsi untuk menutup dialog edit produk
+        function closeEditProdukDialog() {
+            document.getElementById('edit-produk-dialog').close();
+        }
+    
+        // Fungsi untuk mendapatkan data produk dan mengisi formulir modal
+        function getProdukDataAndFillForm(produkId) {
+            $.ajax({
+                type: 'GET',
+                url: `/get_produk_data/${produkId}/`,
+                success: function (data) {
+                    $('#edit-produk-form [name="nama_produk"]').val(data.nama_produk);
+                    $('#edit-produk-form [name="rettings"]').val(data.rettings);
+                    $('#edit-produk-form [name="harga"]').val(data.harga);
+                    $('#edit-produk-form [name="kategori"]').val(data.kategori);
+                    // (Tambahkan pengisian formulir lainnya sesuai kebutuhan Anda)
+    
+                    // Buka dialog setelah formulir diisi
+                    document.getElementById('edit-produk-dialog').showModal();
+                },
+                error: function () {
+                    alert('Terjadi kesalahan saat mengambil data produk.');
+                }
+            });
+        }
+    
+        // Panggil fungsi getProdukDataAndFillForm saat tautan "Edit Produk" diklik
+        $('.edit-produk-btn').click(function (e) {
+            e.preventDefault();
+            var produkId = $(this).data('produk-id');
+            getProdukDataAndFillForm(produkId);
+        });
+    
+        // Fungsi untuk menutup dialog setelah submit
+        $('#submit-edit-produk-btn').click(function () {
+            closeEditProdukDialog();
+        });
+    </script>
+    
+    <script>
+        // Ambil data kategori dari server dan isi dropdown
+        $(document).ready(function () {
+            // 1. Ambil data kategori
+            $.ajax({
+                type: "GET",
+                url: "/get-kategori-list/",
+                success: function (data) {
+                    var kategoriSelect = $("#kategori-select");
+                    kategoriSelect.empty();
+                    kategoriSelect.append('<option value="">Pilih Kategori</option>');
+    
+                    // 2. Isi dropdown dengan data kategori
+                    data.kategori_list.forEach(function (kategori) {
+                        kategoriSelect.append('<option value="' + kategori.id + '">' + kategori.kategori + '</option>');
+                    });
+    
+                    // 3. Ambil kategori produk yang sedang di-edit dan set sebagai selected
+                    var produkKategoriId = "{{ produk.kategori.id }}";
+                    kategoriSelect.val(produkKategoriId);
+                },
+                error: function () {
+                    alert("Terjadi kesalahan saat mengambil data kategori.");
+                }
+            });
+        });
+    </script>
+
+
+
+
 
 
 </body>
