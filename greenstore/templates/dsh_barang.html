@@ -18,7 +18,7 @@
         <div class="navigation">
             <ul>
                 <li>
-                    <a href="{% url 'index' %}">
+                    <a href="">
                         <span class="icon">
                             <img src="{% static 'img/logo.svg' %}" alt="Toko Kain" style="width: 30px;">
                         </span>
@@ -116,7 +116,6 @@
                                 <td>Gambar</td>
                                 <td>Nama</td>
                                 <td>Harga</td>
-                                <td>Kategori</td>
                                 <td>Retings</td>
                                 <td>Stok</td>
                                 <td>Hapus</td>
@@ -131,12 +130,13 @@
                                         <img src="{{ produk.img_produk.url }}" alt="{{ produk.nama_produk }}" style="width: 80px; height: 80px; border: 1px solid rgb(214, 214, 214); border-radius: 4px;">
                                     </td>
                                     <td>
-                                        <a href="#" class="edit-produk-btn" data-produk-id="{{ produk.id }}">{{ produk.nama_produk }}</a>
+                                        <a href="#" class="edit-produk-btn" data-produk-id="{{ produk.id }}">
+                                            {{ produk.nama_produk }}
+                                        </a>
                                     </td>
                                     
                                                  
                                     <td>Rp. {{ produk.harga }}</td>
-                                    <td>{{ produk.kategori }}</td>
                                     <td>
                                         <ion-icon name="star" style="color:rgb(255, 191, 0);"></ion-icon> {{ produk.rettings }}
                                     </td>
@@ -170,33 +170,26 @@
             <input type="text" name="rettings" placeholder="rettings">
             <input type="text" name="harga" placeholder="Harga">
             <input type="text" name="stok" placeholder="Stok">
-            <!-- Tambahkan id="kategori-select" pada elemen <select> -->
-            <select id="kategori-select" name="kategori" style="padding: 10px 15px;">
-                <option value="">Pilih Kategori</option>
-            </select>
-
             <button type="button" id="submit-btn"> Submit</button>
         </form>
         <button onclick="window.dialog.close()" aria-label="close" class="x">❌</button>
     </dialog>
 
     <!-- modals edit -->
-    <dialog id="edit-produk-dialog">
+    <dialog id="dialogedit">
         <h2>Edit Produk</h2>
-        <form id="edit-produk-form" enctype="multipart/form-data">
+        <form id="produk-form" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="file" name="img_produk" placeholder="Gambar Produk">
-            <input type="text" name="nama_produk" placeholder="Nama Produk" value="{{ produk.nama_produk }}">
-            <input type="text" name="rettings" placeholder="Rettings" value="{{ produk.rettings }}">
-            <input type="text" name="harga" placeholder="Harga" value="{{ produk.harga }}">
-            <select id="kategori-select" name="kategori" style="padding: 10px 15px;">
-                <option value="">Pilih Kategori</option>
-            </select>
-            <button type="button" id="submit-edit-produk-btn">Submit</button>
+            <input type="text" name="nama_produk" placeholder="Nama Produk">
+            <input type="text" name="rettings" placeholder="Rettings">
+            <input type="text" name="harga" placeholder="Harga">
+            <input type="text" name="stok" placeholder="Stok">
+            <button type="button" id="submit-btnedit">Submit</button>
         </form>
-        <button onclick="closeEditProdukDialog();" aria-label="close" class="x">❌</button>
+        <button onclick="window.dialogedit.close()" aria-label="close" class="x">❌</button>
     </dialog>
-
+    
     
 
     <!-- =========== Scripts =========  -->
@@ -208,7 +201,7 @@
     <script src="{% static 'js/jquery.js' %}"></script>
 
     <!-- get kategori -->
-    <script>
+    <!-- <script>
         $(document).ready(function () {
             // Ambil data kategori saat halaman dimuat
             getKategoriList();
@@ -236,52 +229,28 @@
                 });
             }
         });
-    </script>
+    </script> -->
 
     <!-- add produk -->
     <script>
         $(document).ready(function () {
-            // Ambil data kategori saat halaman dimuat
-            getKategoriList();
-
-            // Fungsi untuk mendapatkan data kategori
-            function getKategoriList() {
-                $.ajax({
-                    type: "GET",
-                    url: "/kategori-list/",
-                    success: function (data) {
-                        if (data.kategori_list) {
-                            var kategoriSelect = $('#kategori-select');
-                            kategoriSelect.empty();
-                            kategoriSelect.append('<option value="">Pilih Kategori</option>');
-
-                            data.kategori_list.forEach(function (kategori) {
-                                kategoriSelect.append(`<option value="${kategori[0]}">${kategori[1]}</option>`);
-                            });
-                        }
-                    },
-                    error: function () {
-                       
-                    }
-                });
-            }
-
-            // Handle klik tombol submit
+            // Handle klik tombol Submit
             $('#submit-btn').click(function () {
+                // Menggunakan FormData untuk mengirim data formulir termasuk file
                 var formData = new FormData($('#produk-form')[0]);
-
+    
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'produk_add' %}",
+                    url: "/tambah-produk/",  // Sesuaikan dengan URL yang sesuai di aplikasi Django Anda
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function (data) {
                         if (data.success) {
                             alert("Produk berhasil ditambahkan.");
-                            window.location.href = "{% url 'barang' %}";
+                            window.location.reload();  // Refresh halaman setelah penambahan produk berhasil
                         } else {
-                            alert("Gagal menambahkan produk: " + data.message);
+                            alert("Gagal menambahkan produk.");
                         }
                     },
                     error: function () {
@@ -291,9 +260,9 @@
             });
         });
     </script>
-
+    
      <!-- hapus produk -->
-     <script>
+    <script>
         $(document).ready(function () {
             // Handle klik tombol delete
             $(".delete-user-btn").click(function (e) {
@@ -328,79 +297,68 @@
         });
     </script>
 
-    <!-- edit produk -->
+    <!-- edit -->
     <script>
-        // Fungsi untuk menutup dialog edit produk
-        function closeEditProdukDialog() {
-            document.getElementById('edit-produk-dialog').close();
-        }
-    
-        // Fungsi untuk mendapatkan data produk dan mengisi formulir modal
-        function getProdukDataAndFillForm(produkId) {
-            $.ajax({
-                type: 'GET',
-                url: `/get_produk_data/${produkId}/`,
-                success: function (data) {
-                    $('#edit-produk-form [name="nama_produk"]').val(data.nama_produk);
-                    $('#edit-produk-form [name="rettings"]').val(data.rettings);
-                    $('#edit-produk-form [name="harga"]').val(data.harga);
-                    $('#edit-produk-form [name="kategori"]').val(data.kategori);
-                    // (Tambahkan pengisian formulir lainnya sesuai kebutuhan Anda)
-    
-                    // Buka dialog setelah formulir diisi
-                    document.getElementById('edit-produk-dialog').showModal();
-                },
-                error: function () {
-                    alert('Terjadi kesalahan saat mengambil data produk.');
-                }
-            });
-        }
-    
-        // Panggil fungsi getProdukDataAndFillForm saat tautan "Edit Produk" diklik
-        $('.edit-produk-btn').click(function (e) {
-            e.preventDefault();
-            var produkId = $(this).data('produk-id');
-            getProdukDataAndFillForm(produkId);
-        });
-    
-        // Fungsi untuk menutup dialog setelah submit
-        $('#submit-edit-produk-btn').click(function () {
-            closeEditProdukDialog();
-        });
-    </script>
-    
-    <script>
-        // Ambil data kategori dari server dan isi dropdown
         $(document).ready(function () {
-            // 1. Ambil data kategori
-            $.ajax({
-                type: "GET",
-                url: "/get-kategori-list/",
-                success: function (data) {
-                    var kategoriSelect = $("#kategori-select");
-                    kategoriSelect.empty();
-                    kategoriSelect.append('<option value="">Pilih Kategori</option>');
+            var produkId;
     
-                    // 2. Isi dropdown dengan data kategori
-                    data.kategori_list.forEach(function (kategori) {
-                        kategoriSelect.append('<option value="' + kategori.id + '">' + kategori.kategori + '</option>');
-                    });
-    
-                    // 3. Ambil kategori produk yang sedang di-edit dan set sebagai selected
-                    var produkKategoriId = "{{ produk.kategori.id }}";
-                    kategoriSelect.val(produkKategoriId);
-                },
-                error: function () {
-                    alert("Terjadi kesalahan saat mengambil data kategori.");
-                }
+            // Handle klik tombol Edit Produk
+            $('.edit-produk-btn').click(function (e) {
+                e.preventDefault();
+                produkId = $(this).data('produk-id');
+                getProdukDataAndFillForm(produkId);
+                window.dialogedit.showModal();
             });
+    
+            // Handle klik tombol Submit Edit
+            $('#submit-btnedit').click(function () {
+                var formData = new FormData($('#produk-form')[0]);
+    
+                $.ajax({
+                    type: "POST",
+                    url: `/edit-produk/${produkId}/`,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            alert("Produk berhasil diperbarui.");
+                            window.location.reload();
+                        } else {
+                            alert("Gagal mengedit produk.");
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim permintaan.");
+                    }
+                });
+            });
+    
+            // Fungsi untuk mengisi formulir modal dengan data produk yang diedit
+            function getProdukDataAndFillForm(produkId) {
+                $.ajax({
+                    type: "GET",
+                    url: `/edit-produk/${produkId}/`,
+                    success: function (data) {
+                        $('#produk-form [name="img_produk"]').val("");  // Atur nilai kosong untuk input file (jika perlu)
+                        $('#produk-form [name="nama_produk"]').val(data.nama_produk);
+                        $('#produk-form [name="rettings"]').val(data.rettings);
+                        $('#produk-form [name="harga"]').val(data.harga);
+                        $('#produk-form [name="stok"]').val(data.stok);
+    
+                        // Tampilkan gambar yang sedang diedit
+                        var imgElement = $('#produk-form [name="img_produk"]').siblings('img');
+                        imgElement.attr('src', data.img_produk);
+    
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengambil data produk.");
+                    }
+                });
+            }
         });
     </script>
-
-
-
-
-
+    
 
 </body>
 

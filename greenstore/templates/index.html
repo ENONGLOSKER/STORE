@@ -80,14 +80,12 @@
                 <h3>Store</h3>
                 <p>Hello 👋 {{user}}</p>
             </div>
+            <!-- index.html -->
             <form method="GET" action="{% url 'index' %}">
-                <select name="kategori" id="kategori-filter">
-                    <option value="">Filter by category</option>
-                    {% for kategori in kategoris %}
-                        <option value="{{ kategori.kategori }}" {% if kategori_filter == kategori.kategori %}selected{% endif %}>
-                            {{ kategori.kategori }}
-                        </option>
-                    {% endfor %}             
+                <select name="filter_type" id="filter-type">
+                    <option value="">Filter by harga</option>
+                    <option value="termurah" {% if filter_type == 'termurah' %}selected{% endif %}>Harga Termurah</option>
+                    <option value="termahal" {% if filter_type == 'termahal' %}selected{% endif %}>Harga Termahal</option>
                 </select>
                 <button type="submit">Filter</button>
             </form>
@@ -108,7 +106,7 @@
                             <ion-icon name="star"></ion-icon> 
                             {{data.rettings}}
                         </div>
-
+        
                         <p>Rp. {{data.harga}}</p>
                         <a href="#" class="beli-btn" data-produk-id="{{data.id}}">
                             <ion-icon name="bag-check" id="beli"></ion-icon>

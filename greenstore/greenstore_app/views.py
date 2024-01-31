@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Produk,CustomUser,Cart, CartItem, Kategori
+from .models import Produk,CustomUser,Cart, CartItem
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import ListView, DetailView
@@ -22,37 +22,35 @@ from django.urls import reverse_lazy
 def pesanan(request):
     return render(request, 'dsh_pesanan.html')
 
-def get_kategori_list(request):
-    kategori_list = Kategori.objects.values_list('id', 'kategori')
-    return JsonResponse({'kategori_list': list(kategori_list)})
+# def get_kategori_list(request):
+#     kategori_list = Kategori.objects.values_list('id', 'kategori')
+#     return JsonResponse({'kategori_list': list(kategori_list)})
 
-class KategoriListView(View):
-    def get(self, request, *args, **kwargs):
-        kategori_list = Kategori.objects.values('id', 'kategori')
-        return JsonResponse({'kategori_list': list(kategori_list)})
+# class KategoriListView(View):
+#     def get(self, request, *args, **kwargs):
+#         kategori_list = Kategori.objects.values('id', 'kategori')
+#         return JsonResponse({'kategori_list': list(kategori_list)})
     
-class ProdukAddView(View):
+class AddProdukView(View):
     def post(self, request, *args, **kwargs):
+        # Ambil data dari formulir modal
         img_produk = request.FILES.get('img_produk')
         nama_produk = request.POST.get('nama_produk')
         rettings = request.POST.get('rettings')
         harga = request.POST.get('harga')
         stok = request.POST.get('stok')
-        kategori_id = request.POST.get('kategori')
 
-        try:
-            kategori = Kategori.objects.get(id=kategori_id)
-        except Kategori.DoesNotExist:
-            return JsonResponse({'success': False, 'message': 'Kategori tidak valid.'})
-
-        Produk.objects.create(
+        # Buat objek Produk baru
+        produk_baru = Produk(
             img_produk=img_produk,
             nama_produk=nama_produk,
             rettings=rettings,
             harga=harga,
-            kategori=kategori,
             stok=stok
         )
+
+        # Simpan produk baru ke database
+        produk_baru.save()
 
         return JsonResponse({'success': True})
     
@@ -75,42 +73,32 @@ class DeleteProdukView(View):
         return JsonResponse({'success': True})
 
 class EditProdukView(View):
-    template_name = 'dsh_barang.html'  # Sesuaikan dengan template yang Anda gunakan
-
-    def get(self, request, produk_id):
-        # Ambil data produk dari database
-        produk = get_object_or_404(Produk, id=produk_id)
-        # Buat formulir dengan data produk
-        form = EditProdukForm(instance=produk)
-        # Render template dengan formulir
-        return render(request, self.template_name, {'form': form, 'produk': produk})
-
-    def post(self, request, produk_id):
-        # Ambil data produk dari database
-        produk = get_object_or_404(Produk, id=produk_id)
-        # Buat formulir dengan data POST dan data produk
-        form = EditProdukForm(request.POST, request.FILES, instance=produk)
-        if form.is_valid():
-            # Simpan perubahan jika formulir valid
-            form.save()
-            return JsonResponse({'success': True})
-        else:
-            # Kirim pesan kesalahan jika formulir tidak valid
-            return JsonResponse({'success': False, 'errors': form.errors})
-
-class GetProdukDataView(View):
-    def get(self, request, produk_id, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        produk_id = kwargs.get('produk_id')
         produk = get_object_or_404(Produk, id=produk_id)
         data = {
-            'img_produk': produk.img_produk.url,
             'nama_produk': produk.nama_produk,
             'rettings': produk.rettings,
             'harga': produk.harga,
-            'kategori': produk.kategori.id,  # Jika kategori adalah ForeignKey
-            # Tambahkan atribut lain jika perlu
+            'stok': produk.stok,
+            # (Tambahkan data lainnya sesuai kebutuhan Anda)
         }
         return JsonResponse(data)
 
+    def post(self, request, *args, **kwargs):
+        produk_id = kwargs.get('produk_id')
+        produk = get_object_or_404(Produk, id=produk_id)
+
+        # Update data produk dengan data dari formulir modal
+        produk.img_produk = request.FILES.get('img_produk', produk.img_produk)
+        produk.nama_produk = request.POST.get('nama_produk', produk.nama_produk)
+        produk.rettings = request.POST.get('rettings', produk.rettings)
+        produk.harga = request.POST.get('harga', produk.harga)
+        produk.stok = request.POST.get('stok', produk.stok)
+
+        produk.save()
+
+        return JsonResponse({'success': True, 'img_produk': produk.img_produk.url}) 
 
 
 # customor
@@ -355,29 +343,21 @@ class ProdukListView(ListView):
     template_name = 'index.html'
     context_object_name = 'produk'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        # Mendapatkan semua kategori yang unik
-        context['kategoris'] = Produk.objects.values('kategori').distinct()
-
-        # Menambahkan kategori_filter ke dalam konteks untuk tetap mempertahankan filter
-        context['kategori_filter'] = self.request.GET.get('kategori', '')
-
-        return context
-    
     def get_queryset(self):
         queryset = Produk.objects.all().order_by('-id')
-        kategori_filter = self.request.GET.get('kategori', '')
-        if kategori_filter:
-            queryset = queryset.filter(kategori=kategori_filter)
+        filter_type = self.request.GET.get('filter_type', '')
+        
+        if filter_type == 'termurah':
+            queryset = queryset.order_by('harga')
+        elif filter_type == 'termahal':
+            queryset = queryset.order_by('-harga')
+
         return queryset
 
 def kategori(request):
-    data = Kategori.objects.all()
 
     context = {
-        'kategoris': data,
+       
     }
     return render(request, 'dsh_kategori.html',context)
 
