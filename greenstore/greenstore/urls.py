@@ -25,14 +25,12 @@ urlpatterns = [
     path('dashboard/', datauser, name='dashboard'),
     path('kategori/', kategori, name='kategori'),
     path('pesanan/', pesanan, name='pesanan'),
-
   
     # produk
     path('tambah-produk/', AddProdukView.as_view(), name='tambah_produk'),
     path('produk-list/', BarangListView.as_view(), name='barang'),
     path('delete-produk/<int:product_id>/', DeleteProdukView.as_view(), name='delete_produk'),
     path('edit-produk/<int:produk_id>/', EditProdukView.as_view(), name='edit_produk'),
-
 
     # custumor
     path('customor/', CustomUserListView.as_view(), name='customor'),
@@ -53,7 +51,6 @@ urlpatterns = [
     path('update_quantity/', UpdateQuantityView.as_view(), name='update_quantity'),
     path('checkout/', CheckoutView.as_view(), name='checkout'),
     path('remove_cart_item/', RemoveCartItemView.as_view(), name='remove_cart_item'),
-    # path('get_order_summary/', get_order_summary, name='get_order_summary'),
     path('get_order_summary/', OrderSummaryView.as_view(), name='get_order_summary'),
     path('send_order_whatsapp/', OrderSummaryView.as_view(), name='send_order_whatsapp'),
 
