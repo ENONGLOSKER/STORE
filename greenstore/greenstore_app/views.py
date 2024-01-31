@@ -269,7 +269,6 @@ class RemoveCartItemView(View):
         produk_id = request.POST.get('produk_id')
 
         with transaction.atomic():
-            # Pastikan item ada di keranjang dan milik pengguna yang sedang login
             cart_item = CartItem.objects.filter(cart__user=request.user, produk__id=produk_id).first()
 
             if cart_item:
@@ -323,7 +322,7 @@ class OrderSummaryView(View):
             f"Salam Customor,\n {nama_user}"
         )
 
-        # URL WhatsApp dengan parameter pesan
+        # nomor penerima (+6285239664462) di setting disini, nomor dalam format kode negara
         whatsapp_url = f"https://wa.me/+6285239664462?text={urllib.parse.quote(whatsapp_message)}"
 
         return JsonResponse({'whatsapp_url': whatsapp_url, 'order_summary': {
@@ -334,8 +333,6 @@ class OrderSummaryView(View):
             'jumlah_items': jumlah_items,
             'total_harga': total_harga,
         }})
-
-
 
 # user 
 class ProdukListView(ListView):
