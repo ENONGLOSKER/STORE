@@ -45,15 +45,6 @@
                 </li>
 
                 <li>
-                    <a href="{% url 'kategori' %}">
-                        <span class="icon">
-                            <ion-icon name="storefront-outline"></ion-icon>
-                        </span>
-                        <span class="title">Kategori</span>
-                    </a>
-                </li>
-
-                <li>
                     <a href="{% url 'barang' %}">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
@@ -133,6 +124,7 @@
                                         <a href="#" class="edit-produk-btn" data-produk-id="{{ produk.id }}">
                                             {{ produk.nama_produk }}
                                         </a>
+                                        
                                     </td>
                                     
                                                  
@@ -180,6 +172,7 @@
         <h2>Edit Produk</h2>
         <form id="produk-form" enctype="multipart/form-data">
             {% csrf_token %}
+            <img src="" height="64px" width="64px" alt="Produk Image">
             <input type="file" name="img_produk" placeholder="Gambar Produk">
             <input type="text" name="nama_produk" placeholder="Nama Produk">
             <input type="text" name="rettings" placeholder="Rettings">
@@ -189,6 +182,7 @@
         </form>
         <button onclick="window.dialogedit.close()" aria-label="close" class="x">❌</button>
     </dialog>
+
     
     
 
@@ -340,16 +334,15 @@
                     type: "GET",
                     url: `/edit-produk/${produkId}/`,
                     success: function (data) {
-                        $('#produk-form [name="img_produk"]').val("");  // Atur nilai kosong untuk input file (jika perlu)
+                        console.log(data);
+                        console.log(data.gambar);
+                        // $('#produk-form img').remove();
+                        // $('#produk-form').append('<img src="' + data.gambar + '" height="64px" width="64px" alt="Produk Image">');
+                        $('#produk-form [name="img_produk"]').val(data.gambar); 
                         $('#produk-form [name="nama_produk"]').val(data.nama_produk);
                         $('#produk-form [name="rettings"]').val(data.rettings);
                         $('#produk-form [name="harga"]').val(data.harga);
                         $('#produk-form [name="stok"]').val(data.stok);
-    
-                        // Tampilkan gambar yang sedang diedit
-                        var imgElement = $('#produk-form [name="img_produk"]').siblings('img');
-                        imgElement.attr('src', data.img_produk);
-    
                     },
                     error: function () {
                         alert("Terjadi kesalahan saat mengambil data produk.");
@@ -358,6 +351,7 @@
             }
         });
     </script>
+
     
 
 </body>
