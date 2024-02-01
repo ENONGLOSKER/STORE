@@ -9,6 +9,21 @@
     <title> Admin Dashboard </title>
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>
+        #dialogedit form #gmbr{
+            transform: translateX(100%);
+        }
+        #dialogedit form #gambar{
+            border: 1px solid #4b4b4b;
+        }
+        #dialogedit form #gambar input[type=file]::-webkit-file-upload-button {
+            background-color: #ffffff;
+            color: #000;
+            border: 0;
+            border-right: 1px solid #e5e5e5;
+            margin-right: 15px;
+        }
+    </style>
 </head>
 
 <body>
@@ -172,8 +187,10 @@
         <h2>Edit Produk</h2>
         <form id="produk-form" enctype="multipart/form-data">
             {% csrf_token %}
-            <img src="" height="64px" width="64px" alt="Produk Image">
-            <input type="file" name="img_produk" placeholder="Gambar Produk">
+            <img src="" height="100px" width="100px" alt="Produk Image" id="gmbr">
+            <div id="gambar">
+                <input type="file" name="img_produk" placeholder="Gambar Produk">
+            </div>
             <input type="text" name="nama_produk" placeholder="Nama Produk">
             <input type="text" name="rettings" placeholder="Rettings">
             <input type="text" name="harga" placeholder="Harga">
@@ -295,7 +312,7 @@
     <script>
         $(document).ready(function () {
             var produkId;
-    
+
             // Handle klik tombol Edit Produk
             $('.edit-produk-btn').click(function (e) {
                 e.preventDefault();
@@ -303,11 +320,11 @@
                 getProdukDataAndFillForm(produkId);
                 window.dialogedit.showModal();
             });
-    
+
             // Handle klik tombol Submit Edit
             $('#submit-btnedit').click(function () {
                 var formData = new FormData($('#produk-form')[0]);
-    
+
                 $.ajax({
                     type: "POST",
                     url: `/edit-produk/${produkId}/`,
@@ -327,7 +344,7 @@
                     }
                 });
             });
-    
+
             // Fungsi untuk mengisi formulir modal dengan data produk yang diedit
             function getProdukDataAndFillForm(produkId) {
                 $.ajax({
@@ -335,10 +352,11 @@
                     url: `/edit-produk/${produkId}/`,
                     success: function (data) {
                         console.log(data);
-                        console.log(data.gambar);
-                        // $('#produk-form img').remove();
-                        // $('#produk-form').append('<img src="' + data.gambar + '" height="64px" width="64px" alt="Produk Image">');
-                        $('#produk-form [name="img_produk"]').val(data.gambar); 
+
+                        // Atur nilai atribut src dari elemen img
+                        $('#produk-form img').attr('src', data.gambar);
+                        
+                        $('#produk-form [name="img_produk"]').val("");  // Kosongkan nilai input file
                         $('#produk-form [name="nama_produk"]').val(data.nama_produk);
                         $('#produk-form [name="rettings"]').val(data.rettings);
                         $('#produk-form [name="harga"]').val(data.harga);
@@ -350,6 +368,7 @@
                 });
             }
         });
+
     </script>
 
     
