@@ -185,7 +185,7 @@
     <!-- modals edit -->
     <dialog id="dialogedit">
         <h2>Edit Produk</h2>
-        <form id="produk-form" enctype="multipart/form-data">
+        <form id="produk-formedit" enctype="multipart/form-data">
             {% csrf_token %}
             <img src="" height="100px" width="100px" alt="Produk Image" id="gmbr">
             <div id="gambar">
@@ -204,44 +204,12 @@
     
 
     <!-- =========== Scripts =========  -->
+    <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/dashboard.js' %}"></script>
 
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script src="{% static 'js/jquery.js' %}"></script>
-
-    <!-- get kategori -->
-    <!-- <script>
-        $(document).ready(function () {
-            // Ambil data kategori saat halaman dimuat
-            getKategoriList();
-
-            // Fungsi untuk mendapatkan data kategori
-            function getKategoriList() {
-                $.ajax({
-                    type: "GET",
-                    url: "/kategori-list/",  // Sesuaikan dengan URL yang sesuai di aplikasi Django Anda
-                    success: function (data) {
-                        if (data.kategori_list) {
-                            // Isi opsi kategori pada elemen <select>
-                            var kategoriSelect = $('#kategori-select');
-                            kategoriSelect.empty();
-                            kategoriSelect.append('<option value="">Pilih Kategori</option>');
-
-                            data.kategori_list.forEach(function (kategori) {
-                                kategoriSelect.append(`<option value="${kategori[0]}">${kategori[1]}</option>`);
-                            });
-                        }
-                    },
-                    error: function () {
-                        alert("Terjadi kesalahan saat mengambil data kategori.");
-                    }
-                });
-            }
-        });
-    </script> -->
-
     <!-- add produk -->
     <script>
         $(document).ready(function () {
@@ -271,7 +239,6 @@
             });
         });
     </script>
-    
      <!-- hapus produk -->
     <script>
         $(document).ready(function () {
@@ -312,7 +279,7 @@
     <script>
         $(document).ready(function () {
             var produkId;
-
+    
             // Handle klik tombol Edit Produk
             $('.edit-produk-btn').click(function (e) {
                 e.preventDefault();
@@ -320,11 +287,11 @@
                 getProdukDataAndFillForm(produkId);
                 window.dialogedit.showModal();
             });
-
+    
             // Handle klik tombol Submit Edit
             $('#submit-btnedit').click(function () {
-                var formData = new FormData($('#produk-form')[0]);
-
+                var formData = new FormData($('#produk-formedit')[0]);
+    
                 $.ajax({
                     type: "POST",
                     url: `/edit-produk/${produkId}/`,
@@ -344,7 +311,7 @@
                     }
                 });
             });
-
+    
             // Fungsi untuk mengisi formulir modal dengan data produk yang diedit
             function getProdukDataAndFillForm(produkId) {
                 $.ajax({
@@ -352,15 +319,15 @@
                     url: `/edit-produk/${produkId}/`,
                     success: function (data) {
                         console.log(data);
-
+    
                         // Atur nilai atribut src dari elemen img
-                        $('#produk-form img').attr('src', data.gambar);
-                        
-                        $('#produk-form [name="img_produk"]').val("");  // Kosongkan nilai input file
-                        $('#produk-form [name="nama_produk"]').val(data.nama_produk);
-                        $('#produk-form [name="rettings"]').val(data.rettings);
-                        $('#produk-form [name="harga"]').val(data.harga);
-                        $('#produk-form [name="stok"]').val(data.stok);
+                        $('#produk-formedit img').attr('src', data.gambar);
+    
+                        $('#produk-formedit [name="img_produk"]').val("");  // Kosongkan nilai input file
+                        $('#produk-formedit [name="nama_produk"]').val(data.nama_produk);
+                        $('#produk-formedit [name="rettings"]').val(data.rettings);
+                        $('#produk-formedit [name="harga"]').val(data.harga);
+                        $('#produk-formedit [name="stok"]').val(data.stok);
                     },
                     error: function () {
                         alert("Terjadi kesalahan saat mengambil data produk.");
@@ -368,7 +335,6 @@
                 });
             }
         });
-
     </script>
 
     

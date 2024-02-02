@@ -72,37 +72,8 @@ class DeleteProdukView(View):
         product.delete()
         return JsonResponse({'success': True})
 
-# class EditProdukView(View):
-#     def get(self, request, *args, **kwargs):
-#         produk_id = kwargs.get('produk_id')
-#         produk = get_object_or_404(Produk, id=produk_id)
-#         data = {
-#             'nama_produk': produk.nama_produk,
-#             'rettings': produk.rettings,
-#             'harga': produk.harga,
-#             'stok': produk.stok,
-#             'gambar' : produk.img_produk.name
-#             # (Tambahkan data lainnya sesuai kebutuhan Anda)
-#         }
-#         return JsonResponse(data)
-
-#     def post(self, request, *args, **kwargs):
-#         produk_id = kwargs.get('produk_id')
-#         produk = get_object_or_404(Produk, id=produk_id)
-
-#         # Update data produk dengan data dari formulir modal
-#         produk.img_produk = request.FILES.get('img_produk', produk.img_produk)
-#         produk.nama_produk = request.POST.get('nama_produk', produk.nama_produk)
-#         produk.rettings = request.POST.get('rettings', produk.rettings)
-#         produk.harga = request.POST.get('harga', produk.harga)
-#         produk.stok = request.POST.get('stok', produk.stok)
-
-#         produk.save()
-
-#         return JsonResponse({'success': True, 'img_produk': produk.img_produk.url}) 
-
 class EditProdukView(View):
-    template_name = 'dsh_barang.html'  # Ganti dengan nama template yang sesuai
+    template_name = 'dsh_barang.html'  
 
     def get(self, request, *args, **kwargs):
         produk_id = kwargs.get('produk_id')
@@ -112,8 +83,7 @@ class EditProdukView(View):
             'rettings': produk.rettings,
             'harga': produk.harga,
             'stok': produk.stok,
-            'gambar': produk.img_produk.url
-            # (Tambahkan data lainnya sesuai kebutuhan Anda)
+            'gambar': produk.img_produk.url,
         }
         return JsonResponse(data)
 
@@ -131,7 +101,7 @@ class EditProdukView(View):
         produk.save()
 
         return JsonResponse({'success': True, 'img_produk': produk.img_produk.url})
-
+    
 # customor
 class GetUserDataView(View):
     def get(self, request, *args, **kwargs):
