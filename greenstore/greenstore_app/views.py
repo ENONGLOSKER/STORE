@@ -22,15 +22,6 @@ from django.urls import reverse_lazy
 def pesanan(request):
     return render(request, 'dsh_pesanan.html')
 
-# def get_kategori_list(request):
-#     kategori_list = Kategori.objects.values_list('id', 'kategori')
-#     return JsonResponse({'kategori_list': list(kategori_list)})
-
-# class KategoriListView(View):
-#     def get(self, request, *args, **kwargs):
-#         kategori_list = Kategori.objects.values('id', 'kategori')
-#         return JsonResponse({'kategori_list': list(kategori_list)})
-    
 class AddProdukView(View):
     def post(self, request, *args, **kwargs):
         # Ambil data dari formulir modal
@@ -145,7 +136,6 @@ class CustomUserListView(ListView):
     model = CustomUser
     template_name = 'dsh_customor.html'
     context_object_name = 'custom_users'
-
 
 # AUTH
 class SignOutView(View):
@@ -351,14 +341,6 @@ class ProdukListView(ListView):
             queryset = queryset.order_by('-harga')
 
         return queryset
-
-def kategori(request):
-
-    context = {
-       
-    }
-    return render(request, 'dsh_kategori.html',context)
-
 
 def datauser(request):
     data = CustomUser.objects.all()

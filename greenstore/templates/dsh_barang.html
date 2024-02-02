@@ -23,6 +23,16 @@
             border-right: 1px solid #e5e5e5;
             margin-right: 15px;
         }
+        #dialog form #gambaradd{
+            border: 1px solid #4b4b4b;
+        }
+        #dialog form #gambaradd input[type=file]::-webkit-file-upload-button {
+            background-color: #ffffff;
+            color: #000;
+            border: 0;
+            border-right: 1px solid #e5e5e5;
+            margin-right: 15px;
+        }
     </style>
 </head>
 
@@ -135,7 +145,7 @@
                                     <td style="width: 80px; height: 80px; padding: 3px;">
                                         <img src="{{ produk.img_produk.url }}" alt="{{ produk.nama_produk }}" style="width: 80px; height: 80px; border: 1px solid rgb(214, 214, 214); border-radius: 4px;">
                                     </td>
-                                    <td>
+                                    <td >
                                         <a href="#" class="edit-produk-btn" data-produk-id="{{ produk.id }}">
                                             {{ produk.nama_produk }}
                                         </a>
@@ -172,7 +182,9 @@
         <h2>Produk</h2>
         <form id="produk-form" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="file" name="img_produk" placeholder="Gambar Produk">
+            <div id="gambaradd">
+                <input type="file" name="img_produk" placeholder="Gambar Produk">
+            </div>
             <input type="text" name="nama_produk" placeholder="Nama Produk">
             <input type="text" name="rettings" placeholder="rettings">
             <input type="text" name="harga" placeholder="Harga">
@@ -336,9 +348,6 @@
             }
         });
     </script>
-
-    
-
 </body>
 
 </html>

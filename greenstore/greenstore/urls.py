@@ -16,14 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser,kategori, pesanan, BarangListView,DeleteProdukView, AddProdukView, EditProdukView, ProdukListView
+from greenstore_app.views import SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser, pesanan, BarangListView,DeleteProdukView, AddProdukView, EditProdukView, ProdukListView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', datauser, name='dashboard'),
-    path('kategori/', kategori, name='kategori'),
     path('pesanan/', pesanan, name='pesanan'),
   
     # produk
