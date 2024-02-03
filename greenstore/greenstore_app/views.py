@@ -19,9 +19,17 @@ from django.db import transaction
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 
+def datauser(request):
+    data = CustomUser.objects.all()
+    context = {
+        'data':data
+    }
+    return render(request, 'dashboard.html',context)
+
 def pesanan(request):
     return render(request, 'dsh_pesanan.html')
 
+# ADMIN PRODUK
 class AddProdukView(View):
     def post(self, request, *args, **kwargs):
         # Ambil data dari formulir modal
@@ -47,13 +55,12 @@ class AddProdukView(View):
     
 class BarangListView(ListView):
     model = Produk
-    template_name = 'dsh_barang.html'  # Ganti 'nama_template_anda.html' dengan nama template yang sesuai
+    template_name = 'dsh_barang.html'  
     context_object_name = 'produk_list'
-    ordering = ['nama_produk']  # Sesuaikan dengan field yang ingin Anda gunakan sebagai urutan
+    ordering = ['-id'] 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Tambahkan konteks tambahan jika diperlukan
         return context
     
 class DeleteProdukView(View):
@@ -82,7 +89,6 @@ class EditProdukView(View):
         produk_id = kwargs.get('produk_id')
         produk = get_object_or_404(Produk, id=produk_id)
 
-        # Update data produk dengan data dari formulir modal
         produk.img_produk = request.FILES.get('img_produk', produk.img_produk)
         produk.nama_produk = request.POST.get('nama_produk', produk.nama_produk)
         produk.rettings = request.POST.get('rettings', produk.rettings)
@@ -93,7 +99,7 @@ class EditProdukView(View):
 
         return JsonResponse({'success': True, 'img_produk': produk.img_produk.url})
     
-# customor
+# ADMIN CUSTOMOR
 class GetUserDataView(View):
     def get(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
@@ -136,34 +142,6 @@ class CustomUserListView(ListView):
     model = CustomUser
     template_name = 'dsh_customor.html'
     context_object_name = 'custom_users'
-
-# AUTH
-class SignOutView(View):
-
-    def post(self, request, *args, **kwargs):
-        logout(request)
-        return JsonResponse({'success': True})
-
-class SignInView(View):
-    def post(self, request, *args, **kwargs):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return JsonResponse({'success': True})
-        else:
-            return JsonResponse({'success': False, 'message': 'Username atau password salah'})
-        
-class SignUpView(View):
-    def post(self, request, *args, **kwargs):
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return JsonResponse({'success': True, 'message': 'Register berhasil'})
-        return JsonResponse({'success': False, 'errors': form.errors})
 
 #USER PAGE CART AND SUMMARY ORDER
 class AddToCartView(View):
@@ -254,7 +232,6 @@ class CheckoutView(View):
 
         return render(request, self.template_name, {'cart_items': cart_items, 'total_items': total_items})
 
-
 class RemoveCartItemView(View):
     def post(self, request, *args, **kwargs):
         produk_id = request.POST.get('produk_id')
@@ -325,7 +302,6 @@ class OrderSummaryView(View):
             'total_harga': total_harga,
         }})
 
-# user 
 class ProdukListView(ListView):
     model = Produk
     template_name = 'index.html'
@@ -341,10 +317,31 @@ class ProdukListView(ListView):
             queryset = queryset.order_by('-harga')
 
         return queryset
+    
+# AUTH
+class SignOutView(View):
 
-def datauser(request):
-    data = CustomUser.objects.all()
-    context = {
-        'data':data
-    }
-    return render(request, 'dashboard.html',context)
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return JsonResponse({'success': True})
+
+class SignInView(View):
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'message': 'Username atau password salah'})
+        
+class SignUpView(View):
+    def post(self, request, *args, **kwargs):
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return JsonResponse({'success': True, 'message': 'Register berhasil'})
+        return JsonResponse({'success': False, 'errors': form.errors})

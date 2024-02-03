@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicons -->
+    <link href="{%static 'img/logo.svg'%}" rel="icon">
     <title> Admin Dashboard </title>
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
@@ -158,7 +160,7 @@
                                     </td>
                                     <td>{{ custom_user.email }}</td>
                                     <td>{{ custom_user.alamat }}</td>
-                                    <td>{{ custom_user.nomor }}</td>
+                                    <td style="text-align: center;">{{ custom_user.nomor }}</td>
                                     <td style="text-align: center;">
                                         <span class="status delivered">{{ custom_user.last_login|date:'d/m/Y/' }}</span>
                                     </td>
