@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Produk,CustomUser,Cart, CartItem
+from .models import Produk,CustomUser,Cart, CartItem, Pesanan
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import ListView, DetailView
@@ -18,6 +18,12 @@ from urllib.parse import quote
 from django.db import transaction
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+import urllib.parse
 
 def datauser(request):
     data = CustomUser.objects.all()
@@ -26,9 +32,14 @@ def datauser(request):
     }
     return render(request, 'dashboard.html',context)
 
-def pesanan(request):
-    return render(request, 'dsh_pesanan.html')
+class OrderListView(View):
+    template_name = 'dsh_pesanan.html'
 
+    def get(self, request, *args, **kwargs):
+        orders = Pesanan.objects.all()
+        context = {'orders': orders}
+        return render(request, self.template_name, context)
+    
 # ADMIN PRODUK
 class AddProdukView(View):
     def post(self, request, *args, **kwargs):
@@ -232,6 +243,88 @@ class CheckoutView(View):
 
         return render(request, self.template_name, {'cart_items': cart_items, 'total_items': total_items})
 
+class OrderSummaryView(View):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        cart_items = CartItem.objects.filter(cart__user=user)
+
+        if not cart_items.exists():
+            return JsonResponse({'error': 'Keranjang kosong.'}, status=400)
+
+        nama_user = user.username
+        nomor_hp = user.nomor
+        email = user.email
+        alamat = user.alamat
+
+        pesanan = "\n".join(
+            f"{item.produk.nama_produk} - Jumlah: {item.quantity} - Harga Satuan: Rp. {item.produk.harga}"
+            for item in cart_items
+        )
+
+        jumlah_items = cart_items.count()
+        total_harga = sum(item.produk.harga * item.quantity for item in cart_items)
+
+        try:
+            # Gunakan transaksi database
+            with transaction.atomic():
+                # Simpan pesanan ke dalam model Pesanan
+                order_summary_user = Pesanan.objects.create(
+                    nama_user=user,
+                    nomor_hp=nomor_hp,
+                    email=email,
+                    alamat=alamat,
+                    jumlah_items=jumlah_items,
+                    total_harga=total_harga,
+                    pesanan_detail=pesanan
+                )
+
+                # Format pesan untuk WhatsApp
+                whatsapp_message = f"Hallo admin, Saya ingin melakukan pemesanan produk. Detail pesanannya:\n" \
+                                   f"Nama: {nama_user}\n" \
+                                   f"Alamat: {alamat}\n" \
+                                   f"Nomor: {nomor_hp}\n" \
+                                   f"Email: {email}\n" \
+                                   "---------------------------------------------\n" \
+                                   f"Pesanan:\n{pesanan}\n" \
+                                   "---------------------------------------------\n" \
+                                   f"Jumlah Item: {jumlah_items}\n" \
+                                   f"Total Bayar: Rp. {total_harga}\n" \
+                                   "---------------------------------------------\n" \
+                                   "Mohon konfirmasi mengenai informasi pembayaran. Terima kasih!\n\n\n" \
+                                   f"Salam Customer,\n {nama_user}"
+
+                # Ambil nomor penerima WhatsApp dari pengaturan
+                admin_whatsapp_number = "+6281936316805"
+
+                whatsapp_url = f"https://wa.me/{admin_whatsapp_number}?text={urllib.parse.quote(whatsapp_message)}"
+                
+                return JsonResponse({'whatsapp_url': whatsapp_url, 'order_summary': {
+                    'nama_user': nama_user,
+                    'nomor_hp': nomor_hp,
+                    'email': email,
+                    'alamat': alamat,
+                    'jumlah_items': jumlah_items,
+                    'total_harga': total_harga,
+                }})
+        except Exception as e:
+            return JsonResponse({'error': f'Terjadi kesalahan saat membuat pesanan: {str(e)}'}, status=500)
+
+class ProdukListView(ListView):
+    model = Produk
+    template_name = 'index.html'
+    context_object_name = 'produk'
+
+    def get_queryset(self):
+        queryset = Produk.objects.all().order_by('-id')
+        filter_type = self.request.GET.get('filter_type', '')
+        
+        if filter_type == 'termurah':
+            queryset = queryset.order_by('harga')
+        elif filter_type == 'termahal':
+            queryset = queryset.order_by('-harga')
+
+        return queryset
+
 class RemoveCartItemView(View):
     def post(self, request, *args, **kwargs):
         produk_id = request.POST.get('produk_id')
@@ -254,70 +347,6 @@ class RemoveCartItemView(View):
             else:
                 return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
 
-class OrderSummaryView(View):
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        cart_items = CartItem.objects.filter(cart__user=user)
-
-        nama_user = user.username
-        nomor_hp = user.nomor
-        email = user.email
-        alamat = user.alamat
-
-        pesanan = "\n".join(
-            f"{item.produk.nama_produk} - Jumlah: {item.quantity} - Harga Satuan: Rp. {item.produk.harga}"
-            for item in cart_items
-        )
-
-        jumlah_items = cart_items.count()
-        total_harga = sum(item.produk.harga * item.quantity for item in cart_items)
-
-        # Format pesan untuk WhatsApp
-        whatsapp_message = (
-            f"Hallo admin, Saya ingin melakukan pemesanan produk. Detail pesanannya:\n"
-            f"Nama: {nama_user}\n"
-            f"Alamat: {alamat}\n"
-            f"Nomor: {nomor_hp}\n"
-            f"Email: {email}\n"
-            "---------------------------------------------\n"
-            f"Pesanan:\n{pesanan}\n"
-            "---------------------------------------------\n"
-            f"Jumlah Item: {jumlah_items}\n"
-            f"Total Bayar: Rp. {total_harga}\n"
-            "---------------------------------------------\n"
-            "Mohon konfirmasi mengenai informasi pembayaran.Terima kasih!\n\n\n"
-            
-            f"Salam Customor,\n {nama_user}"
-        )
-
-        # nomor penerima (+6281936316805) di setting disini, nomor dalam format kode negara
-        whatsapp_url = f"https://wa.me/+6281936316805?text={urllib.parse.quote(whatsapp_message)}"
-
-        return JsonResponse({'whatsapp_url': whatsapp_url, 'order_summary': {
-            'nama_user': nama_user,
-            'nomor_hp': nomor_hp,
-            'email': email,
-            'alamat': alamat,
-            'jumlah_items': jumlah_items,
-            'total_harga': total_harga,
-        }})
-
-class ProdukListView(ListView):
-    model = Produk
-    template_name = 'index.html'
-    context_object_name = 'produk'
-
-    def get_queryset(self):
-        queryset = Produk.objects.all().order_by('-id')
-        filter_type = self.request.GET.get('filter_type', '')
-        
-        if filter_type == 'termurah':
-            queryset = queryset.order_by('harga')
-        elif filter_type == 'termahal':
-            queryset = queryset.order_by('-harga')
-
-        return queryset
-    
 # AUTH
 class SignOutView(View):
 

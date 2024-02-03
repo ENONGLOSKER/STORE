@@ -145,7 +145,14 @@
                         <td style="font-weight: bold;">: Rp. <span id="total-harga"></span></td>
                     </tr>
                 </table>
-                <button id="pesan-btn">Pesan</button>
+            
+                {% if order_error %}
+                    <div class="error-message">
+                        {{ order_error }}
+                    </div>
+                {% else %}
+                    <button id="pesan-btn">Pesan</button>
+                {% endif %}
             </div>
 
         </div>
@@ -254,12 +261,17 @@
                     $("#alamat").text(data.order_summary.alamat);
                     $("#jumlah-items").text(data.order_summary.jumlah_items);
                     $("#total-harga").text(data.order_summary.total_harga);
+    
+                    if (data.error) {
+                        $(".summray").append(`<div class="error-message">${data.error}</div>`);
+                        $("#pesan-btn").hide();
+                    }
                 },
                 error: function () {
                     alert("Terjadi kesalahan saat mengambil data order summary.");
                 }
             });
-
+    
             $("#pesan-btn").click(function () {
                 $.ajax({
                     type: "GET",
