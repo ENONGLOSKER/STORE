@@ -290,8 +290,8 @@ class OrderSummaryView(View):
             f"Salam Customor,\n {nama_user}"
         )
 
-        # nomor penerima (+6285239664462) di setting disini, nomor dalam format kode negara
-        whatsapp_url = f"https://wa.me/+6285239664462?text={urllib.parse.quote(whatsapp_message)}"
+        # nomor penerima (+6281936316805) di setting disini, nomor dalam format kode negara
+        whatsapp_url = f"https://wa.me/+6281936316805?text={urllib.parse.quote(whatsapp_message)}"
 
         return JsonResponse({'whatsapp_url': whatsapp_url, 'order_summary': {
             'nama_user': nama_user,
