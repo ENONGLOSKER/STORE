@@ -36,7 +36,7 @@ class OrderListView(View):
     template_name = 'dsh_pesanan.html'
 
     def get(self, request, *args, **kwargs):
-        orders = Pesanan.objects.all()
+        orders = Pesanan.objects.all().order_by('-id')
         context = {'orders': orders}
         return render(request, self.template_name, context)
     
@@ -265,7 +265,7 @@ class OrderSummaryView(View):
         total_harga = sum(item.produk.harga * item.quantity for item in cart_items)
 
         try:
-            # Gunakan transaksi database
+            
             with transaction.atomic():
                 # Simpan pesanan ke dalam model Pesanan
                 order_summary_user = Pesanan.objects.create(
@@ -278,7 +278,7 @@ class OrderSummaryView(View):
                     pesanan_detail=pesanan
                 )
 
-                # Format pesan untuk WhatsApp
+
                 whatsapp_message = f"Hallo admin, Saya ingin melakukan pemesanan produk. Detail pesanannya:\n" \
                                    f"Nama: {nama_user}\n" \
                                    f"Alamat: {alamat}\n" \
@@ -293,7 +293,7 @@ class OrderSummaryView(View):
                                    "Mohon konfirmasi mengenai informasi pembayaran. Terima kasih!\n\n\n" \
                                    f"Salam Customer,\n {nama_user}"
 
-                # Ambil nomor penerima WhatsApp dari pengaturan
+
                 admin_whatsapp_number = "+6281936316805"
 
                 whatsapp_url = f"https://wa.me/{admin_whatsapp_number}?text={urllib.parse.quote(whatsapp_message)}"
