@@ -162,6 +162,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
+
     <script>
         // main.js
         $(document).ready(function () {
@@ -247,7 +248,6 @@
 
     </script>
 
-
     <!-- pesan via wa -->
     <script>
         $(document).ready(function () {
@@ -287,6 +287,32 @@
             });
         });
     </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#pesan-btn").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'save_order' %}",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}"
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            // Buka tab baru dengan URL WhatsApp
+                            window.open(data.whatsapp_url, '_blank');
+                        } else {
+                            alert("Terjadi kesalahan saat menyimpan pesanan.");
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim pesanan.");
+                    }
+                });
+            });
+        });
+    </script>
+
 
 </body>
 </html>

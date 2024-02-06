@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from greenstore_app.views import SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView, OrderSummaryView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser, OrderListView, BarangListView,DeleteProdukView, AddProdukView, EditProdukView, ProdukListView
+from greenstore_app.views import SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser, OrderListView, BarangListView,DeleteProdukView, AddProdukView, EditProdukView, ProdukListView, SaveOrderView, OrderSummaryView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -52,6 +52,8 @@ urlpatterns = [
     path('remove_cart_item/', RemoveCartItemView.as_view(), name='remove_cart_item'),
     path('get_order_summary/', OrderSummaryView.as_view(), name='get_order_summary'),
     path('send_order_whatsapp/', OrderSummaryView.as_view(), name='send_order_whatsapp'),
+    path('save_order/', SaveOrderView.as_view(), name='save_order'),
+
 
     # product
     path('', ProdukListView.as_view(), name='index'),

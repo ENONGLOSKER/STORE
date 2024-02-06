@@ -32,6 +32,7 @@ def datauser(request):
     }
     return render(request, 'dashboard.html',context)
 
+# ADMIN PESANAN
 class OrderListView(View):
     template_name = 'dsh_pesanan.html'
 
@@ -265,7 +266,59 @@ class OrderSummaryView(View):
         total_harga = sum(item.produk.harga * item.quantity for item in cart_items)
 
         try:
+            whatsapp_message = f"Hallo admin, Saya ingin melakukan pemesanan produk. Detail pesanannya:\n" \
+                                f"Nama: {nama_user}\n" \
+                                f"Alamat: {alamat}\n" \
+                                f"Nomor: {nomor_hp}\n" \
+                                f"Email: {email}\n" \
+                                "---------------------------------------------\n" \
+                                f"Pesanan:\n{pesanan}\n" \
+                                "---------------------------------------------\n" \
+                                f"Jumlah Item: {jumlah_items}\n" \
+                                f"Total Bayar: Rp. {total_harga}\n" \
+                                "---------------------------------------------\n" \
+                                "Mohon konfirmasi mengenai informasi pembayaran. Terima kasih!\n\n\n" \
+                                f"Salam Customer,\n {nama_user}"
+
+
+            admin_whatsapp_number = "+6281936316805"
+
+            whatsapp_url = f"https://wa.me/{admin_whatsapp_number}?text={urllib.parse.quote(whatsapp_message)}"
             
+            return JsonResponse({'whatsapp_url': whatsapp_url, 'order_summary': {
+                'nama_user': nama_user,
+                'nomor_hp': nomor_hp,
+                'email': email,
+                'alamat': alamat,
+                'jumlah_items': jumlah_items,
+                'total_harga': total_harga,
+            }})
+        except Exception as e:
+            return JsonResponse({'error': f'Terjadi kesalahan saat membuat pesanan: {str(e)}'}, status=500)
+
+
+class SaveOrderView(View):
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        cart_items = CartItem.objects.filter(cart__user=user)
+
+        if not cart_items.exists():
+            return JsonResponse({'error': 'Keranjang kosong.'}, status=400)
+
+        nama_user = user.username
+        nomor_hp = user.nomor
+        email = user.email
+        alamat = user.alamat
+
+        pesanan = "\n".join(
+            f"{item.produk.nama_produk} - Jumlah: {item.quantity} - Harga Satuan: Rp. {item.produk.harga}"
+            for item in cart_items
+        )
+
+        jumlah_items = cart_items.count()
+        total_harga = sum(item.produk.harga * item.quantity for item in cart_items)
+
+        try:
             with transaction.atomic():
                 # Simpan pesanan ke dalam model Pesanan
                 order_summary_user = Pesanan.objects.create(
@@ -278,34 +331,7 @@ class OrderSummaryView(View):
                     pesanan_detail=pesanan
                 )
 
-
-                whatsapp_message = f"Hallo admin, Saya ingin melakukan pemesanan produk. Detail pesanannya:\n" \
-                                   f"Nama: {nama_user}\n" \
-                                   f"Alamat: {alamat}\n" \
-                                   f"Nomor: {nomor_hp}\n" \
-                                   f"Email: {email}\n" \
-                                   "---------------------------------------------\n" \
-                                   f"Pesanan:\n{pesanan}\n" \
-                                   "---------------------------------------------\n" \
-                                   f"Jumlah Item: {jumlah_items}\n" \
-                                   f"Total Bayar: Rp. {total_harga}\n" \
-                                   "---------------------------------------------\n" \
-                                   "Mohon konfirmasi mengenai informasi pembayaran. Terima kasih!\n\n\n" \
-                                   f"Salam Customer,\n {nama_user}"
-
-
-                admin_whatsapp_number = "+6281936316805"
-
-                whatsapp_url = f"https://wa.me/{admin_whatsapp_number}?text={urllib.parse.quote(whatsapp_message)}"
-                
-                return JsonResponse({'whatsapp_url': whatsapp_url, 'order_summary': {
-                    'nama_user': nama_user,
-                    'nomor_hp': nomor_hp,
-                    'email': email,
-                    'alamat': alamat,
-                    'jumlah_items': jumlah_items,
-                    'total_harga': total_harga,
-                }})
+            return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'error': f'Terjadi kesalahan saat membuat pesanan: {str(e)}'}, status=500)
 
