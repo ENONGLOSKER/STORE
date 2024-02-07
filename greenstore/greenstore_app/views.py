@@ -266,13 +266,13 @@ class OrderSummaryView(View):
         total_harga = sum(item.produk.harga * item.quantity for item in cart_items)
 
         try:
-            whatsapp_message = f"Hallo admin, Saya ingin melakukan pemesanan produk. Detail pesanannya:\n" \
+            whatsapp_message = f"Hallo admin, Saya ingin melakukan pemesanan\n" \
                                 f"Nama: {nama_user}\n" \
                                 f"Alamat: {alamat}\n" \
                                 f"Nomor: {nomor_hp}\n" \
                                 f"Email: {email}\n" \
                                 "---------------------------------------------\n" \
-                                f"Pesanan:\n{pesanan}\n" \
+                                f"Detail Pesanan:\n{pesanan}\n" \
                                 "---------------------------------------------\n" \
                                 f"Jumlah Item: {jumlah_items}\n" \
                                 f"Total Bayar: Rp. {total_harga}\n" \
@@ -280,8 +280,9 @@ class OrderSummaryView(View):
                                 "Mohon konfirmasi mengenai informasi pembayaran. Terima kasih!\n\n\n" \
                                 f"Salam Customer,\n {nama_user}"
 
-
-            admin_whatsapp_number = "+6281936316805"
+            # 6281936316805
+            # 6281913428083
+            admin_whatsapp_number = "+6281913428083"
 
             whatsapp_url = f"https://wa.me/{admin_whatsapp_number}?text={urllib.parse.quote(whatsapp_message)}"
             
@@ -295,7 +296,6 @@ class OrderSummaryView(View):
             }})
         except Exception as e:
             return JsonResponse({'error': f'Terjadi kesalahan saat membuat pesanan: {str(e)}'}, status=500)
-
 
 class SaveOrderView(View):
     def post(self, request, *args, **kwargs):
@@ -330,6 +330,8 @@ class SaveOrderView(View):
                     total_harga=total_harga,
                     pesanan_detail=pesanan
                 )
+
+                cart_items.delete()
 
             return JsonResponse({'success': True})
         except Exception as e:

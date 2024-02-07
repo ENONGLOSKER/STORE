@@ -251,6 +251,7 @@
     <!-- pesan via wa -->
     <script>
         $(document).ready(function () {
+            // mengambil data untuk order summary
             $.ajax({
                 type: "GET",
                 url: "{% url 'get_order_summary' %}",
@@ -267,11 +268,15 @@
                         $("#pesan-btn").hide();
                     }
                 },
-                error: function () {
-                    alert("Terjadi kesalahan saat mengambil data order summary.");
+                error: function (data) {
+                    console.log("keranjang kosong!");
+                    let halamUtama = window.location.href = "{% url 'index' %}";
+                    alert("Keranjang Kosong! Silahkan Masukan Item ke Keranjang", halamUtama);
+                    
                 }
             });
     
+            // menangani redirect ke Whatsapp
             $("#pesan-btn").click(function () {
                 $.ajax({
                     type: "GET",
@@ -279,17 +284,18 @@
                     success: function (data) {
                         // Buka tab baru dengan URL WhatsApp
                         window.open(data.whatsapp_url, '_blank');
+                        
                     },
                     error: function () {
-                        alert("Terjadi kesalahan saat mengirim pesanan.");
+                        // let halamUtama = window.location.href = "{% url 'cart' %}";
+                        // alert("Terjadi kesalahan saat mengirim pesanan.", halamUtama);
+                        // window.location.href = "{% url 'cart' %}";
+                        window.reload();
                     }
                 });
             });
-        });
-    </script>
 
-    <script>
-        $(document).ready(function () {
+            // menagani data pesanan disimpan ke db
             $("#pesan-btn").click(function () {
                 $.ajax({
                     type: "POST",
@@ -306,10 +312,14 @@
                         }
                     },
                     error: function () {
-                        alert("Terjadi kesalahan saat mengirim pesanan.");
+                      window.location.href = "{% url 'cart' %}";
+                        // let halamUtama = window.location.href = "{% url 'cart' %}";
+                        // alert("Terjadi kesalahan saat mengirim pesanan.", halamUtama)
+
                     }
                 });
             });
+
         });
     </script>
 
