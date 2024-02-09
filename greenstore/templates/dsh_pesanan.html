@@ -178,8 +178,14 @@
                                     <td>{{ order.jumlah_items }}</td>
                                     <td>Rp. {{ order.total_harga }}</td>
                                     <td>
-                                        <select name="" id="" class="status {{ order.status|lower }}" style="border: none;">
-                                            <option  value="{{ order.status}}">{{ order.status}}</option>
+                                        <select name="status" class="status {{ order.status|lower }}" data-order-id="{{ order.id }}">
+                                            {% for status_value, status_display in order.STATUS_CHOICES %}
+                                                {% if order.status == status_value %}
+                                                    <option value="{{ status_value }}" selected>{{ status_display }}</option>
+                                                {% else %}
+                                                    <option value="{{ status_value }}">{{ status_display }}</option>
+                                                {% endif %}
+                                            {% endfor %}
                                         </select>
                                     </td>
                                 </tr>
@@ -203,6 +209,38 @@
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- update status -->
+    <script>
+        $(document).ready(function () {
+            $(".status").change(function () {
+                var orderId = $(this).data("order-id");
+                var newStatus = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'update_order_status' %}",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        order_id: orderId,
+                        new_status: newStatus
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            alert("Status pesanan berhasil diperbarui.");
+                            window.location.reload();
+                            // Tambahkan kode untuk memperbarui tampilan jika diperlukan
+                        } else {
+                            alert("Gagal memperbarui status pesanan.");
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat mengirim permintaan.");
+                    }
+                });
+            });
+        });
+
+    </script>
 
     <!-- signout -->
     <script>

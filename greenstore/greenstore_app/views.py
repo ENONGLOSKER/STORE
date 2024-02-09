@@ -40,7 +40,22 @@ class OrderListView(View):
         orders = Pesanan.objects.all().order_by('-id')
         context = {'orders': orders}
         return render(request, self.template_name, context)
-    
+
+class UpdateOrderStatusView(View):
+    def post(self, request, *args, **kwargs):
+        order_id = request.POST.get('order_id')
+        new_status = request.POST.get('new_status')
+        try:
+            order = Pesanan.objects.get(id=order_id)
+            order.status = new_status
+            order.save()
+            return JsonResponse({'success': True})
+        except Pesanan.DoesNotExist:
+            return JsonResponse({'error': 'Pesanan tidak ditemukan'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        
+
 # ADMIN PRODUK
 class AddProdukView(View):
     def post(self, request, *args, **kwargs):
