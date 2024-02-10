@@ -67,10 +67,12 @@
                 <p id="jlh">{{ total_items }}</p>
                 <ion-icon name="cart" id="cartProduk"></ion-icon>
             </a>
+            <a href="{% url 'status' %}">
+                <p>Status</p>
+            </a>
             <button class="signin" id="signout-btn">Sign out</button>
             <button class="signin" onclick="window.dialogsignin.showModal();">Sign in</button>
             <button class="signup" onclick="window.dialogsignup.showModal();">Sign up</button>
-            <!-- <button class="primary" onclick="window.dialog.showModal();">Product</button> -->
         </div>
     </nav>
     <!-- content -->

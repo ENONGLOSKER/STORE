@@ -32,6 +32,14 @@ def datauser(request):
     }
     return render(request, 'dashboard.html',context)
 
+class PesananListView(ListView):
+    model = Pesanan
+    template_name = 'status.html'
+    context_object_name = 'pesanan'
+
+    def get_queryset(self):
+        return Pesanan.objects.filter(nama_user=self.request.user)
+    
 # ADMIN PESANAN
 class OrderListView(View):
     template_name = 'dsh_pesanan.html'

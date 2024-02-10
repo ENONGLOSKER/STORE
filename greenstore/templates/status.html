@@ -1,0 +1,305 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOKO KAIN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Favicons -->
+    <link href="{%static 'img/logo.svg'%}" rel="icon">
+    <link rel="stylesheet" href="{%static 'css/main.css'%}">
+    <style>
+     .content2{
+        background-color: white;
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        padding: 40px 80px;
+     }
+     .content2 .detail{
+        width: 60%;
+     }
+     .content2 .detail table tr{
+        height: 30px;
+     }
+     .content2 .detail .btn-status{
+        height: 50px;
+        width: 30%;
+        margin-top: 20px;
+       
+     }
+     .content2 .detail .btn-status button{
+        padding: 8px 18px;
+        border: none;
+        color: white;
+        font-weight: bold;
+     }
+     .content2 .detail .btn-status button:nth-child(1){
+        background-color: var(--satu);
+     }
+    
+     .content2 .detail .btn-status button:nth-child(2){
+        background-color: var(--dua);
+        padding: 8px 28px;
+     }
+     .content2 .detail .btn-status button:nth-child(1):hover{
+        background-color: orange;
+     }
+     .content2 .detail .btn-status button:nth-child(2):hover{
+        background-color: rgb(255, 49, 49);
+     }
+     
+     
+
+
+     .content2 .progres{
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        padding: 0 15px;
+     }
+     .content2 .progres #line{
+        width: 5px;
+        height: 100%;
+        background-color: rgb(116, 116, 116);
+        position:absolute;
+     }
+  
+     .content2 .progres .pg1, .pg2{
+        margin-left: 15px;
+     }
+     .content2 .progres h5{
+        color: rgb(215, 215, 215);
+     }
+     .content2 .progres .active{
+        color: var(--satu);
+     }
+     .content2 .progres #pgrs1, #pgrs2{
+        background-color: rgb(189, 189, 189);
+        padding: 10px;
+        color: rgb(4, 4, 4);
+        border-radius: 50px;
+        z-index: 100px;
+     }
+    </style>
+</head>
+<body>
+    <!-- Modal -->
+    <dialog id="dialog">
+        <h2>Produk</h2>
+        <form id="produk-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="img_produk" placeholder="Gambar Produk">
+            <input type="text" name="nama_produk" placeholder="Nama Produk">
+            <input type="text" name="rettings" placeholder="rettings">
+            <input type="text" name="harga" placeholder="Harga">
+            <input type="text" name="kategori" placeholder="Kategori">
+            <button type="button" id="submit-btn">Submit</button>
+        </form>
+        <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+
+    <!-- signin.html -->
+    <dialog id="dialogsignin">
+        <h2>Sign in</h2>
+        <form id="signin-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="Password">
+            <button type="button" id="submitSignin">Submit</button>
+        </form>
+        <button onclick="window.dialogsignin.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+   
+    <!-- signup.html -->
+    <dialog id="dialogsignup">
+        <h2>Sign up</h2>
+        <form id="signup-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="text" name="email" placeholder="Email">
+            <input type="text" name="nomor" placeholder="Nomor">
+            <textarea type="text" name="alamat" placeholder="Alamat Lengkap : Kab, Daerah, Kecamatan, Dusun - Desa "></textarea>
+            <input type="password" name="password1" placeholder="Password">
+            <input type="password" name="password2" placeholder="Confirm Password">
+            <button type="button" data-dialog-id="dialogsignup" id="submit-signup-btn">Submit</button>
+        </form>
+        <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
+    </dialog>
+    <!-- navbar -->
+    <nav>
+        <div class="logo">
+            <img src="{% static 'img/logo.svg' %}" alt="">
+            <h3>TOKO KAIN</h3>
+        </div>
+        <div class="btncart">
+
+            <button class="signin" id="signout-btn">Sign out</button>
+            <button class="signin" onclick="window.dialogsignin.showModal();">Sign in</button>
+            <button class="signup" onclick="window.dialogsignup.showModal();">Sign up</button>
+        </div>
+    </nav>
+    <!-- content -->
+    <div class="container">
+        <div class="content1">
+            <div class="title">
+                <h3>Status Pesanan</h3>
+                <p>Hello 👋 {{user}}</p>
+            </div>
+            
+        </div>
+
+        {% for order in pesanan %}
+            <div class="content2">
+                <div class="detail">
+                    <table>
+                        <tr>
+                            <td>Nama</td>
+                            <td>: {{ order.nama_user }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 20%;">Nomor HP</td>
+                            <td>: {{ order.nomor_hp }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>: {{ order.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Alamat</td>
+                            <td>: {{ order.alamat }}</td>
+                        </tr>
+                        <tr>
+                            <td>Produk</td>
+                            <td>: {{ order.pesanan_detail }}</td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Item</td>
+                            <td>: {{ order.jumlah_items }}</td>
+                        </tr>
+                        <tr>
+                            <td>Harga</td>
+                            <td>: Rp. {{ order.total_harga }}</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            {% if order.status  == "DELIVERED" %}
+                            <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span></td>
+                            {% elif order.status  == "RETURN" %}
+                            <td>: <span style="font-weight: bold; color: rgb(253, 62, 62);">{{ order.status }}</span></td>
+                            {% else %}
+                            <td>: <span style="font-weight: bold; color: rgb(253, 212, 47);">{{ order.status }}</span></td>
+                            {% endif %}
+                        </tr>
+                    </table>
+
+                    <div class="btn-status">
+                        
+                        {% if order.status  == "DELIVERED" %}
+                            <button>Diterima</button>
+                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
+                            {% elif order.status  == "RETURN" %}
+                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
+                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
+                            {% else %}
+                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
+                            <button >Batal</button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="progres">
+                    <span id="line"></span>
+                    {% if order.status  == "DELIVERED" %}
+                    <div class="pg1">
+                        <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
+                        <div class="">
+                            <p >Status Pending</p>
+                            <h5>20 Februari 2024</h5>
+                        </div>
+                    </div>
+                    <div class="pg2">
+                        <ion-icon name="checkbox-outline" id="pgrs2" style="background-color: rgb(65, 250, 55);"></ion-icon>
+                        <div class="">
+                            <p style="color: rgb(65, 250, 55);">Status Delivered</p>
+                            <h5>20 Februari 2024</h5>
+                        </div>
+                    </div>
+                    {% elif order.status  == "RETURN" %}
+                    <div class="pg1">
+                        <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
+                        <div class="">
+                            <p >Status Pending</p>
+                            <h5>20 Februari 2024</h5>
+                        </div>
+                    </div>
+                    <div class="pg1">
+                        <ion-icon name="cube-outline" id="pgrs1" style="background-color: rgb(253, 62, 62);"></ion-icon>
+                        <div class="">
+                            <p style="color: rgb(253, 62, 62);">Status Return</p>
+                            <h5>20 Februari 2024</h5>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="pg1">
+                        <ion-icon name="cube-outline" id="pgrs1" style="background-color: rgb(253, 212, 47);"></ion-icon>
+                        <div class="">
+                            <p style="color: rgb(253, 212, 47);">Status Pending</p>
+                            <h5>20 Februari 2024</h5>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        {% endfor %}
+
+
+        
+        
+    </div>
+
+    <!-- ionic icon -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- jquery -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <!-- sign out -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var signoutButton = document.getElementById("signout-btn");
+
+            signoutButton.addEventListener("click", function () {
+                signout();
+            });
+        });
+
+        function signout() {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'signout' %}",  // Ganti 'signout' dengan nama URL view sign-out
+                data: {csrfmiddlewaretoken: "{{ csrf_token }}",},
+                success: function (data) {
+                    if (data.success) {
+                        alert("Logout berhasil");
+                        window.location.href = "{% url 'index' %}";  // Redirect ke halaman utama atau halaman login
+                    } else {
+                        alert("Logout gagal: " + data.message);
+                    }
+                },
+                error: function () {
+                    alert("Terjadi kesalahan saat mengirim permintaan sign-out.");
+                }
+            });
+        }
+    </script>
+
+    
+    
+</body>
+</html>
