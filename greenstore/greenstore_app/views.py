@@ -25,158 +25,16 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 import urllib.parse
 
-def datauser(request):
-    data = CustomUser.objects.all()
-    context = {
-        'data':data
-    }
-    return render(request, 'dashboard.html',context)
 
+# USER PESANAN
 class PesananListView(ListView):
     model = Pesanan
     template_name = 'status.html'
     context_object_name = 'pesanan'
 
     def get_queryset(self):
-        return Pesanan.objects.filter(nama_user=self.request.user)
-    
-# ADMIN PESANAN
-class OrderListView(View):
-    template_name = 'dsh_pesanan.html'
+        return Pesanan.objects.filter(nama_user=self.request.user).order_by('-id')
 
-    def get(self, request, *args, **kwargs):
-        orders = Pesanan.objects.all().order_by('-id')
-        context = {'orders': orders}
-        return render(request, self.template_name, context)
-
-class UpdateOrderStatusView(View):
-    def post(self, request, *args, **kwargs):
-        order_id = request.POST.get('order_id')
-        new_status = request.POST.get('new_status')
-        try:
-            order = Pesanan.objects.get(id=order_id)
-            order.status = new_status
-            order.save()
-            return JsonResponse({'success': True})
-        except Pesanan.DoesNotExist:
-            return JsonResponse({'error': 'Pesanan tidak ditemukan'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-        
-
-# ADMIN PRODUK
-class AddProdukView(View):
-    def post(self, request, *args, **kwargs):
-        # Ambil data dari formulir modal
-        img_produk = request.FILES.get('img_produk')
-        nama_produk = request.POST.get('nama_produk')
-        rettings = request.POST.get('rettings')
-        harga = request.POST.get('harga')
-        stok = request.POST.get('stok')
-
-        # Buat objek Produk baru
-        produk_baru = Produk(
-            img_produk=img_produk,
-            nama_produk=nama_produk,
-            rettings=rettings,
-            harga=harga,
-            stok=stok
-        )
-
-        # Simpan produk baru ke database
-        produk_baru.save()
-
-        return JsonResponse({'success': True})
-    
-class BarangListView(ListView):
-    model = Produk
-    template_name = 'dsh_barang.html'  
-    context_object_name = 'produk_list'
-    ordering = ['-id'] 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-    
-class DeleteProdukView(View):
-    def post(self, request, *args, **kwargs):
-        product_id = request.POST.get('product_id')
-        product = get_object_or_404(Produk, id=product_id)
-        product.delete()
-        return JsonResponse({'success': True})
-
-class EditProdukView(View):
-    template_name = 'dsh_barang.html'  
-
-    def get(self, request, *args, **kwargs):
-        produk_id = kwargs.get('produk_id')
-        produk = get_object_or_404(Produk, id=produk_id)
-        data = {
-            'nama_produk': produk.nama_produk,
-            'rettings': produk.rettings,
-            'harga': produk.harga,
-            'stok': produk.stok,
-            'gambar': produk.img_produk.url,
-        }
-        return JsonResponse(data)
-
-    def post(self, request, *args, **kwargs):
-        produk_id = kwargs.get('produk_id')
-        produk = get_object_or_404(Produk, id=produk_id)
-
-        produk.img_produk = request.FILES.get('img_produk', produk.img_produk)
-        produk.nama_produk = request.POST.get('nama_produk', produk.nama_produk)
-        produk.rettings = request.POST.get('rettings', produk.rettings)
-        produk.harga = request.POST.get('harga', produk.harga)
-        produk.stok = request.POST.get('stok', produk.stok)
-
-        produk.save()
-
-        return JsonResponse({'success': True, 'img_produk': produk.img_produk.url})
-    
-# ADMIN CUSTOMOR
-class GetUserDataView(View):
-    def get(self, request, *args, **kwargs):
-        user_id = self.kwargs['user_id']
-        user = get_object_or_404(CustomUser, id=user_id)
-        data = {
-            'username': user.username,
-            'email': user.email,
-            'nomor': user.nomor,
-            'alamat': user.alamat,
-        }
-        return JsonResponse(data)
-
-class CustomUserEditView(View):
-    def post(self, request, *args, **kwargs):
-        user_id = kwargs.get('user_id')
-        user = get_object_or_404(CustomUser, id=user_id)
-
-        user.username = request.POST.get('edit_username')
-        user.email = request.POST.get('edit_email')
-        user.nomor = request.POST.get('edit_nomor')
-        user.alamat = request.POST.get('edit_alamat')
-
-        # Ubah password hanya jika diisi
-        new_password = request.POST.get('edit_password')
-        if new_password:
-            user.set_password(new_password)
-
-        user.save()
-
-        return JsonResponse({'success': True})
-
-class CustomUserDeleteView(View):
-    def post(self, request, *args, **kwargs):
-        user_id = kwargs.get('user_id')
-        user = get_object_or_404(CustomUser, id=user_id)
-        user.delete()
-        return JsonResponse({'success': True})
-    
-class CustomUserListView(ListView):
-    model = CustomUser
-    template_name = 'dsh_customor.html'
-    context_object_name = 'custom_users'
 
 #USER PAGE CART AND SUMMARY ORDER
 class AddToCartView(View):
@@ -397,6 +255,153 @@ class RemoveCartItemView(View):
                 return JsonResponse({'success': True})
             else:
                 return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
+            
+# ADMIN DASHBOARD
+def datauser(request):
+    data = CustomUser.objects.all()
+    context = {
+        'data':data
+    }
+    return render(request, 'dashboard.html',context)
+
+
+# ADMIN PESANAN
+class OrderListView(View):
+    template_name = 'dsh_pesanan.html'
+
+    def get(self, request, *args, **kwargs):
+        orders = Pesanan.objects.all().order_by('-id')
+        context = {'orders': orders}
+        return render(request, self.template_name, context)
+
+class UpdateOrderStatusView(View):
+    def post(self, request, *args, **kwargs):
+        order_id = request.POST.get('order_id')
+        new_status = request.POST.get('new_status')
+        try:
+            order = Pesanan.objects.get(id=order_id)
+            order.status = new_status
+            order.save()
+            return JsonResponse({'success': True})
+        except Pesanan.DoesNotExist:
+            return JsonResponse({'error': 'Pesanan tidak ditemukan'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        
+# ADMIN PRODUK
+class AddProdukView(View):
+    def post(self, request, *args, **kwargs):
+        # Ambil data dari formulir modal
+        img_produk = request.FILES.get('img_produk')
+        nama_produk = request.POST.get('nama_produk')
+        rettings = request.POST.get('rettings')
+        harga = request.POST.get('harga')
+        stok = request.POST.get('stok')
+
+        # Buat objek Produk baru
+        produk_baru = Produk(
+            img_produk=img_produk,
+            nama_produk=nama_produk,
+            rettings=rettings,
+            harga=harga,
+            stok=stok
+        )
+
+        # Simpan produk baru ke database
+        produk_baru.save()
+
+        return JsonResponse({'success': True})
+    
+class BarangListView(ListView):
+    model = Produk
+    template_name = 'dsh_barang.html'  
+    context_object_name = 'produk_list'
+    ordering = ['-id'] 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+class DeleteProdukView(View):
+    def post(self, request, *args, **kwargs):
+        product_id = request.POST.get('product_id')
+        product = get_object_or_404(Produk, id=product_id)
+        product.delete()
+        return JsonResponse({'success': True})
+
+class EditProdukView(View):
+    template_name = 'dsh_barang.html'  
+
+    def get(self, request, *args, **kwargs):
+        produk_id = kwargs.get('produk_id')
+        produk = get_object_or_404(Produk, id=produk_id)
+        data = {
+            'nama_produk': produk.nama_produk,
+            'rettings': produk.rettings,
+            'harga': produk.harga,
+            'stok': produk.stok,
+            'gambar': produk.img_produk.url,
+        }
+        return JsonResponse(data)
+
+    def post(self, request, *args, **kwargs):
+        produk_id = kwargs.get('produk_id')
+        produk = get_object_or_404(Produk, id=produk_id)
+
+        produk.img_produk = request.FILES.get('img_produk', produk.img_produk)
+        produk.nama_produk = request.POST.get('nama_produk', produk.nama_produk)
+        produk.rettings = request.POST.get('rettings', produk.rettings)
+        produk.harga = request.POST.get('harga', produk.harga)
+        produk.stok = request.POST.get('stok', produk.stok)
+
+        produk.save()
+
+        return JsonResponse({'success': True, 'img_produk': produk.img_produk.url})
+    
+# ADMIN CUSTOMOR
+class GetUserDataView(View):
+    def get(self, request, *args, **kwargs):
+        user_id = self.kwargs['user_id']
+        user = get_object_or_404(CustomUser, id=user_id)
+        data = {
+            'username': user.username,
+            'email': user.email,
+            'nomor': user.nomor,
+            'alamat': user.alamat,
+        }
+        return JsonResponse(data)
+
+class CustomUserEditView(View):
+    def post(self, request, *args, **kwargs):
+        user_id = kwargs.get('user_id')
+        user = get_object_or_404(CustomUser, id=user_id)
+
+        user.username = request.POST.get('edit_username')
+        user.email = request.POST.get('edit_email')
+        user.nomor = request.POST.get('edit_nomor')
+        user.alamat = request.POST.get('edit_alamat')
+
+        # Ubah password hanya jika diisi
+        new_password = request.POST.get('edit_password')
+        if new_password:
+            user.set_password(new_password)
+
+        user.save()
+
+        return JsonResponse({'success': True})
+
+class CustomUserDeleteView(View):
+    def post(self, request, *args, **kwargs):
+        user_id = kwargs.get('user_id')
+        user = get_object_or_404(CustomUser, id=user_id)
+        user.delete()
+        return JsonResponse({'success': True})
+    
+class CustomUserListView(ListView):
+    model = CustomUser
+    template_name = 'dsh_customor.html'
+    context_object_name = 'custom_users'
+
 
 # AUTH
 class SignOutView(View):

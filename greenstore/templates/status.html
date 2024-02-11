@@ -134,14 +134,9 @@
     <nav>
         <div class="logo">
             <img src="{% static 'img/logo.svg' %}" alt="">
-            <h3>TOKO KAIN</h3>
+            <h3><a href="{% url 'index' %}" style="text-decoration: none; color: var(--dua)">TOKO KAIN</a></h3>
         </div>
-        <div class="btncart">
-
-            <button class="signin" id="signout-btn">Sign out</button>
-            <button class="signin" onclick="window.dialogsignin.showModal();">Sign in</button>
-            <button class="signup" onclick="window.dialogsignup.showModal();">Sign up</button>
-        </div>
+        
     </nav>
     <!-- content -->
     <div class="container">
@@ -162,7 +157,7 @@
                             <td>: {{ order.nama_user }}</td>
                         </tr>
                         <tr>
-                            <td style="width: 20%;">Nomor HP</td>
+                            <td style="width: 25%;">Nomor HP</td>
                             <td>: {{ order.nomor_hp }}</td>
                         </tr>
                         <tr>
@@ -178,8 +173,8 @@
                             <td>: {{ order.pesanan_detail }}</td>
                         </tr>
                         <tr>
-                            <td>Jumlah Item</td>
-                            <td>: {{ order.jumlah_items }}</td>
+                            <td>Jumlah Produk</td>
+                            <td>: {{ order.jumlah_items }} item</td>
                         </tr>
                         <tr>
                             <td>Harga</td>
@@ -188,7 +183,12 @@
                         <tr>
                             <td>Status</td>
                             {% if order.status  == "DELIVERED" %}
-                            <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span></td>
+                                {% if order.diterima  == True %}
+                                    <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span> <ion-icon name="checkmark-circle-outline" style="background-color: rgb(38, 34, 250); width: 20px; height: 20px; color: white; border-radius: 50px;"></ion-icon></td>
+                                {% else %}
+                                    <!-- belum diterima -->
+                                    <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span></td>
+                                {% endif %}
                             {% elif order.status  == "RETURN" %}
                             <td>: <span style="font-weight: bold; color: rgb(253, 62, 62);">{{ order.status }}</span></td>
                             {% else %}
@@ -200,12 +200,16 @@
                     <div class="btn-status">
                         
                         {% if order.status  == "DELIVERED" %}
-                            <button>Diterima</button>
-                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
-                            {% elif order.status  == "RETURN" %}
+                            {% if order.diterima  == True %}
+                               
+                            {% else %}
+                                <button>Diterima</button>
+                                <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
+                            {% endif %}
+                        {% elif order.status  == "RETURN" %}
                             <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
                             <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
-                            {% else %}
+                        {% else %}
                             <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
                             <button >Batal</button>
                         {% endif %}
@@ -219,14 +223,14 @@
                         <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
                         <div class="">
                             <p >Status Pending</p>
-                            <h5>20 Februari 2024</h5>
+                            <h5>{{order.created_at}}</h5>
                         </div>
                     </div>
                     <div class="pg2">
                         <ion-icon name="checkbox-outline" id="pgrs2" style="background-color: rgb(65, 250, 55);"></ion-icon>
                         <div class="">
                             <p style="color: rgb(65, 250, 55);">Status Delivered</p>
-                            <h5>20 Februari 2024</h5>
+                            <h5>{{order.updated_at}}</h5>
                         </div>
                     </div>
                     {% elif order.status  == "RETURN" %}
@@ -234,14 +238,14 @@
                         <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
                         <div class="">
                             <p >Status Pending</p>
-                            <h5>20 Februari 2024</h5>
+                            <h5>{{order.created_at}}</h5>
                         </div>
                     </div>
                     <div class="pg1">
-                        <ion-icon name="cube-outline" id="pgrs1" style="background-color: rgb(253, 62, 62);"></ion-icon>
+                        <ion-icon name="close-circle-outline" id="pgrs1" style="background-color: rgb(253, 62, 62);"></ion-icon>
                         <div class="">
                             <p style="color: rgb(253, 62, 62);">Status Return</p>
-                            <h5>20 Februari 2024</h5>
+                            <h5>{{order.updated_at}}</h5>
                         </div>
                     </div>
                     {% else %}
@@ -249,7 +253,7 @@
                         <ion-icon name="cube-outline" id="pgrs1" style="background-color: rgb(253, 212, 47);"></ion-icon>
                         <div class="">
                             <p style="color: rgb(253, 212, 47);">Status Pending</p>
-                            <h5>20 Februari 2024</h5>
+                            <h5>{{order.created_at}}</h5>
                         </div>
                     </div>
                     {% endif %}

@@ -42,6 +42,8 @@ class Pesanan(models.Model):
     pesanan_detail = models.TextField()  
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    diterima = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Pesanan oleh {self.nama_user} pada {self.created_at} - Status: {self.status}"

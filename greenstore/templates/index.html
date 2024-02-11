@@ -60,7 +60,7 @@
     <nav>
         <div class="logo">
             <img src="{% static 'img/logo.svg' %}" alt="">
-            <h3>TOKO KAIN</h3>
+             <h3><a href="{% url 'index' %}" style="text-decoration: none; color: var(--dua)">TOKO KAIN</a></h3>
         </div>
         <div class="btncart">
             <a href="{% url 'checkout' %}">
@@ -68,7 +68,7 @@
                 <ion-icon name="cart" id="cartProduk"></ion-icon>
             </a>
             <a href="{% url 'status' %}">
-                <p>Status</p>
+                <p id="statuspes">Status</p>
             </a>
             <button class="signin" id="signout-btn">Sign out</button>
             <button class="signin" onclick="window.dialogsignin.showModal();">Sign in</button>
