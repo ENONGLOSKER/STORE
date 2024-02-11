@@ -177,7 +177,7 @@
                                     <td>{{order.pesanan_detail}}</td>
                                     <td>{{ order.jumlah_items }}</td>
                                     <td>Rp. {{ order.total_harga }}</td>
-                                    <td>
+                                    <td style="display: flex; gap: 10px;">
                                         <select name="status" class="status {{ order.status|lower }}" data-order-id="{{ order.id }}">
                                             {% for status_value, status_display in order.STATUS_CHOICES %}
                                                 {% if order.status == status_value %}
@@ -187,6 +187,9 @@
                                                 {% endif %}
                                             {% endfor %}
                                         </select>
+                                      {% if order.diterima == True %}
+                                         <ion-icon name="checkmark-circle-outline" style="background-color: rgb(38, 34, 250); width: 20px; height: 20px; color: white; border-radius: 50px;"></ion-icon>
+                                      {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -204,7 +207,7 @@
     <script src="{% static 'js/jquery.js' %}"></script>
 
     <!-- jquery -->
-    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
 
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

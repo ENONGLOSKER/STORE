@@ -312,7 +312,7 @@ class UpdateOrderStatusView(View):
             return JsonResponse({'error': 'Pesanan tidak ditemukan'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-        
+       
 # ADMIN PRODUK
 class AddProdukView(View):
     def post(self, request, *args, **kwargs):

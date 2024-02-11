@@ -30,7 +30,6 @@ urlpatterns = [
 
     path('pesanan/', OrderListView.as_view(), name='pesanan'),
     path('update_order_status/', UpdateOrderStatusView.as_view(), name='update_order_status'),
-  
     # produk
     path('tambah-produk/', AddProdukView.as_view(), name='tambah_produk'),
     path('produk-list/', BarangListView.as_view(), name='barang'),
