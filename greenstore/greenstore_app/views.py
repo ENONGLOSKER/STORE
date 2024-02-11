@@ -24,6 +24,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 import urllib.parse
+from datetime import datetime, timedelta
 
 
 # USER PESANAN
@@ -282,23 +283,83 @@ class RemoveCartItemView(View):
                 return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
             
 # ADMIN DASHBOARD
-def datauser(request):
-    data = CustomUser.objects.all()
-    context = {
-        'data':data
-    }
-    return render(request, 'dashboard.html',context)
 
+class DashboardView(View):
+    template_name = 'dashboard.html'
+
+    def get(self, request, *args, **kwargs):
+        data = CustomUser.objects.all()
+        count_customor = CustomUser.objects.all().count()
+        count_produk = Produk.objects.all().count()
+        count_pesanan_trm = Pesanan.objects.filter(status='DELIVERED').count()
+        count_pesanan_btl = Pesanan.objects.filter(status='RETURN').count()
+        context = {
+            'data': data,
+            'count_customor': count_customor,
+            'count_produk': count_produk,
+            'count_pesanaTRM': count_pesanan_trm,
+            'count_pesanaBTL': count_pesanan_btl,
+        }
+        return render(request, self.template_name, context)
 
 # ADMIN PESANAN
 class OrderListView(View):
     template_name = 'dsh_pesanan.html'
 
     def get(self, request, *args, **kwargs):
-        orders = Pesanan.objects.all().order_by('-id')
-        context = {'orders': orders}
-        return render(request, self.template_name, context)
+        # Ambil parameter filter dari URL
+        customer_id = request.GET.get('customer')
+        date_filter = request.GET.get('date')
+        status_filter = request.GET.get('status')
 
+        # Ambil data pelanggan untuk opsi filter
+        customers = CustomUser.objects.all()
+
+        # Ambil semua opsi status yang ada
+        status_options = Pesanan.STATUS_CHOICES
+
+        # Buat query awal
+        orders = Pesanan.objects.all().order_by('-id')
+
+        # Filter berdasarkan pelanggan
+        if customer_id:
+            orders = orders.filter(nama_user_id=customer_id)
+
+        # Filter berdasarkan tanggal
+        if date_filter == 'today':
+            # Filter untuk hari ini
+            today = datetime.now().date()
+            orders = orders.filter(created_at__date=today)
+        elif date_filter == 'week':
+            # Filter untuk seminggu terakhir
+            week_ago = datetime.now().date() - timedelta(days=7)
+            orders = orders.filter(created_at__date__gte=week_ago)
+        elif date_filter == 'month':
+            # Filter untuk sebulan terakhir
+            month_ago = datetime.now().date() - timedelta(days=30)
+            orders = orders.filter(created_at__date__gte=month_ago)
+
+        # Filter berdasarkan status
+        if status_filter:
+            orders = orders.filter(status=status_filter)
+
+
+        count_pandding = Pesanan.objects.filter(status='PENDING').count()
+        count_progres = Pesanan.objects.filter(status='PROGRES').count()
+        count_delivered = Pesanan.objects.filter(status='DELIVERED').count()
+        count_return = Pesanan.objects.filter(status='RETURN').count()
+
+        context = {
+            'orders': orders,
+            'customers': customers,
+            'status_options': status_options,
+            'count_pandding': count_pandding,
+            'count_progres': count_progres,
+            'count_delivered': count_delivered,
+            'count_return': count_return
+        }
+        return render(request, self.template_name, context)
+    
 class UpdateOrderStatusView(View):
     def post(self, request, *args, **kwargs):
         order_id = request.POST.get('order_id')

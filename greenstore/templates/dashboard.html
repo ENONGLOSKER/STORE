@@ -104,7 +104,7 @@
             <div class="cardBox">
                 <div class="card">
                     <div>
-                        <div class="numbers">1,504</div>
+                        <div class="numbers">{{count_customor}} <span style="font-size: 25px;">Orang</span></div>
                         <div class="cardName">Customors</div>
                     </div>
 
@@ -115,18 +115,7 @@
 
                 <div class="card">
                     <div>
-                        <div class="numbers">80</div>
-                        <div class="cardName">Kategoris</div>
-                    </div>
-
-                    <div class="iconBx">
-                        <ion-icon name="storefront-outline"></ion-icon>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div>
-                        <div class="numbers">284</div>
+                        <div class="numbers">{{count_produk}} <span style="font-size: 25px;">Item</span></div>
                         <div class="cardName">Produks</div>
                     </div>
 
@@ -137,45 +126,38 @@
 
                 <div class="card">
                     <div>
-                        <div class="numbers">7,842</div>
-                        <div class="cardName">Pesanan</div>
+                        <div class="numbers">{{count_pesanaTRM}} <span style="font-size: 25px;">Pesanan</span></div>
+                        <div class="cardName">Berhasil</div>
                     </div>
 
                     <div class="iconBx">
-                        <ion-icon name="cart-outline"></ion-icon>
+                        <ion-icon name="bag-check-outline"></ion-icon>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers">{{count_pesanaBTL}} <span style="font-size: 25px;">Pesanan</span></div>
+                        <div class="cardName">Batal</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="bag-remove-outline"></ion-icon>
+                    </div>
+                </div>
+
+                
             </div>
 
-            <!-- ================ Order Details List ================= -->
+            <!-- ================ visualisasi data ================= -->
             <div class="details">
                 <div class="recentOrders">
                     <div class="cardHeader">
-                        <h2>Visualisasi Data Toko Kain</h2>
-                        <!-- <p>Data : Customors, Kategoris, Produks, Pesanan</p> -->
-                        <a href="#" class="btn">View All</a>
+                        <h2>Visualisasi Data </h2>
                     </div>
 
                     <table>
                         <div id="container" style="width:100%; height:400px;"></div>
-                    </table>
-                </div>
-
-                <!-- ================= New Customers ================ -->
-                <div class="recentCustomers">
-                    <div class="cardHeader">
-                        <h2>Recent Pesanan</h2>
-                    </div>
-
-                    <table>
-                        <tr>
-                            <!-- <td width="60px">
-                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
-                            </td>
-                            <td>
-                                <h4>David <br> <span>Italy</span></h4>
-                            </td> -->
-                        </tr>
                     </table>
                 </div>
             </div>
@@ -200,28 +182,29 @@
                     type: 'column'
                 },
                 title: {
-                    text: 'Fruit Consumption'
+                    text: 'TOKO KAIN'
                 },
                 xAxis: {
-                    categories: ['A', 'B', 'C','D']
+                    categories: ['']
                 },
                 yAxis: {
                     title: {
-                        text: 'Fruit eaten'
+                        text: 'Jumlah Keseluruhan'
                     }
                 },
+                // data customor, produk, pesanan berhasil, pesann gagal
                 series: [{
-                    name: 'th1',
-                    data: [1, 0, 4,8]
+                    name: 'CUSTOMOR',
+                    data: [{{count_customor}}]
                 }, {
-                    name: 'th2',
-                    data: [5, 7, 3,6]
+                    name: 'PRODUK',
+                    data: [{{count_produk}}]
                 }, {
-                    name: 'th2',
-                    data: [5, 7, 3,8]
+                    name: 'PESANAN BERHASIL',
+                    data: [{{count_pesanaTRM}}]
                 }, {
-                    name: 'th4',
-                    data: [4, 5, 2,5]
+                    name: 'PESANAN BATAL',
+                    data: [{{count_pesanaBTL}}]
                 }]
                 
             });

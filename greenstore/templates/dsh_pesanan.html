@@ -12,6 +12,15 @@
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 </head>
+<style>
+    #filter_pesanan{
+        padding: 4px 8px;
+        margin-right: 5px;
+        color: rgb(93, 2, 2);
+        border: 2px solid rgb(129, 75, 75);
+        border-radius: 4px;
+    }
+</style>
 
 <body>
     <!-- =============== Navigation ================ -->
@@ -102,45 +111,45 @@
             <div class="cardBox">
                 <div class="card">
                     <div>
-                        <div class="numbers">1,504</div>
-                        <div class="cardName">Daily Views</div>
+                        <div class="numbers">{{count_pandding}} <span style="font-size: 20px;">Pesanan</span></div>
+                        <div class="cardName">Status Pandding</div>
                     </div>
 
                     <div class="iconBx">
-                        <ion-icon name="eye-outline"></ion-icon>
+                        <ion-icon name="hand-left"></ion-icon>
                     </div>
                 </div>
 
                 <div class="card">
                     <div>
-                        <div class="numbers">80</div>
-                        <div class="cardName">Sales</div>
+                        <div class="numbers">{{count_progres}} <span style="font-size: 20px;">Pesanan</span></div>
+                        <div class="cardName">Status Progres</div>
                     </div>
 
                     <div class="iconBx">
-                        <ion-icon name="cart-outline"></ion-icon>
+                        <ion-icon name="cube"></ion-icon>
                     </div>
                 </div>
 
                 <div class="card">
                     <div>
-                        <div class="numbers">284</div>
-                        <div class="cardName">Comments</div>
+                        <div class="numbers">{{count_delivered}} <span style="font-size: 20px;">Pesanan</span></div>
+                        <div class="cardName">Status Delivered</div>
                     </div>
 
                     <div class="iconBx">
-                        <ion-icon name="chatbubbles-outline"></ion-icon>
+                        <ion-icon name="log-out"></ion-icon>
                     </div>
                 </div>
 
                 <div class="card">
                     <div>
-                        <div class="numbers">$7,842</div>
-                        <div class="cardName">Earning</div>
+                        <div class="numbers">{{count_return}} <span style="font-size: 20px;">Pesanan</span></div>
+                        <div class="cardName">Status Return</div>
                     </div>
 
                     <div class="iconBx">
-                        <ion-icon name="cash-outline"></ion-icon>
+                        <ion-icon name="reload"></ion-icon>
                     </div>
                 </div>
             </div>
@@ -150,7 +159,29 @@
                 <div class="recentOrders">
                     <div class="cardHeader">
                         <h2>Data Pesanan</h2>
-                        <a href="#" class="btn">View All</a>
+                        <form method="get" action="">
+                                <select name="customer" id="filter_pesanan">
+                                    <option value="">customer</option>
+                                    <!-- Loop untuk menampilkan opsi pelanggan -->
+                                    {% for customer in customers %}
+                                        <option value="{{ customer.id }}">{{ customer.username }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select name="date" id="filter_pesanan">
+                                    <option value="">tanggal</option>
+                                    <option value="today">Hari ini</option>
+                                    <option value="week">Seminggu</option>
+                                    <option value="month">Sebulan</option>
+                                </select>
+                                <select name="status" id="filter_pesanan">
+                                    <option value="">status</option>
+                                    {% for status_value, status_display in status_options %}
+                                        <option value="{{ status_value }}">{{ status_display }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn"><ion-icon name="funnel" style="margin-right: 2px; transform: translateY(2.2px);"></ion-icon> Filter</button>
+                        </form>
+                        
                     </div>
                     <table>
                         <thead>
@@ -174,10 +205,14 @@
                                     <td>{{ order.nomor_hp }}</td>
                                     <td>{{ order.email }}</td>
                                     <td>{{ order.alamat }}</td>
-                                    <td>{{order.pesanan_detail}}</td>
+                                    <td>
+                                        <h5 style="margin-bottom: 5px; color: rgb(213, 213, 213);">{{order.created_at}}</h5>
+                                        {{order.pesanan_detail}}
+                                    </td>
                                     <td>{{ order.jumlah_items }}</td>
                                     <td>Rp. {{ order.total_harga }}</td>
                                     <td style="display: flex; gap: 10px;">
+                                        {% if order.diterima == False %}
                                         <select name="status" class="status {{ order.status|lower }}" data-order-id="{{ order.id }}">
                                             {% for status_value, status_display in order.STATUS_CHOICES %}
                                                 {% if order.status == status_value %}
@@ -187,7 +222,17 @@
                                                 {% endif %}
                                             {% endfor %}
                                         </select>
-                                      {% if order.diterima == True %}
+                                        {% else %}
+                                        <select disabled name="status" class="status {{ order.status|lower }}" data-order-id="{{ order.id }}">
+                                            {% for status_value, status_display in order.STATUS_CHOICES %}
+                                                {% if order.status == status_value %}
+                                                    <option value="{{ status_value }}" selected>{{ status_display }}</option>
+                                                {% else %}
+                                                    <option value="{{ status_value }}">{{ status_display }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                
                                          <ion-icon name="checkmark-circle-outline" style="background-color: rgb(38, 34, 250); width: 20px; height: 20px; color: white; border-radius: 50px;"></ion-icon>
                                       {% endif %}
                                     </td>

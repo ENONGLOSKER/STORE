@@ -19,11 +19,11 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from greenstore_app.views import SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, datauser, OrderListView, BarangListView,DeleteProdukView, AddProdukView, EditProdukView, ProdukListView, SaveOrderView, OrderSummaryView, UpdateOrderStatusView,PesananListView, PesananDiterimaView,PesananBatalView
+from greenstore_app.views import SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, DashboardView, OrderListView, BarangListView,DeleteProdukView, AddProdukView, EditProdukView, ProdukListView, SaveOrderView, OrderSummaryView, UpdateOrderStatusView,PesananListView, PesananDiterimaView,PesananBatalView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dashboard/', datauser, name='dashboard'),
+    path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('status/', PesananListView.as_view(), name='status'),
     path('pesanan/diterima/', PesananDiterimaView.as_view(), name='pesanan_diterima'),
     path('pesanan/batal/', PesananBatalView.as_view(), name='pesanan_batal'),
