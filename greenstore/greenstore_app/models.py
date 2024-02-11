@@ -29,6 +29,7 @@ class CartItem(models.Model):
 class Pesanan(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
+        ('PROGRES', 'Progres'),
         ('DELIVERED', 'Delivered'),
         ('RETURN', 'Return'),
     ]

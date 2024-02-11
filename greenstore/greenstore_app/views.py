@@ -35,6 +35,31 @@ class PesananListView(ListView):
     def get_queryset(self):
         return Pesanan.objects.filter(nama_user=self.request.user).order_by('-id')
 
+class PesananDiterimaView(View):
+    def post(self, request, *args, **kwargs):
+        order_id = request.POST.get('order_id')  # Ambil ID pesanan dari POST request
+        try:
+            order = Pesanan.objects.get(id=order_id)
+            order.diterima = True  # Set nilai diterima menjadi True
+            order.save()
+            return JsonResponse({'success': True})
+        except Pesanan.DoesNotExist:
+            return JsonResponse({'error': 'Pesanan tidak ditemukan'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        
+class PesananBatalView(View):
+    def post(self, request, *args, **kwargs):
+        pesanan_id = request.POST.get('pesanan_id')
+        try:
+            pesanan = Pesanan.objects.get(id=pesanan_id)
+            pesanan.status = 'RETURN'  # Update status pesanan menjadi 'RETURN'
+            pesanan.save()
+            return JsonResponse({'success': True})
+        except Pesanan.DoesNotExist:
+            return JsonResponse({'error': 'Pesanan tidak ditemukan'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 #USER PAGE CART AND SUMMARY ORDER
 class AddToCartView(View):

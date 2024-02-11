@@ -189,29 +189,28 @@
                                     <!-- belum diterima -->
                                     <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span></td>
                                 {% endif %}
+                            {% elif order.status  == "PROGRES" %}
+                                <td>: <span style="font-weight: bold; color: rgb(55, 230, 250);">{{ order.status }}</span></td>
                             {% elif order.status  == "RETURN" %}
-                            <td>: <span style="font-weight: bold; color: rgb(253, 62, 62);">{{ order.status }}</span></td>
+                                <td>: <span style="font-weight: bold; color: rgb(253, 62, 62);">{{ order.status }}</span></td>
                             {% else %}
-                            <td>: <span style="font-weight: bold; color: rgb(253, 212, 47);">{{ order.status }}</span></td>
+                                <td>: <span style="font-weight: bold; color: rgb(253, 212, 47);">{{ order.status }}</span></td>
                             {% endif %}
                         </tr>
                     </table>
 
                     <div class="btn-status">
-                        
                         {% if order.status  == "DELIVERED" %}
-                            {% if order.diterima  == True %}
-                               
-                            {% else %}
-                                <button>Diterima</button>
-                                <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
+                            {% if order.status == "DELIVERED" and not order.diterima %}
+                            <button class="btn-diterima" data-order-id="{{ order.id }}">Diterima</button>
+                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
                             {% endif %}
-                        {% elif order.status  == "RETURN" %}
+                        {% elif order.status  == "RETURN" or order.status  == "PROGRES" %}
                             <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
                             <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
                         {% else %}
                             <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
-                            <button >Batal</button>
+                            <button onclick="batalkanPesanan({{ order.id }})">Batal</button>
                         {% endif %}
                     </div>
                 </div>
@@ -227,12 +226,35 @@
                         </div>
                     </div>
                     <div class="pg2">
+                        <ion-icon name="checkbox-outline" id="pgrs2" ></ion-icon>
+                        <div class="">
+                            <p >Status Progres</p>
+                            <h5>{{order.updated_at}}</h5>
+                        </div>
+                    </div>
+                    <div class="pg2">
                         <ion-icon name="checkbox-outline" id="pgrs2" style="background-color: rgb(65, 250, 55);"></ion-icon>
                         <div class="">
                             <p style="color: rgb(65, 250, 55);">Status Delivered</p>
                             <h5>{{order.updated_at}}</h5>
                         </div>
                     </div>
+                    {% elif order.status  == "PROGRES" %}
+                    <div class="pg1">
+                        <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
+                        <div class="">
+                            <p >Status Pending</p>
+                            <h5>{{order.created_at}}</h5>
+                        </div>
+                    </div>
+                    <div class="pg2">
+                        <ion-icon name="checkbox-outline" id="pgrs2" style="background-color: rgb(55, 230, 250);"></ion-icon>
+                        <div class="">
+                            <p style="color: rgb(55, 230, 250);">Status Progres</p>
+                            <h5>{{order.updated_at}}</h5>
+                        </div>
+                    </div>
+
                     {% elif order.status  == "RETURN" %}
                     <div class="pg1">
                         <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
@@ -272,6 +294,65 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
+
+    <!-- diterima -->
+    <script>
+        $(document).ready(function() {
+            $(".btn-diterima").click(function() {
+                var orderId = $(this).data("order-id");
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'pesanan_diterima' %}",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        order_id: orderId
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            // Tindakan setelah pesanan diterima berhasil diupdate
+                            // Misalnya, refresh halaman atau tampilkan pesan sukses
+                            alert("Pesanan telah diterima.");
+                            window.location.reload();
+                        } else {
+                            alert("Gagal memperbarui status pesanan.");
+                        }
+                    },
+                    error: function() {
+                        alert("Terjadi kesalahan saat mengirim permintaan.");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- batal -->
+    <script>
+        // Fungsi untuk mengirimkan permintaan POST untuk membatalkan pesanan
+        function batalkanPesanan(pesananId) {
+            // Konfirmasi sebelum membatalkan pesanan
+            if (confirm("Apakah Anda yakin ingin membatalkan pesanan ini?")) {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'pesanan_batal' %}",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        pesanan_id: pesananId
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            // Refresh halaman setelah pembatalan berhasil
+                            window.location.reload();
+                        } else {
+                            alert("Gagal membatalkan pesanan.");
+                        }
+                    },
+                    error: function () {
+                        alert("Terjadi kesalahan saat membatalkan pesanan.");
+                    }
+                });
+            }
+        }
+        </script>
 
     <!-- sign out -->
     <script>
