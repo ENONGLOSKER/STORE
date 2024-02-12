@@ -15,8 +15,8 @@
      .content2{
         background-color: white;
         display: flex;
-        flex-direction: row;
         gap: 20px;
+        width: 100%;
         padding: 40px 80px;
      }
      .content2 .detail{
@@ -29,13 +29,16 @@
         height: 50px;
         width: 30%;
         margin-top: 20px;
-       
+        display: flex;
+        gap: 15px;
      }
      .content2 .detail .btn-status button{
-        padding: 8px 18px;
+        /* padding: 4px 16px; */
         border: none;
         color: white;
         font-weight: bold;
+        height: 35px;
+        width: 82px;
      }
      .content2 .detail .btn-status button:nth-child(1){
         background-color: var(--satu);
@@ -43,7 +46,6 @@
     
      .content2 .detail .btn-status button:nth-child(2){
         background-color: var(--dua);
-        padding: 8px 28px;
      }
      .content2 .detail .btn-status button:nth-child(1):hover{
         background-color: orange;
@@ -52,9 +54,6 @@
         background-color: rgb(255, 49, 49);
      }
      
-     
-
-
      .content2 .progres{
         position: relative;
         display: flex;
@@ -85,6 +84,57 @@
         border-radius: 50px;
         z-index: 100px;
      }
+
+     /* mobile mode */
+     @media only screen and (max-width: 620px) { /*batas max*/
+        nav{
+            padding: 15px 20px;
+        }
+        .container{
+            /* background-color: rgb(204, 248, 197); */
+            margin: 0 20px;
+        }
+        .container .content2{
+            display: flex;
+            gap: 5px;
+            justify-content: space-between;
+            padding: 15px 20px;
+            height: 80%;
+        }
+        .content2 .detail .btn-status button{
+            height: 38px;
+            width: 280px;
+            padding: 0 20px;
+        }
+        .content2 .detail .btn-status button:nth-child(2){
+            background-color: var(--dua);
+            padding: 0 30px;
+        }
+        .content2 .progres{
+            gap: 30px;
+        }
+    }
+
+    /* tablet mode */
+    @media only screen and (min-width: 692px) {
+        
+        .container .content2{
+            display: flex;
+            gap: 5px;
+            justify-content: space-between;
+            padding: 15px 20px;
+            height: 80%;
+        }
+        .content2 .detail .btn-status button{
+            height: 38px;
+            width: 120px;
+            padding: 0 20px;
+        }
+        .content2 .detail .btn-status button:nth-child(2){
+            background-color: var(--dua);
+            padding: 0 30px;
+        }
+    }
     </style>
 </head>
 <body>
@@ -148,141 +198,141 @@
             
         </div>
 
-        {% for order in pesanan %}
-            <div class="content2">
-                <div class="detail">
-                    <table>
-                        <tr>
-                            <td>Nama</td>
-                            <td>: {{ order.nama_user }}</td>
-                        </tr>
-                        <tr>
-                            <td style="width: 25%;">Nomor HP</td>
-                            <td>: {{ order.nomor_hp }}</td>
-                        </tr>
-                        <tr>
-                            <td>Email</td>
-                            <td>: {{ order.email }}</td>
-                        </tr>
-                        <tr>
-                            <td>Alamat</td>
-                            <td>: {{ order.alamat }}</td>
-                        </tr>
-                        <tr>
-                            <td>Produk</td>
-                            <td>: {{ order.pesanan_detail }}</td>
-                        </tr>
-                        <tr>
-                            <td>Jumlah Produk</td>
-                            <td>: {{ order.jumlah_items }} item</td>
-                        </tr>
-                        <tr>
-                            <td>Harga</td>
-                            <td>: Rp. {{ order.total_harga }}</td>
-                        </tr>
-                        <tr>
-                            <td>Status</td>
-                            {% if order.status  == "DELIVERED" %}
-                                {% if order.diterima  == True %}
-                                    <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span> <ion-icon name="checkmark-circle-outline" style="background-color: rgb(38, 34, 250); width: 20px; height: 20px; color: white; border-radius: 50px;"></ion-icon></td>
-                                {% else %}
-                                    <!-- belum diterima -->
-                                    <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span></td>
-                                {% endif %}
-                            {% elif order.status  == "PROGRES" %}
-                                <td>: <span style="font-weight: bold; color: rgb(55, 230, 250);">{{ order.status }}</span></td>
-                            {% elif order.status  == "RETURN" %}
-                                <td>: <span style="font-weight: bold; color: rgb(253, 62, 62);">{{ order.status }}</span></td>
-                            {% else %}
-                                <td>: <span style="font-weight: bold; color: rgb(253, 212, 47);">{{ order.status }}</span></td>
-                            {% endif %}
-                        </tr>
-                    </table>
-
-                    <div class="btn-status">
+    {% for order in pesanan %}
+        <div class="content2">
+            <div class="detail">
+                <table>
+                    <tr>
+                        <td>Nama</td>
+                        <td>: {{ order.nama_user }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 25%;">Nomor HP</td>
+                        <td>: {{ order.nomor_hp }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>: {{ order.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
+                        <td>: {{ order.alamat }}</td>
+                    </tr>
+                    <tr>
+                        <td>Produk</td>
+                        <td>: {{ order.pesanan_detail }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jumlah Produk</td>
+                        <td>: {{ order.jumlah_items }} item</td>
+                    </tr>
+                    <tr>
+                        <td>Harga</td>
+                        <td>: Rp. {{ order.total_harga }}</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
                         {% if order.status  == "DELIVERED" %}
-                            {% if order.status == "DELIVERED" and not order.diterima %}
-                            <button class="btn-diterima" data-order-id="{{ order.id }}">Diterima</button>
-                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
+                            {% if order.diterima  == True %}
+                                <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span> <ion-icon name="checkmark-circle-outline" style="background-color: rgb(38, 34, 250); width: 20px; height: 20px; color: white; border-radius: 50px;"></ion-icon></td>
+                            {% else %}
+                                <!-- belum diterima -->
+                                <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span></td>
                             {% endif %}
-                        {% elif order.status  == "RETURN" or order.status  == "PROGRES" %}
-                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
-                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
+                        {% elif order.status  == "PROGRES" %}
+                            <td>: <span style="font-weight: bold; color: rgb(55, 230, 250);">{{ order.status }}</span></td>
+                        {% elif order.status  == "RETURN" %}
+                            <td>: <span style="font-weight: bold; color: rgb(253, 62, 62);">{{ order.status }}</span></td>
                         {% else %}
-                            <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
-                            <button onclick="batalkanPesanan({{ order.id }})">Batal</button>
+                            <td>: <span style="font-weight: bold; color: rgb(253, 212, 47);">{{ order.status }}</span></td>
                         {% endif %}
-                    </div>
-                </div>
+                    </tr>
+                </table>
 
-                <div class="progres">
-                    <span id="line"></span>
+                <div class="btn-status">
                     {% if order.status  == "DELIVERED" %}
-                    <div class="pg1">
-                        <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
-                        <div class="">
-                            <p >Status Pending</p>
-                            <h5>{{order.created_at}}</h5>
-                        </div>
-                    </div>
-                    <div class="pg2">
-                        <ion-icon name="checkbox-outline" id="pgrs2" ></ion-icon>
-                        <div class="">
-                            <p >Status Progres</p>
-                            <h5>{{order.updated_at}}</h5>
-                        </div>
-                    </div>
-                    <div class="pg2">
-                        <ion-icon name="checkbox-outline" id="pgrs2" style="background-color: rgb(65, 250, 55);"></ion-icon>
-                        <div class="">
-                            <p style="color: rgb(65, 250, 55);">Status Delivered</p>
-                            <h5>{{order.updated_at}}</h5>
-                        </div>
-                    </div>
-                    {% elif order.status  == "PROGRES" %}
-                    <div class="pg1">
-                        <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
-                        <div class="">
-                            <p >Status Pending</p>
-                            <h5>{{order.created_at}}</h5>
-                        </div>
-                    </div>
-                    <div class="pg2">
-                        <ion-icon name="checkbox-outline" id="pgrs2" style="background-color: rgb(55, 230, 250);"></ion-icon>
-                        <div class="">
-                            <p style="color: rgb(55, 230, 250);">Status Progres</p>
-                            <h5>{{order.updated_at}}</h5>
-                        </div>
-                    </div>
-
-                    {% elif order.status  == "RETURN" %}
-                    <div class="pg1">
-                        <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
-                        <div class="">
-                            <p >Status Pending</p>
-                            <h5>{{order.created_at}}</h5>
-                        </div>
-                    </div>
-                    <div class="pg1">
-                        <ion-icon name="close-circle-outline" id="pgrs1" style="background-color: rgb(253, 62, 62);"></ion-icon>
-                        <div class="">
-                            <p style="color: rgb(253, 62, 62);">Status Return</p>
-                            <h5>{{order.updated_at}}</h5>
-                        </div>
-                    </div>
+                        {% if order.status == "DELIVERED" and not order.diterima %}
+                        <button class="btn-diterima" data-order-id="{{ order.id }}">Diterima</button>
+                        <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
+                        {% endif %}
+                    {% elif order.status  == "RETURN" or order.status  == "PROGRES" %}
+                        <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
+                        <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Batal</button>
                     {% else %}
-                    <div class="pg1">
-                        <ion-icon name="cube-outline" id="pgrs1" style="background-color: rgb(253, 212, 47);"></ion-icon>
-                        <div class="">
-                            <p style="color: rgb(253, 212, 47);">Status Pending</p>
-                            <h5>{{order.created_at}}</h5>
-                        </div>
-                    </div>
+                        <button disabled style="background-color: rgb(201, 201, 201); cursor: not-allowed;">Diterima</button>
+                        <button onclick="batalkanPesanan({{ order.id }})">Batal</button>
                     {% endif %}
-                    
                 </div>
             </div>
-        {% endfor %}
+
+            <div class="progres">
+                <span id="line"></span>
+                {% if order.status  == "DELIVERED" %}
+                <div class="pg1">
+                    <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
+                    <div class="">
+                        <p >Status Pending</p>
+                        <h5>{{order.created_at}}</h5>
+                    </div>
+                </div>
+                <div class="pg2">
+                    <ion-icon name="checkbox-outline" id="pgrs2" ></ion-icon>
+                    <div class="">
+                        <p >Status Progres</p>
+                        <h5>{{order.updated_at}}</h5>
+                    </div>
+                </div>
+                <div class="pg2">
+                    <ion-icon name="checkbox-outline" id="pgrs2" style="background-color: rgb(65, 250, 55);"></ion-icon>
+                    <div class="">
+                        <p style="color: rgb(65, 250, 55);">Status Delivered</p>
+                        <h5>{{order.updated_at}}</h5>
+                    </div>
+                </div>
+                {% elif order.status  == "PROGRES" %}
+                <div class="pg1">
+                    <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
+                    <div class="">
+                        <p >Status Pending</p>
+                        <h5>{{order.created_at}}</h5>
+                    </div>
+                </div>
+                <div class="pg2">
+                    <ion-icon name="checkbox-outline" id="pgrs2" style="background-color: rgb(55, 230, 250);"></ion-icon>
+                    <div class="">
+                        <p style="color: rgb(55, 230, 250);">Status Progres</p>
+                        <h5>{{order.updated_at}}</h5>
+                    </div>
+                </div>
+
+                {% elif order.status  == "RETURN" %}
+                <div class="pg1">
+                    <ion-icon name="cube-outline" id="pgrs1"></ion-icon>
+                    <div class="">
+                        <p >Status Pending</p>
+                        <h5>{{order.created_at}}</h5>
+                    </div>
+                </div>
+                <div class="pg1">
+                    <ion-icon name="close-circle-outline" id="pgrs1" style="background-color: rgb(253, 62, 62);"></ion-icon>
+                    <div class="">
+                        <p style="color: rgb(253, 62, 62);">Status Return</p>
+                        <h5>{{order.updated_at}}</h5>
+                    </div>
+                </div>
+                {% else %}
+                <div class="pg1">
+                    <ion-icon name="cube-outline" id="pgrs1" style="background-color: rgb(253, 212, 47);"></ion-icon>
+                    <div class="">
+                        <p style="color: rgb(253, 212, 47);">Status Pending</p>
+                        <h5>{{order.created_at}}</h5>
+                    </div>
+                </div>
+                {% endif %}
+                
+            </div>
+        </div>
+    {% endfor %}
 
 
         
