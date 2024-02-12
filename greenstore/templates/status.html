@@ -352,36 +352,6 @@
                 });
             }
         }
-        </script>
-
-    <!-- sign out -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var signoutButton = document.getElementById("signout-btn");
-
-            signoutButton.addEventListener("click", function () {
-                signout();
-            });
-        });
-
-        function signout() {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'signout' %}",  // Ganti 'signout' dengan nama URL view sign-out
-                data: {csrfmiddlewaretoken: "{{ csrf_token }}",},
-                success: function (data) {
-                    if (data.success) {
-                        alert("Logout berhasil");
-                        window.location.href = "{% url 'index' %}";  // Redirect ke halaman utama atau halaman login
-                    } else {
-                        alert("Logout gagal: " + data.message);
-                    }
-                },
-                error: function () {
-                    alert("Terjadi kesalahan saat mengirim permintaan sign-out.");
-                }
-            });
-        }
     </script>
 
     

@@ -2,29 +2,19 @@ from django.shortcuts import render
 from .models import Produk,CustomUser,Cart, CartItem, Pesanan
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.core.files.base import ContentFile
-import base64
-import io
 from django.contrib.auth import authenticate, login, logout
 from .forms import CustomUserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sessions.models import Session
-from django.views.generic import TemplateView
 import urllib.parse
-from urllib.parse import quote
 from django.db import transaction
-from django.views.generic.edit import DeleteView
-from django.urls import reverse_lazy
 from django.http import JsonResponse
-from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.db import transaction
-import urllib.parse
 from datetime import datetime, timedelta
+from django.db.models import Q
 
 
 # USER PESANAN
@@ -397,7 +387,7 @@ class AddProdukView(View):
         produk_baru.save()
 
         return JsonResponse({'success': True})
-    
+
 class BarangListView(ListView):
     model = Produk
     template_name = 'dsh_barang.html'  
@@ -406,6 +396,23 @@ class BarangListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        return context
+
+class BarangListView(ListView):
+    model = Produk
+    template_name = 'dsh_barang.html'  
+    context_object_name = 'produk_list'
+    ordering = ['-id'] 
+    paginate_by = 6
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Produk.objects.filter(nama_produk__icontains=query).order_by('-id')
+        return Produk.objects.all().order_by('-id')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
         return context
     
 class DeleteProdukView(View):
@@ -487,6 +494,18 @@ class CustomUserListView(ListView):
     model = CustomUser
     template_name = 'dsh_customor.html'
     context_object_name = 'custom_users'
+    ordering = ['-id']
+    paginate_by = 10
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return CustomUser.objects.filter(username__icontains=query).order_by('-id')
+        return CustomUser.objects.all().order_by('-id')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        return context
 
 
 # AUTH

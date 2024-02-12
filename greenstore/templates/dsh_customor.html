@@ -11,6 +11,38 @@
     <title> Admin Dashboard </title>
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>
+        .pagination{
+            margin-top: 10px;
+        }
+        .pagination .step-links{
+            padding: 5px 10px; 
+            background-color: #f8f8f8; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            width: 15%; 
+            border-radius: 4px;
+        }
+        .pagination .step-links a{
+            padding: 5px 5px 3px 5px;
+            border-radius: 4px;
+            background-color: #dadada;
+            color: rgb(91, 91, 91);
+        }
+        .pagination .step-links a:nth-child(1):hover{
+            background-color:var(--satu) ;
+            color: white;
+        }
+        .pagination .step-links a:last-child:hover{
+            color: white;
+            background-color: var(--dua) ;
+        }
+        .pagination .step-links a #pgkiri, #pgkanan{
+            width: 24px;
+            height: 24px;
+        }
+    </style>
 </head>
 
 <body>
@@ -115,10 +147,12 @@
                 </div>
 
                 <div class="search">
-                    <label>
-                        <input type="text" placeholder="Search here">
-                        <ion-icon name="search-outline"></ion-icon>
-                    </label>
+                    <form method="GET">
+                        <label>
+                            <input type="text" name="q" placeholder="Search here" style="margin-top: 25px;">
+                            <button type="submit"><ion-icon name="search-outline"></ion-icon></button>
+                        </label>
+                    </form>
                 </div>
 
                 <div class="" style="display: flex; gap: 10px; align-items: center;">
@@ -172,6 +206,27 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
+                        <div class="pagination" >
+                            {% if is_paginated %}
+                                <span class="step-links">
+                                    {% if page_obj.has_previous %}
+                                        <a href="?q={{ search_query }}&page={{ page_obj.previous_page_number }}">
+                                            <ion-icon name="chevron-back-circle-outline" id="pgkiri"></ion-icon >
+                                        </a>
+                                    {% endif %}
+                        
+                                    <span class="current" style="color: #b7b6b6;">
+                                        Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                                    </span>
+                        
+                                    {% if page_obj.has_next %}
+                                        <a href="?q={{ search_query }}&page={{ page_obj.next_page_number }}">
+                                            <ion-icon name="chevron-forward-circle-outline" id="pgkanan"></ion-icon>
+                                        </a>
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                        </div> 
                     </table>
 
                 </div>

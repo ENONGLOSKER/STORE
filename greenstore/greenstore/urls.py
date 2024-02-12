@@ -31,13 +31,15 @@ urlpatterns = [
     path('pesanan/', OrderListView.as_view(), name='pesanan'),
     path('update_order_status/', UpdateOrderStatusView.as_view(), name='update_order_status'),
     # produk
-    path('tambah-produk/', AddProdukView.as_view(), name='tambah_produk'),
     path('produk-list/', BarangListView.as_view(), name='barang'),
+    path('barang/search/', BarangListView.as_view(), name='barang_search'),
+    path('tambah-produk/', AddProdukView.as_view(), name='tambah_produk'),
     path('delete-produk/<int:product_id>/', DeleteProdukView.as_view(), name='delete_produk'),
     path('edit-produk/<int:produk_id>/', EditProdukView.as_view(), name='edit_produk'),
 
     # custumor
     path('customor/', CustomUserListView.as_view(), name='customor'),
+    path('customor/search/', CustomUserListView.as_view(), name='customor_search'),
     path('delete_user/<int:user_id>/', CustomUserDeleteView.as_view(), name='delete_user'),
     path('edit_user/<int:user_id>/', CustomUserEditView.as_view(), name='edit_user'),
     path('get_user_data/<int:user_id>/', GetUserDataView.as_view(), name='get_user_data'),
