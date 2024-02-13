@@ -19,6 +19,34 @@
             color: rgb(11, 11, 11);
         }
 
+        /* mobile mode */
+        @media only screen and (max-width: 790px) { /*batas max*/
+            nav{
+                padding: 15px 20px;
+            }
+            .container{
+                /* background-color: rgb(204, 248, 197); */
+                margin: 0 20px;
+            }
+            .container .content2{
+                flex-direction: column;
+                padding-bottom: 20px;
+            }
+            .content2 .summray{
+                width: 100%;
+            }
+            .content2 .order{
+                width: 100%;
+            }
+        }
+
+        /* tablet mode */
+        @media only screen and (min-width: 692px) {
+            .container .content2{
+                background-color: blue;
+            }
+        }
+
     </style>
 </head>
 <body>

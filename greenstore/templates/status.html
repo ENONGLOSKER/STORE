@@ -358,16 +358,14 @@
                         order_id: orderId
                     },
                     success: function(data) {
-                        if (data.success) {
-                            // Tindakan setelah pesanan diterima berhasil diupdate
-                            // Misalnya, refresh halaman atau tampilkan pesan sukses
+                        if (data.success) { 
                             alert("Pesanan telah diterima.");
                             window.location.reload();
                         } else {
                             alert("Gagal memperbarui status pesanan.");
                         }
                     },
-                    error: function() {
+                    error: function() { 
                         alert("Terjadi kesalahan saat mengirim permintaan.");
                     }
                 });
@@ -377,9 +375,7 @@
 
     <!-- batal -->
     <script>
-        // Fungsi untuk mengirimkan permintaan POST untuk membatalkan pesanan
         function batalkanPesanan(pesananId) {
-            // Konfirmasi sebelum membatalkan pesanan
             if (confirm("Apakah Anda yakin ingin membatalkan pesanan ini?")) {
                 $.ajax({
                     type: "POST",
@@ -390,7 +386,6 @@
                     },
                     success: function (data) {
                         if (data.success) {
-                            // Refresh halaman setelah pembatalan berhasil
                             window.location.reload();
                         } else {
                             alert("Gagal membatalkan pesanan.");

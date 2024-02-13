@@ -11,7 +11,35 @@
     <!-- Favicons -->
     <link href="{%static 'img/logo.svg'%}" rel="icon">
     <link rel="stylesheet" href="{%static 'css/main.css'%}">
+    <style>
+         /* mobile mode */
+        @media only screen and (max-width: 752px) { /*batas max*/
+            nav{
+                padding: 15px 20px;
+            }
+            .container{
+                /* background-color: rgb(204, 248, 197); */
+                margin: 0 20px;
+            }
+            .container .content2 .card{
+                width: 48%;
+            }
+        }
 
+        /* tablet mode */
+        @media only screen and (max-width: 925px) and (min-width: 751px){
+            nav{
+                padding: 15px 40px;
+            }
+            .container{
+                /* background-color: rgb(204, 248, 197); */
+                margin: 0 40px;
+            }
+            .container .content2 .card{
+                width: 30%;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Modal -->
