@@ -52,7 +52,7 @@ class PesananBatalView(View):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-#USER PAGE CART AND SUMMARY ORDER
+# USER PAGE CART AND SUMMARY ORDER
 class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         produk_id = self.kwargs['produk_id']
@@ -273,7 +273,6 @@ class RemoveCartItemView(View):
                 return JsonResponse({'success': False, 'message': 'Produk tidak ditemukan di keranjang'})
             
 # ADMIN DASHBOARD
-
 class DashboardView(View):
     template_name = 'dashboard.html'
 
@@ -367,14 +366,12 @@ class UpdateOrderStatusView(View):
 # ADMIN PRODUK
 class AddProdukView(View):
     def post(self, request, *args, **kwargs):
-        # Ambil data dari formulir modal
         img_produk = request.FILES.get('img_produk')
         nama_produk = request.POST.get('nama_produk')
         rettings = request.POST.get('rettings')
         harga = request.POST.get('harga')
         stok = request.POST.get('stok')
 
-        # Buat objek Produk baru
         produk_baru = Produk(
             img_produk=img_produk,
             nama_produk=nama_produk,
@@ -382,8 +379,6 @@ class AddProdukView(View):
             harga=harga,
             stok=stok
         )
-
-        # Simpan produk baru ke database
         produk_baru.save()
 
         return JsonResponse({'success': True})
@@ -474,7 +469,6 @@ class CustomUserEditView(View):
         user.nomor = request.POST.get('edit_nomor')
         user.alamat = request.POST.get('edit_alamat')
 
-        # Ubah password hanya jika diisi
         new_password = request.POST.get('edit_password')
         if new_password:
             user.set_password(new_password)
@@ -506,7 +500,6 @@ class CustomUserListView(ListView):
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.request.GET.get('q', '')
         return context
-
 
 # AUTH
 class SignOutView(View):

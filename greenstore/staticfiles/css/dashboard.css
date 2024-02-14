@@ -477,7 +477,7 @@ body {
   font-size: 14px;
   font-weight: 500;
 }
-.status.inProgress {
+.status.progres{
   padding: 2px 4px;
   background: #1795ce;
   color: var(--white);

@@ -24,8 +24,6 @@ class CartItem(models.Model):
     produk = models.ForeignKey('Produk', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
-# models.py
-
 class Pesanan(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),

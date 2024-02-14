@@ -12,147 +12,134 @@
     <link href="{%static 'img/logo.svg'%}" rel="icon">
     <link rel="stylesheet" href="{%static 'css/main.css'%}">
     <style>
-     .content2{
-        background-color: white;
-        display: flex;
-        gap: 20px;
-        width: 100%;
-        padding: 40px 80px;
-     }
-     .content2 .detail{
-        width: 60%;
-     }
-     .content2 .detail table tr{
-        height: 30px;
-     }
-     .content2 .detail .btn-status{
-        height: 50px;
-        width: 30%;
-        margin-top: 20px;
-        display: flex;
-        gap: 15px;
-     }
-     .content2 .detail .btn-status button{
-        /* padding: 4px 16px; */
-        border: none;
-        color: white;
-        font-weight: bold;
-        height: 35px;
-        width: 82px;
-     }
-     .content2 .detail .btn-status button:nth-child(1){
-        background-color: var(--satu);
-     }
-    
-     .content2 .detail .btn-status button:nth-child(2){
-        background-color: var(--dua);
-     }
-     .content2 .detail .btn-status button:nth-child(1):hover{
-        background-color: orange;
-     }
-     .content2 .detail .btn-status button:nth-child(2):hover{
-        background-color: rgb(255, 49, 49);
-     }
-     
-     .content2 .progres{
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        padding: 0 15px;
-     }
-     .content2 .progres #line{
-        width: 5px;
-        height: 100%;
-        background-color: rgb(116, 116, 116);
-        position:absolute;
-     }
-  
-     .content2 .progres .pg1, .pg2{
-        margin-left: 15px;
-     }
-     .content2 .progres h5{
-        color: rgb(215, 215, 215);
-     }
-     .content2 .progres .active{
-        color: var(--satu);
-     }
-     .content2 .progres #pgrs1, #pgrs2{
-        background-color: rgb(189, 189, 189);
-        padding: 10px;
-        color: rgb(4, 4, 4);
-        border-radius: 50px;
-        z-index: 100px;
-     }
-
-     /* mobile mode */
-     @media only screen and (max-width: 620px) { /*batas max*/
-        nav{
-            padding: 15px 20px;
-        }
-        .container{
-            /* background-color: rgb(204, 248, 197); */
-            margin: 0 20px;
-        }
-        .container .content2{
+        .content2{
+            background-color: white;
             display: flex;
-            gap: 5px;
-            justify-content: space-between;
-            padding: 15px 20px;
-            height: 80%;
+            gap: 20px;
+            width: 100%;
+            padding: 40px 80px;
+        }
+        .content2 .detail{
+            width: 60%;
+        }
+        .content2 .detail table tr{
+            height: 30px;
+        }
+        .content2 .detail .btn-status{
+            height: 50px;
+            width: 30%;
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
         }
         .content2 .detail .btn-status button{
-            height: 38px;
-            width: 280px;
-            padding: 0 20px;
+            /* padding: 4px 16px; */
+            border: none;
+            color: white;
+            font-weight: bold;
+            height: 35px;
+            width: 82px;
         }
-        .content2 .detail .btn-status button:nth-child(2){
-            background-color: var(--dua);
-            padding: 0 30px;
+        .content2 .detail .btn-status button:nth-child(1){
+            background-color: var(--satu);
         }
-        .content2 .progres{
-            gap: 30px;
-        }
-    }
-
-    /* tablet mode */
-    @media only screen and (min-width: 692px) {
         
-        .container .content2{
-            display: flex;
-            gap: 5px;
-            justify-content: space-between;
-            padding: 15px 20px;
-            height: 80%;
-        }
-        .content2 .detail .btn-status button{
-            height: 38px;
-            width: 120px;
-            padding: 0 20px;
-        }
         .content2 .detail .btn-status button:nth-child(2){
             background-color: var(--dua);
-            padding: 0 30px;
         }
-    }
+        .content2 .detail .btn-status button:nth-child(1):hover{
+            background-color: orange;
+        }
+        .content2 .detail .btn-status button:nth-child(2):hover{
+            background-color: rgb(255, 49, 49);
+        }
+        
+        .content2 .progres{
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            padding: 0 15px;
+        }
+        .content2 .progres #line{
+            width: 5px;
+            height: 100%;
+            background-color: rgb(116, 116, 116);
+            position:absolute;
+        }
+    
+        .content2 .progres .pg1, .pg2{
+            margin-left: 15px;
+        }
+        .content2 .progres h5{
+            color: rgb(215, 215, 215);
+        }
+        .content2 .progres .active{
+            color: var(--satu);
+        }
+        .content2 .progres #pgrs1, #pgrs2{
+            background-color: rgb(189, 189, 189);
+            padding: 10px;
+            color: rgb(4, 4, 4);
+            border-radius: 50px;
+            z-index: 100px;
+        }
+
+        /* resposif mode */
+
+        /* mobile mode */
+        @media only screen and (max-width: 620px) {
+            nav{
+                padding: 15px 20px;
+            }
+            .container{
+                margin: 0 20px;
+            }
+            .container .content2{
+                display: flex;
+                gap: 5px;
+                justify-content: space-between;
+                padding: 15px 20px;
+                height: 80%;
+            }
+            .content2 .detail .btn-status button{
+                height: 38px;
+                width: 280px;
+                padding: 0 20px;
+            }
+            .content2 .detail .btn-status button:nth-child(2){
+                background-color: var(--dua);
+                padding: 0 30px;
+            }
+            .content2 .progres{
+                gap: 30px;
+            }
+        }
+
+        /* tablet mode */
+        @media only screen and (min-width: 692px) {
+            
+            .container .content2{
+                display: flex;
+                gap: 5px;
+                justify-content: space-between;
+                padding: 15px 20px;
+                height: 80%;
+            }
+            .content2 .detail .btn-status button{
+                height: 38px;
+                width: 120px;
+                padding: 0 20px;
+            }
+            .content2 .detail .btn-status button:nth-child(2){
+                background-color: var(--dua);
+                padding: 0 30px;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <!-- Modal -->
-    <dialog id="dialog">
-        <h2>Produk</h2>
-        <form id="produk-form" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" name="img_produk" placeholder="Gambar Produk">
-            <input type="text" name="nama_produk" placeholder="Nama Produk">
-            <input type="text" name="rettings" placeholder="rettings">
-            <input type="text" name="harga" placeholder="Harga">
-            <input type="text" name="kategori" placeholder="Kategori">
-            <button type="button" id="submit-btn">Submit</button>
-        </form>
-        <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
-    </dialog>
-
     <!-- signin.html -->
     <dialog id="dialogsignin">
         <h2>Sign in</h2>
@@ -180,14 +167,15 @@
         </form>
         <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
     </dialog>
+
     <!-- navbar -->
     <nav>
         <div class="logo">
             <img src="{% static 'img/logo.svg' %}" alt="">
             <h3><a href="{% url 'index' %}" style="text-decoration: none; color: var(--dua)">TOKO KAIN</a></h3>
         </div>
-        
     </nav>
+
     <!-- content -->
     <div class="container">
         <div class="content1">
@@ -198,7 +186,7 @@
             
         </div>
 
-    {% for order in pesanan %}
+        {% for order in pesanan %}
         <div class="content2">
             <div class="detail">
                 <table>
@@ -332,11 +320,8 @@
                 
             </div>
         </div>
-    {% endfor %}
+         {% endfor %}
 
-
-        
-        
     </div>
 
     <!-- ionic icon -->
@@ -399,7 +384,5 @@
         }
     </script>
 
-    
-    
 </body>
 </html>

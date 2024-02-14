@@ -171,7 +171,6 @@
                         <a href="#" class="btnsignup" onclick="window.dialogsignup.showModal();" style="padding: 6px 12px; background-color: #680000; text-decoration: none;color: white; border-radius: 4px;">Tambah</a>
                     </div>
 
-                    <!-- customor.html -->
                     <table>
                         <thead>
                             <tr style="text-align: center;">
@@ -237,14 +236,12 @@
     <!-- =========== Scripts =========  -->
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
-
+    <!-- dashboard -->
     <script src="{% static 'js/dashboard.js' %}"></script>
-
-    <!-- ====== ionicons ======= -->
+    <!-- ionic icon -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
-
+    <!-- delet customor -->
     <script>
         //  hapus user
         $(document).ready(function () {
@@ -314,28 +311,19 @@
             });
         }
     </script>
-
-
+    <!-- add customor -->
     <script>        
         $(document).ready(function () {
-            // Declare userId in the outer scope
             var userId;
-
-            // Fungsi untuk mendapatkan data pengguna dan mengisi formulir modal
             function getUserDataAndFillForm(id) {
-                // Lakukan permintaan Ajax ke endpoint get_user_data
                 $.ajax({
                     type: "GET",
                     url: `/get_user_data/${id}/`,
                     success: function (data) {
-                        // Isi formulir modal dengan data yang diterima
                         $('#edit-user-form [name="edit_username"]').val(data.username);
                         $('#edit-user-form [name="edit_email"]').val(data.email);
                         $('#edit-user-form [name="edit_nomor"]').val(data.nomor);
                         $('#edit-user-form [name="edit_alamat"]').val(data.alamat);
-                        // (Tambahkan pengisian formulir lainnya sesuai kebutuhan Anda)
-
-                        // Buka dialogEditUser setelah formulir diisi
                         window.dialogEditUser.showModal();
                     },
                     error: function () {
@@ -344,23 +332,17 @@
                 });
             }
 
-            // Panggil fungsi getUserDataAndFillForm saat tautan "Edit User" diklik
             $('.edit-user-btn').click(function (e) {
                 e.preventDefault();
-                // Set nilai userId dari atribut data-user-id
                 userId = $(this).data('user-id');
                 getUserDataAndFillForm(userId);
             });
 
-            // Fungsi untuk menutup dialogEditUser
             $('#submit-edit-user-btn').click(function () {
-                // Ambil data dari formulir modal
                 var formData = $('#edit-user-form').serialize();
-
-                // Lakukan permintaan Ajax untuk menyimpan data pengguna yang diperbarui
                 $.ajax({
                     type: "POST",
-                    url: `/edit_user/${userId}/`,  // Ganti URL dengan endpoint yang sesuai di server Anda
+                    url: `/edit_user/${userId}/`, 
                     data: formData,
                     success: function (response) {
                         if (response.success) {
@@ -388,24 +370,19 @@
     <!-- signout -->
     <script>
         $(document).ready(function () {
-            // Tangani klik pada tautan sign-out
             $("#signoutlink").click(function (event) {
-                event.preventDefault(); // Mencegah perilaku default dari tautan
-                
-                // Konfirmasi sebelum melakukan logout
+                event.preventDefault();
                 var confirmLogout = confirm("Apakah Anda yakin ingin logout?");
                 
                 if (confirmLogout) {
-                    // Lakukan permintaan POST ke view SignOutView
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'signout' %}", // Pastikan Anda telah mendefinisikan URL untuk view SignOutView di urls.py
+                        url: "{% url 'signout' %}",
                         data: {
                             csrfmiddlewaretoken: "{{ csrf_token }}"
                         },
                         success: function (data) {
                             if (data.success) {
-                                // Redirect pengguna ke halaman beranda atau halaman lainnya setelah sign-out
                                 window.location.href = "{% url 'index' %}";
                             } else {
                                 alert("Gagal melakukan sign out.");
@@ -419,8 +396,5 @@
             });
         });
     </script>
-
-
 </body>
-
 </html>

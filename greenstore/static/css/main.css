@@ -16,9 +16,6 @@ body{
     background-color: #F2F2F2;
 }
 
-/* modals */
-
-/*Dialog Styles*/
 dialog {
     margin: 50px auto;
     padding: 1rem 3rem;
@@ -88,7 +85,6 @@ dialog {
     }
 }
 
-/* button */
 .btncart{
     width: 35%;
     display: flex;
@@ -209,7 +205,6 @@ nav{
 }
 
 .logo{
-    /* background-color: rgb(255, 110, 110); */
     display: flex;
     align-items: center;
     gap: 10px;
@@ -228,7 +223,6 @@ span{
 
 /* produk list */
 .container{
-    /* background-color: rgb(204, 248, 197); */
     margin: 0 120px;
 }
 .container .content1{
@@ -264,7 +258,6 @@ span{
 }
 
 .container .content2{
-    /* background-color: aliceblue; */
     display: flex;
     gap: 5px;
     justify-content: space-between;

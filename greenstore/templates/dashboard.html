@@ -8,8 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicons -->
     <link href="{%static 'img/logo.svg'%}" rel="icon">
-    <!-- Favicons -->
-    <link href="{%static 'img/logo.svg'%}" rel="icon">
     <title> Admin Dashboard </title>
     <!-- ======= Styles ====== -->
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
@@ -160,14 +158,14 @@
     <!-- =========== Scripts =========  -->
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
-
+    <!-- dashboard -->
     <script src="{% static 'js/dashboard.js' %}"></script>
-
-    <!-- ====== ionicons ======= -->
+    <!-- ionic icon -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <!-- cart -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- visualisai data -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const chart = Highcharts.chart('container', {
@@ -211,20 +209,17 @@
             $("#signoutlink").click(function (event) {
                 event.preventDefault(); // Mencegah perilaku default dari tautan
                 
-                // Konfirmasi sebelum melakukan logout
                 var confirmLogout = confirm("Apakah Anda yakin ingin logout?");
                 
                 if (confirmLogout) {
-                    // Lakukan permintaan POST ke view SignOutView
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'signout' %}", // Pastikan Anda telah mendefinisikan URL untuk view SignOutView di urls.py
+                        url: "{% url 'signout' %}", 
                         data: {
                             csrfmiddlewaretoken: "{{ csrf_token }}"
                         },
                         success: function (data) {
                             if (data.success) {
-                                // Redirect pengguna ke halaman beranda atau halaman lainnya setelah sign-out
                                 window.location.href = "{% url 'index' %}";
                             } else {
                                 alert("Gagal melakukan sign out.");

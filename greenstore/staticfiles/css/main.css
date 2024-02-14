@@ -117,6 +117,18 @@ dialog {
     }
 }
 
+#statuspes{
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #1e1e1e;
+    background-color: transparent;
+    border: none;
+}
+#statuspes:hover{
+    color: var(--satu);
+    font-weight: bold
+}
+
 .btncart button.signin {
     display: inline-block;
     font-size: 0.8rem;

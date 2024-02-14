@@ -20,12 +20,11 @@
         }
 
         /* mobile mode */
-        @media only screen and (max-width: 790px) { /*batas max*/
+        @media only screen and (max-width: 790px) { 
             nav{
                 padding: 15px 20px;
             }
             .container{
-                /* background-color: rgb(204, 248, 197); */
                 margin: 0 20px;
             }
             .container .content2{
@@ -40,17 +39,9 @@
             }
         }
 
-        /* tablet mode */
-        @media only screen and (min-width: 692px) {
-            .container .content2{
-                background-color: blue;
-            }
-        }
-
     </style>
 </head>
 <body>
-    <!-- Modal -->
     <nav>
         <div class="logo">
             <a href="{% url 'index' %}" style="text-decoration: none; color: #6C9E03; display: flex; gap: 10px; align-items: center;">
@@ -185,14 +176,15 @@
 
         </div>
     </div> 
-    <!-- script ionic icon -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
 
+    <!-- script ionic icon -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
     <script>
-        // main.js
         $(document).ready(function () {
 
            // Handle klik tombol kurang
@@ -239,7 +231,6 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        // Refresh halaman setelah pembaruan berhasil
                         window.location.reload();
                     } else {
                         alert("Gagal memperbarui jumlah item: " + data.message);
@@ -261,7 +252,6 @@
                 },
                 success: function (data) {
                     if (data.success) {
-                        // Refresh halaman setelah penghapusan berhasil
                         window.location.reload();
                     } else {
                         alert("Gagal menghapus item dari keranjang: " + data.message);
@@ -333,7 +323,6 @@
                     },
                     success: function (data) {
                         if (data.success) {
-                            // Buka tab baru dengan URL WhatsApp
                             window.open(data.whatsapp_url, '_blank');
                         } else {
                             alert("Terjadi kesalahan saat menyimpan pesanan.");
@@ -343,14 +332,11 @@
                       window.location.href = "{% url 'cart' %}";
                         // let halamUtama = window.location.href = "{% url 'cart' %}";
                         // alert("Terjadi kesalahan saat mengirim pesanan.", halamUtama)
-
                     }
                 });
             });
 
         });
     </script>
-
-
 </body>
 </html>

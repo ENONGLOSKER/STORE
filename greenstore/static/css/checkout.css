@@ -21,7 +21,6 @@ nav{
     padding: 10px 120px;
 }
 .logo{
-    /* background-color: rgb(255, 110, 110); */
     display: flex;
     align-items: center;
     gap: 10px;
@@ -40,7 +39,6 @@ span{
 
 /* produk list */
 .container{
-    /* background-color: rgb(204, 248, 197); */
     margin: 0 120px;
 }
 .container .content1{

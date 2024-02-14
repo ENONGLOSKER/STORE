@@ -27,10 +27,10 @@ urlpatterns = [
     path('status/', PesananListView.as_view(), name='status'),
     path('pesanan/diterima/', PesananDiterimaView.as_view(), name='pesanan_diterima'),
     path('pesanan/batal/', PesananBatalView.as_view(), name='pesanan_batal'),
-
     path('pesanan/', OrderListView.as_view(), name='pesanan'),
     path('update_order_status/', UpdateOrderStatusView.as_view(), name='update_order_status'),
     # produk
+    path('', ProdukListView.as_view(), name='index'),
     path('produk-list/', BarangListView.as_view(), name='barang'),
     path('barang/search/', BarangListView.as_view(), name='barang_search'),
     path('tambah-produk/', AddProdukView.as_view(), name='tambah_produk'),
@@ -59,12 +59,7 @@ urlpatterns = [
     path('remove_cart_item/', RemoveCartItemView.as_view(), name='remove_cart_item'),
     path('get_order_summary/', OrderSummaryView.as_view(), name='get_order_summary'),
     path('send_order_whatsapp/', OrderSummaryView.as_view(), name='send_order_whatsapp'),
-    path('save_order/', SaveOrderView.as_view(), name='save_order'),
-
-
-    # product
-    path('', ProdukListView.as_view(), name='index'),
-    
+    path('save_order/', SaveOrderView.as_view(), name='save_order')   
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
