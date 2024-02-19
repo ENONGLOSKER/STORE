@@ -61,7 +61,6 @@ dialog {
       padding-bottom: 1rem;
   }
   form{
-      /* background-color: red; */
       padding: 10px 0;
       display: flex;
       flex-direction: column;
@@ -93,8 +92,6 @@ dialog {
   }
 }
 
-/* button */
-
 .cardHeader a.primary {
   display: inline-block;
   font-size: 0.8rem;
@@ -113,7 +110,7 @@ dialog {
       transform: translateY(-5px);
   }
 }
-/* sign up */
+
 .btncart button.signup {
   display: inline-block;
   font-size: 0.8rem;
@@ -132,8 +129,6 @@ dialog {
   box-shadow: 2px 2px 13px rgb(253, 194, 77);
 }
 
-
-
 body {
   min-height: 100vh;
   overflow-x: hidden;
@@ -144,7 +139,6 @@ body {
   width: 100%;
 }
 
-/* =============== Navigation ================ */
 .navigation {
   position: fixed;
   width: 240px;
@@ -218,7 +212,6 @@ body {
   white-space: nowrap;
 }
 
-/* --------- curve outside ---------- */
 .navigation ul li:hover a::before,
 .navigation ul li.hovered a::before {
   content: "";
@@ -246,7 +239,6 @@ body {
   pointer-events: none;
 }
 
-/* ===================== Main ===================== */
 .main {
   position: absolute;
   width: calc(100% - 300px);
@@ -327,7 +319,6 @@ body {
   object-fit: cover;
 }
 
-/* ======================= Cards ====================== */
 .cardBox {
   position: relative;
   width: 100%;
@@ -375,7 +366,6 @@ body {
   color: var(--white);
 }
 
-/* ================== Order Details List ============== */
 .details {
   position: relative;
   width: 100%;
@@ -383,7 +373,6 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 30px;
-  /* margin-top: 10px; */
 }
 
 .details .recentOrders {
@@ -530,7 +519,6 @@ body {
   color: var(--white);
 }
 
-/* ====================== Responsive Design ========================== */
 @media (max-width: 991px) {
   .navigation {
     left: -300px;

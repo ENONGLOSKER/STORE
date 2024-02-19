@@ -12,6 +12,10 @@
     <link href="{%static 'img/logo.svg'%}" rel="icon">
     <link rel="stylesheet" href="{%static 'css/main.css'%}">
     <style>
+        .atuhUser{
+                display: none;
+        }
+
          /* mobile mode */
         @media only screen and (max-width: 752px) { /*batas max*/
             nav{
@@ -39,9 +43,107 @@
                 width: 30%;
             }
         }
+
+        /* CSS untuk hamburger menu */
+        .hamburger-menu {
+            display: none; /* Sembunyikan hamburger menu secara default */
+        }
+
+        @media screen and (max-width: 768px) {
+            
+            nav{
+                position: relative;
+            }
+
+            .btncart{
+                display: none; /* Sembunyikan tombol-tombol lain ketika layar kecil */
+            }
+            .atuhUser{
+                display: flex;
+                padding: 5px;
+                gap: 15px;
+                justify-content: center;
+            }
+            .atuhUser button{
+                font-size: 14px;
+                border: none;
+                background-color: transparent;
+            }
+            .atuhUser button:hover{
+                color: var(--satu);
+            }
+            
+            
+            .hamburger-menu {
+                display: block; /* Tampilkan hamburger menu ketika layar kecil */
+            }
+
+            .menu {
+                display: none; /* Sembunyikan menu secara default */
+                list-style-type: none;
+                background-color: rgb(230, 230, 230);
+                font-size: 20px;
+            }
+
+            .menu.show {
+                display: flex; /* Tampilkan menu ketika class 'show' ditambahkan */
+                flex-direction: column;
+                position: absolute;
+                width: 100%;
+                padding: 20px 40px;
+                transform: translateX(-60%);
+                height: 250px;
+                margin-top: 30px;
+                overflow: hidden;
+            }
+            .humb{
+                display: flex;
+                gap:15px;
+            }
+            .hamburger-icon {
+                display: block;
+                cursor: pointer;
+            }
+
+            .hamburger-icon div {
+                width: 25px;
+                height: 3px;
+                background-color: black;
+                margin: 5px;
+            }
+            .menu.show li{
+                font-size: 20px;
+                margin-bottom: 20px ;
+                color: black;
+                padding: 10px 20px;
+            }
+            .menu.show li:hover{
+                background-color: rgb(255, 255, 255);
+                
+            }
+            .menu.show li a:hover{
+                color: var(--satu);
+                font-weight: bold;
+            }
+        }
+
     </style>
 </head>
 <body>
+    <!-- Modal -->
+    <dialog id="dialog">
+        <h2>Produk</h2>
+        <form id="produk-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="img_produk" placeholder="Gambar Produk">
+            <input type="text" name="nama_produk" placeholder="Nama Produk">
+            <input type="text" name="rettings" placeholder="rettings">
+            <input type="text" name="harga" placeholder="Harga">
+            <input type="text" name="kategori" placeholder="Kategori">
+            <button type="button" id="submit-btn">Submit</button>
+        </form>
+        <button onclick="window.dialog.close();" aria-label="close" class="x">❌</button>
+    </dialog>
 
     <!-- signin.html -->
     <dialog id="dialogsignin">
@@ -70,9 +172,8 @@
         </form>
         <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
     </dialog>
-    
     <!-- navbar -->
-    <nav>
+    <!-- <nav>
         <div class="logo">
             <img src="{% static 'img/logo.svg' %}" alt="">
              <h3><a href="{% url 'index' %}" style="text-decoration: none; color: var(--dua)">TOKO KAIN</a></h3>
@@ -89,7 +190,66 @@
             <button class="signin" onclick="window.dialogsignin.showModal();">Sign in</button>
             <button class="signup" onclick="window.dialogsignup.showModal();">Sign up</button>
         </div>
+    </nav> -->
+
+    <nav>
+        <div class="logo">
+            <img src="{% static 'img/logo.svg' %}" alt="">
+            <h3><a href="{% url 'index' %}" style="text-decoration: none; color: var(--dua)">TOKO KAIN</a></h3>
+        </div>
+        <!-- desktop mode -->
+        <div class="btncart">
+            <a href="{% url 'checkout' %}">
+                <p id="jlh">{{ total_items }}</p>
+                <ion-icon name="cart" id="cartProduk"></ion-icon>
+            </a>
+            <a href="{% url 'status' %}">
+                <p id="statuspes">Status</p>
+            </a>
+
+            <a href="" class="signout" id="signout-btn">Sign out</a>  
+            <button class="signin" onclick="window.dialogsignin.showModal();" id="singin">Sign in</button>
+            <button class="signup" onclick="window.dialogsignup.showModal();" id="signup">Sign up</button>
+        </div>
+        
+        <!-- mobile and tablet mode -->
+        <div class="hamburger-menu">
+            <div class="humb">
+                <div class="atuhUser">
+                    <button class="signin" onclick="window.dialogsignin.showModal();" id="singin">Sign in</button>
+                    <button class="signup" onclick="window.dialogsignup.showModal();" id="signup">Sign up</button>
+                    <button>
+                        <a href="" class="signout" id="signout-btn">Sign out</a>
+                    </button>
+                </div>
+                <div class="hamburger-icon">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <ul class="menu">
+                <li>
+                    <a href="{% url 'status' %}" id="statuspes" style="font-size: 20px;">
+                        <ion-icon name="cart" id="cartProduk"></ion-icon>  Status
+                    </a>    
+                </li>
+                <li>
+                    <a href="{% url 'checkout' %}">
+                        <p id="jlh">{{ total_items }}</p>
+                        <ion-icon name="cart" id="cartProduk"></ion-icon>
+                        Pesanan
+                    </a>
+                </li>
+                <li>
+                    <a href="" class="signout" id="signout-btn">Sign out</a>
+                </li>
+                
+            </ul>
+        </div>
     </nav>
+    
+
     <!-- content -->
     <div class="container">
         <div class="content1">
@@ -138,9 +298,20 @@
     <!-- ionic icon -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.hamburger-icon').addEventListener('click', function() {
+                document.querySelector('.menu').classList.toggle('show');
+            });
+        });
+    </script>
+
+
+    </script>
 
     <!-- sign out -->
     <script>
@@ -155,12 +326,12 @@
         function signout() {
             $.ajax({
                 type: "POST",
-                url: "{% url 'signout' %}", 
+                url: "{% url 'signout' %}",  
                 data: {csrfmiddlewaretoken: "{{ csrf_token }}",},
                 success: function (data) {
                     if (data.success) {
                         alert("Logout berhasil");
-                        window.location.href = "{% url 'index' %}";  
+                        window.location.href = "{% url 'index' %}";  // Redirect ke halaman utama atau halaman login
                     } else {
                         alert("Logout gagal: " + data.message);
                     }
@@ -229,8 +400,9 @@
                     } else {
                         alert("Gagal: " + data.errors);
                     }
-                }, 
+                },
                 error: function (jqXHR) {
+                    // Tangkap respon kesalahan dan tampilkan pesan kesalahan yang lebih informatif
                     var errorMessage = "Terjadi kesalahan saat mengirim formulir.";
                     if (jqXHR.responseJSON && jqXHR.responseJSON.errors) {
                         errorMessage = "Gagal: " + jqXHR.responseJSON.errors;
@@ -253,13 +425,13 @@
             function addToCart(produkId) {
                 $.ajax({
                     type: 'POST',
-                    url: `/add_to_cart/${produkId}/`,  
+                    url: `/add_to_cart/${produkId}/`,  // Sesuaikan dengan URL Anda
                     data: {
                         csrfmiddlewaretoken: "{{ csrf_token }}",
                     },
                     success: function (data) {
                         if (data.success) {
-                            alert("Item berhasil ditambahkan ke keranjang");
+                            // alert("Item berhasil ditambahkan ke keranjang");
                             updateCartCount();
                         } else {
                             alert("Gagal menambahkan item ke keranjang: " + data.message);
@@ -271,12 +443,12 @@
                 });
             }
     
-        updateCartCount(); 
+        updateCartCount();  // Panggil fungsi ini saat halaman dimuat
 
         function updateCartCount() {
             $.ajax({
                 type: 'GET',
-                url: '/cart_item_count/',  
+                url: '/cart_item_count/',  // Sesuaikan dengan URL Anda
                 success: function (data) {
                     $('#jlh').text(data.cart_count);
                 },

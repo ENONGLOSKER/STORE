@@ -155,6 +155,16 @@ dialog {
     font-weight: bold;
     box-shadow: 2px 2px 13px rgb(253, 194, 77);
 }
+/* signout */
+.btncart .signout {
+    font-size: 0.8rem;
+    color: #1e1e1e;
+}
+.btncart .signout:hover{
+    color: var(--satu);
+    font-weight: bold;
+}
+
 .btncart #cartProduk{
     background-color: white;
     padding: 10px;

@@ -28,10 +28,10 @@ class PesananListView(ListView):
 
 class PesananDiterimaView(View):
     def post(self, request, *args, **kwargs):
-        order_id = request.POST.get('order_id')  # Ambil ID pesanan dari POST request
+        order_id = request.POST.get('order_id')  
         try:
             order = Pesanan.objects.get(id=order_id)
-            order.diterima = True  # Set nilai diterima menjadi True
+            order.diterima = True  
             order.save()
             return JsonResponse({'success': True})
         except Pesanan.DoesNotExist:
@@ -44,7 +44,7 @@ class PesananBatalView(View):
         pesanan_id = request.POST.get('pesanan_id')
         try:
             pesanan = Pesanan.objects.get(id=pesanan_id)
-            pesanan.status = 'RETURN'  # Update status pesanan menjadi 'RETURN'
+            pesanan.status = 'RETURN' 
             pesanan.save()
             return JsonResponse({'success': True})
         except Pesanan.DoesNotExist:
@@ -52,7 +52,7 @@ class PesananBatalView(View):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-# USER PAGE CART AND SUMMARY ORDER
+# USER PAGE CART AND SUMMARY ORDERh9mk '' bm89pm9/ /;p mmmmmmmmmmmn         b}""
 class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         produk_id = self.kwargs['produk_id']

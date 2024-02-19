@@ -199,7 +199,11 @@
                                     <td>{{ order.email }}</td>
                                     <td>{{ order.alamat }}</td>
                                     <td>
+                                        {% if order.status == 'PANDDING' %}
                                         <h5 style="margin-bottom: 5px; color: rgb(213, 213, 213);">{{order.created_at}}</h5>
+                                        {% else %}
+                                        <h5 style="margin-bottom: 5px; color: rgb(213, 213, 213);">{{order.updated_at}}</h5>
+                                        {% endif %}
                                         {{order.pesanan_detail}}
                                     </td>
                                     <td>{{ order.jumlah_items }}</td>
@@ -216,10 +220,10 @@
                                             {% endfor %}
                                         </select>
                                         {% else %}
-                                        <select disabled name="status" class="status {{ order.status|lower }}" data-order-id="{{ order.id }}">
+                                        <select disabled style="background-color: grey;" name="status" class="status {{ order.status|lower }}" data-order-id="{{ order.id }}">
                                             {% for status_value, status_display in order.STATUS_CHOICES %}
                                                 {% if order.status == status_value %}
-                                                    <option value="{{ status_value }}" selected>{{ status_display }}</option>
+                                                    <option value="{{ status_value }}" selected> Diterima</option>
                                                 {% else %}
                                                     <option value="{{ status_value }}">{{ status_display }}</option>
                                                 {% endif %}

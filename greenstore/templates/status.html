@@ -222,7 +222,7 @@
                         <td>Status</td>
                         {% if order.status  == "DELIVERED" %}
                             {% if order.diterima  == True %}
-                                <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span> <ion-icon name="checkmark-circle-outline" style="background-color: rgb(38, 34, 250); width: 20px; height: 20px; color: white; border-radius: 50px;"></ion-icon></td>
+                                <td>: <span style="font-weight: bold; color: rgb(38, 34, 250);">DITERIMA</span> <ion-icon name="checkmark-circle-outline" style="background-color: rgb(38, 34, 250); width: 20px; height: 20px; color: white; border-radius: 50px;"></ion-icon></td>
                             {% else %}
                                 <!-- belum diterima -->
                                 <td>: <span style="font-weight: bold; color: rgb(65, 250, 55);">{{ order.status }}</span></td>
