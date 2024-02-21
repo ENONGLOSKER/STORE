@@ -172,25 +172,6 @@
         </form>
         <button onclick="window.dialogsignup.close();" aria-label="close" class="x">❌</button>
     </dialog>
-    <!-- navbar -->
-    <!-- <nav>
-        <div class="logo">
-            <img src="{% static 'img/logo.svg' %}" alt="">
-             <h3><a href="{% url 'index' %}" style="text-decoration: none; color: var(--dua)">TOKO KAIN</a></h3>
-        </div>
-        <div class="btncart">
-            <a href="{% url 'checkout' %}">
-                <p id="jlh">{{ total_items }}</p>
-                <ion-icon name="cart" id="cartProduk"></ion-icon>
-            </a>
-            <a href="{% url 'status' %}">
-                <p id="statuspes">Status</p>
-            </a>
-            <button class="signin" id="signout-btn">Sign out</button>
-            <button class="signin" onclick="window.dialogsignin.showModal();">Sign in</button>
-            <button class="signup" onclick="window.dialogsignup.showModal();">Sign up</button>
-        </div>
-    </nav> -->
 
     <nav>
         <div class="logo">
@@ -200,8 +181,12 @@
         <!-- desktop mode -->
         <div class="btncart">
             <a href="{% url 'checkout' %}">
-                <p id="jlh">{{ total_items }}</p>
+                {% if request.user == AnonymousUser %}
                 <ion-icon name="cart" id="cartProduk"></ion-icon>
+                {%else%}
+                <p id="jlh">0</p>
+                <ion-icon name="cart" id="cartProduk"></ion-icon>
+                {%endif%}
             </a>
             <a href="{% url 'status' %}">
                 <p id="statuspes">Status</p>
