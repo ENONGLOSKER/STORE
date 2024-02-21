@@ -15,6 +15,20 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
 from django.db.models import Q
+import locale
+
+class UpdateRettingsView(View):
+    def post(self, request, *args, **kwargs):
+        produk_id = request.POST.get('produk_id') # Menggunakan produk_id
+        try:
+            produk = Produk.objects.get(id=produk_id)
+            produk.rettings += 1  # Tambah rettings dengan 1
+            produk.save()
+            return JsonResponse({'success': True})
+        except Produk.DoesNotExist:
+            return JsonResponse({'error': 'Produk tidak ditemukan'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 
 # USER PESANAN
@@ -52,7 +66,7 @@ class PesananBatalView(View):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-# USER PAGE CART AND SUMMARY ORDERh9mk '' bm89pm9/ /;p mmmmmmmmmmmn         b}""
+# USER PAGE CART 
 class AddToCartView(View):
     def post(self, request, *args, **kwargs):
         produk_id = self.kwargs['produk_id']
@@ -162,6 +176,9 @@ class OrderSummaryView(View):
         jumlah_items = cart_items.count()
         total_harga = sum(item.produk.harga * item.quantity for item in cart_items)
 
+        # Set locale ke 'id_ID' untuk menggunakan format mata uang Indonesia
+        locale.setlocale(locale.LC_ALL, 'id_ID')
+
         try:
             whatsapp_message = f"Hallo admin, Saya ingin melakukan pemesanan\n" \
                                 f"Nama: {nama_user}\n" \
@@ -172,15 +189,12 @@ class OrderSummaryView(View):
                                 f"Detail Pesanan:\n{pesanan}\n" \
                                 "---------------------------------------------\n" \
                                 f"Jumlah Item: {jumlah_items}\n" \
-                                f"Total Bayar: Rp. {total_harga}\n" \
+                                f"*Total Bayar:* *Rp. {locale.format_string('%d', total_harga, grouping=True)}*\n" \
                                 "---------------------------------------------\n" \
                                 "Mohon konfirmasi mengenai informasi pembayaran. Terima kasih!\n\n\n" \
                                 f"Salam Customer,\n {nama_user}"
 
-            # 6281936316805
-            # 6281913428083
             admin_whatsapp_number = "+6281913428083"
-
             whatsapp_url = f"https://wa.me/{admin_whatsapp_number}?text={urllib.parse.quote(whatsapp_message)}"
             
             return JsonResponse({'whatsapp_url': whatsapp_url, 'order_summary': {
@@ -233,6 +247,7 @@ class SaveOrderView(View):
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'error': f'Terjadi kesalahan saat membuat pesanan: {str(e)}'}, status=500)
+
 
 class ProdukListView(ListView):
     model = Produk

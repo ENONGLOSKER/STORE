@@ -75,7 +75,7 @@
                                     </tr>
                                     <tr>
                                         <td>Harga</td>
-                                        <td>: Rp. {{ item.produk.harga }}</td>
+                                        <td>:<p id="formatted-harga" style="display: inline;"> {{ item.produk.harga }}</p></td>
                                     </tr>
                                     <tr>
                                         <td>Stok </td>
@@ -266,10 +266,21 @@
 
     </script>
 
+    <!-- format harga -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var hargaElements = document.querySelectorAll('#formatted-harga');
+            hargaElements.forEach(function(element) {
+                var harga = parseInt(element.textContent.replace('Rp. ', ''));
+                var formattedHarga = harga.toLocaleString('id-ID');
+                element.textContent = ' Rp. ' + formattedHarga;
+            });
+        });
+    </script>
+
     <!-- pesan via wa -->
     <script>
-        $(document).ready(function () {
-            // mengambil data untuk order summary
+        $(document).ready(function () {              
             $.ajax({
                 type: "GET",
                 url: "{% url 'get_order_summary' %}",
@@ -279,21 +290,26 @@
                     $("#email").text(data.order_summary.email);
                     $("#alamat").text(data.order_summary.alamat);
                     $("#jumlah-items").text(data.order_summary.jumlah_items);
-                    $("#total-harga").text(data.order_summary.total_harga);
-    
+
+                    // Format total harga dengan pemisah titik setiap ribuan
+                    var totalHarga = parseInt(data.order_summary.total_harga);
+                    var formattedTotalHarga = totalHarga.toLocaleString('id-ID');
+                    $("#total-harga").text(formattedTotalHarga);
+                    
                     if (data.error) {
-                        $(".summray").append(`<div class="error-message">${data.error}</div>`);
+                        $(".summary").append(`<div class="error-message">${data.error}</div>`);
                         $("#pesan-btn").hide();
                     }
                 },
                 error: function (data) {
-                    console.log("keranjang kosong!");
+                    console.log("Keranjang kosong!");
                     let halamUtama = window.location.href = "{% url 'index' %}";
                     alert("Keranjang Kosong! Silahkan Masukan Item ke Keranjang", halamUtama);
-                    
                 }
             });
-    
+
+
+
             // menangani redirect ke Whatsapp
             $("#pesan-btn").click(function () {
                 $.ajax({

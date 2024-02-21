@@ -19,7 +19,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from greenstore_app.views import SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, DashboardView, OrderListView, BarangListView,DeleteProdukView, AddProdukView, EditProdukView, ProdukListView, SaveOrderView, OrderSummaryView, UpdateOrderStatusView,PesananListView, PesananDiterimaView,PesananBatalView
+from greenstore_app.views import SignUpView, SignInView, SignOutView, AddToCartView, CartItemCountView, CartView, CartSummaryView, UpdateQuantityView, CheckoutView, RemoveCartItemView,CustomUserListView,CustomUserDeleteView,CustomUserEditView,GetUserDataView, DashboardView, OrderListView, BarangListView,DeleteProdukView, AddProdukView, EditProdukView, ProdukListView, SaveOrderView, OrderSummaryView, UpdateOrderStatusView,PesananListView, PesananDiterimaView,PesananBatalView, UpdateRettingsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,8 @@ urlpatterns = [
     path('pesanan/batal/', PesananBatalView.as_view(), name='pesanan_batal'),
     path('pesanan/', OrderListView.as_view(), name='pesanan'),
     path('update_order_status/', UpdateOrderStatusView.as_view(), name='update_order_status'),
+    path('barang/update-rettings/', UpdateRettingsView.as_view(), name='update_rettings'),
+
     # produk
     path('', ProdukListView.as_view(), name='index'),
     path('produk-list/', BarangListView.as_view(), name='barang'),

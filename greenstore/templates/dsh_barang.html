@@ -190,7 +190,7 @@
                                         </a>
                                         
                                     </td>  
-                                    <td style="text-align: center;">Rp. {{ produk.harga }}</td>
+                                    <td style="text-align: center;" id="formatted-harga">Rp. {{ produk.harga }}</td>
                                     <td style="text-align: center;">
                                         <ion-icon name="star" style="color:rgb(255, 191, 0);"></ion-icon> {{ produk.rettings }}
                                     </td>
@@ -230,7 +230,7 @@
         </div>
     </div>
 
-    <!-- modals -->
+    <!-- add modals -->
     <dialog id="dialog">
         <h2>Produk</h2>
         <form id="produk-form" enctype="multipart/form-data">
@@ -277,6 +277,19 @@
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <!-- format harga -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var hargaElements = document.querySelectorAll('#formatted-harga');
+            hargaElements.forEach(function(element) {
+                var harga = parseInt(element.textContent.replace('Rp. ', ''));
+                var formattedHarga = harga.toLocaleString('id-ID');
+                element.textContent = 'Rp. ' + formattedHarga;
+            });
+        });
+    </script>
+    
     <!-- add produk -->
     <script>
         $(document).ready(function () {
@@ -306,6 +319,7 @@
             });
         });
     </script>
+
      <!-- hapus produk -->
     <script>
         $(document).ready(function () {
@@ -438,6 +452,7 @@
             });
         });
     </script>
+    
 </body>
 
 </html>

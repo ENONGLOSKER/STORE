@@ -280,11 +280,13 @@
                             <div class="stok">
                                 <p>Stok : {{data.stok}}</p>
                             </div>
-                            <ion-icon name="star"></ion-icon> 
-                            {{data.rettings}}
+                            <a href="#" class="update-rettings-btn" data-produk-id="{{ data.id }}" style="text-decoration: none; color: rgb(255, 183, 0);">
+                                <ion-icon name="star"></ion-icon> 
+                                {{ data.rettings }}
+                            </a>
                         </div>
         
-                        <p>Rp. {{data.harga}}</p>
+                        <p id="formatted-harga">Rp. {{data.harga}}</p>
                         <a href="#" class="beli-btn" data-produk-id="{{data.id}}">
                             <ion-icon name="bag-check" id="beli"></ion-icon>
                         </a>
@@ -301,6 +303,48 @@
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
 
+    <!-- format harga -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var hargaElements = document.querySelectorAll('#formatted-harga');
+            hargaElements.forEach(function(element) {
+                var harga = parseInt(element.textContent.replace('Rp. ', ''));
+                var formattedHarga = harga.toLocaleString('id-ID');
+                element.textContent = 'Rp. ' + formattedHarga;
+            });
+        });
+    </script>
+
+    <!-- update retings -->
+    <script>
+        $(document).ready(function() {
+            $(".update-rettings-btn").click(function(event) {
+                event.preventDefault();
+                var produkId = $(this).data("produk-id"); // Menggunakan produkId
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'update_rettings' %}",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        produk_id: produkId // Menggunakan produk_id
+                    },
+                    success: function(data) {
+                        if (data.success) {
+                            // Refresh halaman setelah rettings berhasil diperbarui
+                            window.location.reload();
+                        } else {
+                            alert("Gagal memperbarui rettings.");
+                        }
+                    },
+                    error: function() {
+                        alert("Terjadi kesalahan saat memperbarui rettings.");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- humbrger menu -->
     <script>
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -308,9 +352,6 @@
                 document.querySelector('.menu').classList.toggle('show');
             });
         });
-    </script>
-
-
     </script>
 
     <!-- sign out -->
