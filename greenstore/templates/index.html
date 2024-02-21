@@ -127,6 +127,57 @@
             }
         }
 
+
+        .carousel {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        position: relative;
+        margin: 40px auto;
+        border-radius: 21px;
+        }
+
+        .carousel-container {
+        display: flex;
+        transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+        flex: 0 0 100%;
+        max-width: 100%;
+        }
+
+        .carousel-item img {
+        width: 100%;
+        height: auto;
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px;
+        }
+
+        .carousel-button {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 10px;
+        border: none;
+        outline: none;
+        }
+
+        .carousel-button.prev {
+        left: 0;
+        }
+
+        .carousel-button.next {
+        right: 0;
+        }
+        
+
+
+
     </style>
 </head>
 <body>
@@ -252,6 +303,22 @@
 
     <!-- content -->
     <div class="container">
+        <div class="carousel" >
+            <div class="carousel-container">
+              <div class="carousel-item">
+                <img src="{% static 'img/Frame 10.png' %}" alt="Image 1">
+              </div>
+              <div class="carousel-item">
+                <img src="{% static 'img/Frame 13.png' %}" alt="Image 2">
+              </div>
+              <div class="carousel-item">
+                <img src="{% static 'img/Frame 14.png' %}" alt="Image 3">
+              </div>
+            </div>
+            <button class="carousel-button prev" onclick="prevSlide()">Prev</button>
+            <button class="carousel-button next" onclick="nextSlide()">Next</button>
+        </div>
+
         <div class="content1">
             <div class="title">
                 <h3>Store</h3>
@@ -302,6 +369,49 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
+
+    <script>
+        let currentIndex = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const totalSlides = slides.length;
+        let autoSlideInterval;
+        
+        function showSlide(index) {
+          slides.forEach((slide, i) => {
+            if (i === index) {
+              slide.style.display = 'block';
+            } else {
+              slide.style.display = 'none';
+            }
+          });
+        }
+        
+        function nextSlide() {
+          currentIndex = (currentIndex + 1) % totalSlides;
+          showSlide(currentIndex);
+        }
+        
+        function prevSlide() {
+          currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+          showSlide(currentIndex);
+        }
+        
+        function startAutoSlide() {
+          autoSlideInterval = setInterval(nextSlide, 3500); // Geser setiap 2 detik
+        }
+        
+        function stopAutoSlide() {
+          clearInterval(autoSlideInterval);
+        }
+        
+        showSlide(currentIndex);
+        startAutoSlide(); // Mulai auto geser
+        
+        // Hentikan auto geser ketika kursor di atas carousel
+        document.querySelector('.carousel').addEventListener('mouseenter', stopAutoSlide);
+        // Lanjutkan auto geser ketika kursor meninggalkan carousel
+        document.querySelector('.carousel').addEventListener('mouseleave', startAutoSlide);
+        </script>
 
     <!-- format harga -->
     <script>
