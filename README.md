@@ -3,10 +3,22 @@
     <h1>STORE APP</h1>
     <span>✨⭐⭐⭐✨</span>
     <hr>
-    <img src="/greenstore/static/img/Screenshot1.png" alt="store">
+    <img src="/greenstore/static/a1.PNG" alt="store">
     <br>
-    <img src="/greenstore/static/img/Screenshot2.png" alt="checkout">
+    <img src="/greenstore/static/a2.PNG" alt="store">
     <br>
+    <img src="/greenstore/static/a3.PNG" alt="store">
+    <br>
+    <img src="/greenstore/static/a4.PNG" alt="store">
+    <br>
+    <img src="/greenstore/static/d1.PNG" alt="store">
+    <br>
+    <img src="/greenstore/static/d2.PNG" alt="store">
+    <br>
+    <img src="/greenstore/static/d3.PNG" alt="store">
+    <br>
+    <img src="/greenstore/static/d4.PNG" alt="store">
+    <br> 
 </div>
 
 ## Setup Project
