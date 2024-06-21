@@ -19,6 +19,7 @@
     <br>
     <img src="/greenstore/static/d4.PNG" alt="store">
     <br>  
+    
 </div>
 
 ## Setup Project
