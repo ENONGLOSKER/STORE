@@ -539,7 +539,6 @@ class SignUpView(View):
     def post(self, request, *args, **kwargs):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
+            form.save()
             return JsonResponse({'success': True, 'message': 'Register berhasil'})
         return JsonResponse({'success': False, 'errors': form.errors})
