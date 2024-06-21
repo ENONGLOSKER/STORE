@@ -248,7 +248,6 @@ class SaveOrderView(View):
         except Exception as e:
             return JsonResponse({'error': f'Terjadi kesalahan saat membuat pesanan: {str(e)}'}, status=500)
 
-
 class ProdukListView(ListView):
     model = Produk
     template_name = 'index.html'
@@ -531,7 +530,8 @@ class SignInView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return JsonResponse({'success': True})
+            is_superuser = user.is_superuser
+            return JsonResponse({'success': True, 'is_superuser':user.is_superuser})
         else:
             return JsonResponse({'success': False, 'message': 'Username atau password salah'})
         

@@ -229,21 +229,28 @@
             <img src="{% static 'img/logo.svg' %}" alt="">
             <h3><a href="{% url 'index' %}" style="text-decoration: none; color: var(--dua)">TOKO KAIN</a></h3>
         </div>
+
+
         <!-- desktop mode -->
         <div class="btncart">
-            <a href="{% url 'checkout' %}">
-                {% if request.user == AnonymousUser %}
-                <ion-icon name="cart" id="cartProduk"></ion-icon>
-                {%else%}
-                <p id="jlh">0</p>
-                <ion-icon name="cart" id="cartProduk"></ion-icon>
-                {%endif%}
-            </a>
-            <a href="{% url 'status' %}">
-                <p id="statuspes">Status</p>
-            </a>
-
-            <a href="" class="signout" id="signout-btn">Sign out</a>  
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'checkout' %}">
+                    <p id="jlh">0</p>
+                    <ion-icon name="cart" id="cartProduk"></ion-icon>      
+                </a>
+                <a href="{% url 'status' %}">
+                    <p id="statuspes">Status</p>
+                </a>
+                <a href="" class="signout" id="signout-btn">Sign out</a> 
+            {%else%}
+                <a href="{% url 'checkout' %}">
+                </a>
+                <a href="{% url 'status' %}" id="statuspes" style="font-size: 20px; "> 
+                </a> 
+                
+                <a href="" class="signout" id="signout-btn" style="pointer-events: none; cursor: none;">Sign out</a>  
+            {%endif%}
+        
             <button class="signin" onclick="window.dialogsignin.showModal();" id="singin">Sign in</button>
             <button class="signup" onclick="window.dialogsignup.showModal();" id="signup">Sign up</button>
         </div>
@@ -266,15 +273,25 @@
             </div>
             <ul class="menu">
                 <li>
+                    {% if request.user.is_authenticated %}
                     <a href="{% url 'status' %}" id="statuspes" style="font-size: 20px;">
                         <ion-icon name="cart" id="cartProduk"></ion-icon>  Status
                     </a>    
+                    {% else %}
+                    <a href="{% url 'status' %}" id="statuspes" style="font-size: 20px; pointer-events: none;
+                    cursor: default;">
+                        <ion-icon name="cart" id="cartProduk"></ion-icon> none
+                    </a>    
+                    {% endif %}
                 </li>
                 <li>
                     <a href="{% url 'checkout' %}">
+                        {% if request.user.is_authenticated %}
                         <p id="jlh">{{ total_items }}</p>
                         <ion-icon name="cart" id="cartProduk"></ion-icon>
-                        Pesanan
+                        {% else %}
+                        <ion-icon name="cart" id="cartProduk"></ion-icon>
+                        {% endif %}
                     </a>
                 </li>
                 <li>
@@ -340,48 +357,6 @@
     <!-- jquery -->
     <script src="{% static 'js/jquery.js' %}"></script>
 
-    <script>
-        let currentIndex = 0;
-        const slides = document.querySelectorAll('.carousel-item');
-        const totalSlides = slides.length;
-        let autoSlideInterval;
-        
-        function showSlide(index) {
-          slides.forEach((slide, i) => {
-            if (i === index) {
-              slide.style.display = 'block';
-            } else {
-              slide.style.display = 'none';
-            }
-          });
-        }
-        
-        function nextSlide() {
-          currentIndex = (currentIndex + 1) % totalSlides;
-          showSlide(currentIndex);
-        }
-        
-        function prevSlide() {
-          currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-          showSlide(currentIndex);
-        }
-        
-        function startAutoSlide() {
-          autoSlideInterval = setInterval(nextSlide, 3500); // Geser setiap 2 detik
-        }
-        
-        function stopAutoSlide() {
-          clearInterval(autoSlideInterval);
-        }
-        
-        showSlide(currentIndex);
-        startAutoSlide(); // Mulai auto geser
-        
-        // Hentikan auto geser ketika kursor di atas carousel
-        document.querySelector('.carousel').addEventListener('mouseenter', stopAutoSlide);
-        // Lanjutkan auto geser ketika kursor meninggalkan carousel
-        document.querySelector('.carousel').addEventListener('mouseleave', startAutoSlide);
-        </script>
 
     <!-- format harga -->
     <script>
@@ -484,7 +459,11 @@
                 success: function (data) {
                     if (data.success) {
                         alert("Login berhasil");
-                        window.location.href = "{% url 'index' %}";
+                        if (data.is_superuser) {  // Periksa apakah pengguna adalah superadmin
+                            window.location.href = "{% url 'dashboard' %}";  // Redirect ke halaman dashboard jika user adalah superadmin
+                        } else {
+                            window.location.href = "{% url 'index' %}";
+                        }
                     } else {
                         alert("Login gagal: " + data.message);
                     }

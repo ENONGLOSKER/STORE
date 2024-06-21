@@ -6,7 +6,7 @@ class CustomUser(AbstractUser):
     alamat = models.CharField(max_length=255)
 
 class Produk(models.Model):
-    img_produk = models.ImageField(upload_to='produk')
+    img_produk = models.ImageField(upload_to='produk') 
     nama_produk = models.CharField(max_length=100)
     rettings = models.FloatField()
     harga = models.IntegerField()
